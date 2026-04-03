@@ -1,0 +1,335 @@
+@{
+    ViewData["Title"] = "Schedule — Dr. Carter";
+    ViewData["ActivePage"] = "Schedule";
+}
+
+@section HeadScripts {
+    <script>
+        function scheduleParameterMap(data, operation) {
+            if (operation !== "read") {
+                return kendo.stringify(data);
+            }
+            return data;
+        }
+    </script>
+    <script src="~/js/schedule.js" asp-append-version="true"></script>
+}
+
+    <!-- ═══════════════════════════════════════════
+         PAGE BODY
+    ═══════════════════════════════════════════ -->
+    <div class="schedule-body">
+
+        <!-- LEFT — SCHEDULER -->
+        <div class="schedule-main">
+            <div class="k-card sched-card">                
+                @{
+                    var today = DateTime.Today;
+                    var startTime = new DateTime(today.Year, today.Month, today.Day, 7, 0, 0);
+                    var endTime = new DateTime(today.Year, today.Month, today.Day, 19, 0, 0);
+                }
+                @(Html.Kendo().Scheduler<ScheduleAppointment>()
+                    .Name("scheduler")
+                    .Date(today)
+                    .StartTime(startTime)
+                    .EndTime(endTime)
+                    .Height(890)
+                    .Views(views =>
+                    {
+                        views.DayView(d => d.Selected(true));
+                        views.WeekView();
+                        views.MonthView(m => m.EventHeight(60));
+                        views.AgendaView();
+                    })
+                    .Editable(e => e.Create(false).Move(true).Resize(true).Confirmation("Are you sure you want to delete this appointment?"))
+                    .Resources(res =>
+                    {
+                        res.Add(m => m.EventType)
+                            .Title("Event Type")
+                            .DataTextField("Text")
+                            .DataValueField("Value")
+                            .BindTo(new[] {
+                                new { Text = "Consultation", Value = "Consultation", Color = "#6366f1" },
+                                new { Text = "Surgery", Value = "Surgery", Color = "#ef4444" },
+                                new { Text = "Diagnostics", Value = "Diagnostics", Color = "#f59e0b" },
+                                new { Text = "Follow-up", Value = "Follow-up", Color = "#10b981" },
+                                new { Text = "Therapy", Value = "Therapy", Color = "#8b5cf6" },
+                                new { Text = "Emergency", Value = "Emergency", Color = "#dc2626" }
+                            });
+                    })
+                    .EventTemplateId("event-template")
+                    .Events(e => e.Edit("onSchedulerEdit").DataBound("onSchedulerDataBound"))
+                    .DataSource(ds => ds
+                        .Model(m =>
+                        {
+                            m.Id(f => f.Id);
+                            m.Field(f => f.Title).DefaultValue("No title");
+                            m.Field(f => f.Start);
+                            m.Field(f => f.End);
+                            m.Field(f => f.PatientName).DefaultValue("");
+                            m.Field(f => f.Reason).DefaultValue("");
+                            m.Field(f => f.Room).DefaultValue("");
+                            m.Field(f => f.EventType).DefaultValue("Consultation");
+                        })
+                        .Read("Appointments_Read", "Schedule")
+                        .Create("Appointments_Create", "Schedule")
+                        .Update("Appointments_Update", "Schedule")
+                        .Destroy("Appointments_Destroy", "Schedule")
+                    )
+                )
+            </div>
+        </div>
+
+        <!-- RIGHT — SIDE PANEL -->
+        <div class="schedule-side">
+            <!-- Today's Tasks -->
+            <div class="k-card tasks-card">
+                <div class="tasks-card-header">
+                    <h2 class="tasks-card-title">Daily Tasks</h2>
+                    <div class="tasks-header-actions">
+                        <div class="tasks-search-wrap">
+                            <svg class="tasks-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4A5666" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            <input id="tasks-search" class="tasks-search-input" placeholder="Search daily tasks" />
+                        </div>
+                        @(Html.Kendo().Button()
+                            .Name("btn-add-task")
+                            .Content("Add Task")
+                            .Icon("plus")
+                            .FillMode(ButtonFillMode.Solid)
+                            .ThemeColor(ThemeColor.Dark)
+                            .Rounded(Rounded.Full)
+                            .HtmlAttributes(new { @class = "tasks-add-btn" })
+                            .Events(e => e.Click("onAddTaskBtnClick"))
+                        )
+                    </div>
+                </div>
+                @(Html.Kendo().ListView<DailyTask>()
+                    .Name("tasks-list")
+                    .TagName("div")
+                    .ClientTemplateId("task-template")
+                    .Selectable(false)
+                    .Events(e => e.DataBound("onTasksListDataBound"))
+                    .DataSource(ds => ds
+                        .Ajax()
+                        .Model(m =>
+                        {
+                            m.Id(f => f.Id);
+                            m.Field(f => f.Description);
+                        })
+                        .Read(r => r.Action("Tasks_Read", "Schedule"))
+                    )
+                )
+            </div>            
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         KENDO TEMPLATES
+    ═══════════════════════════════════════════ -->
+
+    <!-- Scheduler event block template -->
+    <script id="event-template" type="text/x-kendo-template">
+        <div class="sched-ev #if(EventType === 'Follow-up'){# sched-ev-followup #}#">
+            <div class="sched-ev-title">#= EventType # &ndash; #= PatientName #</div>
+            <div class="sched-ev-meta">#= kendo.toString(start, "hh:mm") #&ndash;#= kendo.toString(end, "hh:mm tt") # &middot; #= Room #</div>
+        </div>
+    </script>
+
+    <!-- Task list item template -->
+    <script id="task-template" type="text/x-kendo-template">
+        <div class="task-item #= Done ? 'task-done' : '' #">
+            <label class="task-cb-wrap">
+                <input type="checkbox" class="task-checkbox" data-id="#= Id #" #= Done ? 'checked="checked"' : '' # />
+                <span class="task-cb-custom"></span>
+            </label>
+            <span class="task-text">#= Task #</span>
+            <span class="priority-badge" data-priority="#= priorityTheme(Priority) #">#= Priority #</span>
+        </div>
+    </script>
+
+    <!-- ═══════════════════════════════════════════
+         DIALOGS
+    ═══════════════════════════════════════════ -->
+
+    <!-- Add Task dialog -->
+    @(Html.Kendo().Dialog()
+        .Name("add-task-dialog")
+        .Width(690)
+        .Title("Add Task")
+        .Closable(true)
+        .Modal(true)
+        .Visible(false)
+        .Events(e => e.Close("onAddTaskDialogClose").Show("onAddTaskDialogShow"))
+        .Actions(actions => {
+            actions.Add().Text("Cancel").Action("onAddTaskCancel");
+            actions.Add().Text("Save").Primary(true).Action("onAddTaskSave");
+        })
+        .Content(@<text>
+            <div class="add-task-form">
+                <div class="atf-field">
+                    <label class="atf-label">Task Name</label>
+                    @(Html.Kendo().TextBox()
+                        .Name("atf-name")
+                        .Placeholder("Enter task name")
+                        .HtmlAttributes(new { name = "taskName", required = "required" })
+                    )
+                    <span class="k-invalid-msg atf-error" data-for="taskName"></span>
+                </div>
+                <div class="atf-field">
+                    <label class="atf-label">Priority</label>
+                    @(Html.Kendo().ButtonGroup()
+                        .Name("atf-priority-group")
+                        .Selection("single")
+                        .Items(items => {
+                            items.Add().Text("Low").Selected(true).HtmlAttributes(new { id = "atf-pri-low" });
+                            items.Add().Text("Medium").HtmlAttributes(new { id = "atf-pri-medium" });
+                            items.Add().Text("High").HtmlAttributes(new { id = "atf-pri-high" });
+                        })
+                    )
+                </div>
+                <div class="atf-field">
+                    <label class="atf-label">Description</label>
+                    @(Html.Kendo().TextArea()
+                        .Name("atf-description")
+                        .Placeholder("Enter task description...")
+                        .Rows(4)
+                    )
+                </div>
+            </div>
+        </text>)
+    )
+
+    <!-- View Task dialog -->
+    @(Html.Kendo().Dialog()
+        .Name("view-task-dialog")
+        .Width(690)
+        .Title("Task Details")
+        .Closable(true)
+        .Modal(true)
+        .Visible(false)
+        .Events(e => e.Open("onViewTaskDialogOpen"))
+        .Actions(actions => {
+            actions.Add().Text("Close").Primary(true);
+        })
+        .Content(@<text>
+            <div class="add-task-form">
+                <div class="atf-field">
+                    <span class="atf-label">Task</span>
+                    <div id="vtf-name" class="vtf-value"></div>
+                </div>
+                <div class="atf-field">
+                    <span class="atf-label">Priority</span>
+                    <span id="vtf-priority-badge"></span>
+                </div>
+                <div class="atf-field">
+                    <span class="atf-label">Description</span>
+                    <div id="vtf-description" class="vtf-description"></div>
+                </div>
+            </div>
+        </text>)
+    )
+
+    <!-- Appointment detail dialog (content injected by JS) -->
+    @(Html.Kendo().Dialog()
+        .Name("appointment-dialog")
+        .Title("")
+        .Width(320)
+        .Modal(true)
+        .Closable(false)
+        .Visible(false)
+        .Events(e => e.Close("onAppointmentDialogClose"))
+        .Actions(actions => {
+            actions.Add().Text("Cancel").Action("onAppointmentDialogCancel");
+            actions.Add().Text("Save").Primary(true).Action("onAppointmentDialogSave");
+        })
+    )
+
+    <!-- New Appointment dialog -->
+    @{
+        var defaultStart = new DateTime(today.Year, today.Month, today.Day, 9, 0, 0);
+        var defaultEnd = new DateTime(today.Year, today.Month, today.Day, 9, 30, 0);
+    }
+    @(Html.Kendo().Dialog()
+        .Name("new-appointment-dialog")
+        .Title("New Appointment")
+        .Width(520)
+        .Modal(true)
+        .Visible(false)
+        .Events(e => e.Open("onNewApptDialogOpen"))
+        .Actions(actions => {
+            actions.Add().Text("Schedule Appointment").Primary(true).Action("onNewApptSchedule");
+            actions.Add().Text("Cancel");
+        })
+        .Content(@<text>
+            <div class="dialog-field">
+                <label class="dialog-label">Patient</label>
+                @(Html.Kendo().DropDownList()
+                    .Name("new-appt-patient")
+                    .DataTextField("Name")
+                    .DataValueField("Id")
+                    .OptionLabel("Select patient...")
+                    .Rounded(Rounded.Large)
+                    .AutoBind(false)
+                )
+            </div>
+            <div class="dialog-field">
+                <label class="dialog-label">Event Type</label>
+                @(Html.Kendo().DropDownList()
+                    .Name("new-appt-type")
+                    .DataTextField("text")
+                    .DataValueField("value")
+                    .OptionLabel("Select type...")
+                    .Rounded(Rounded.Large)
+                    .BindTo(new[] {
+                        new { text = "Follow-up", value = "Follow-up" },
+                        new { text = "Consultation", value = "Consultation" },
+                        new { text = "Lab Review", value = "Lab Review" },
+                        new { text = "Diagnostics", value = "Diagnostics" },
+                        new { text = "Emergency", value = "Emergency" }
+                    })
+                )
+            </div>
+            <div class="dialog-field dialog-field-row">
+                <div class="dialog-field-half">
+                    <label class="dialog-label">Date</label>
+                    @(Html.Kendo().DatePicker()
+                        .Name("new-appt-date")
+                        .Value(today)
+                        .Rounded(Rounded.Large)
+                    )
+                </div>
+                <div class="dialog-field-half">
+                    <label class="dialog-label">Room</label>
+                    @(Html.Kendo().DropDownList()
+                        .Name("new-appt-room")
+                        .OptionLabel("Select room...")
+                        .Rounded(Rounded.Large)
+                        .BindTo(new[] { "204 (Floor 2)", "456 (Floor 4)", "79A (Floor 0)", "ER-1", "ER-3", "Imaging 1B", "Imaging 2A", "Lab Office" })
+                    )
+                </div>
+            </div>
+            <div class="dialog-field dialog-field-row">
+                <div class="dialog-field-half">
+                    <label class="dialog-label">Start Time</label>
+                    @(Html.Kendo().TimePicker()
+                        .Name("new-appt-start")
+                        .Interval(15)
+                        .Value(defaultStart)
+                    )
+                </div>
+                <div class="dialog-field-half">
+                    <label class="dialog-label">End Time</label>
+                    @(Html.Kendo().TimePicker()
+                        .Name("new-appt-end")
+                        .Interval(15)
+                        .Value(defaultEnd)
+                    )
+                </div>
+            </div>
+            <div class="dialog-field">
+                <label class="dialog-label">Reason</label>
+                <textarea id="new-appt-reason" style="width:100%;height:60px;padding:8px;border:1px solid #ccc;border-radius:4px;font-family:inherit;font-size:13px" placeholder="Reason for appointment..."></textarea>
+            </div>
+        </text>)
+    )
+

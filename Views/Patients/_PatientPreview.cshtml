@@ -1,0 +1,77 @@
+@model HealthcareApp.Models.PatientRecord
+@{
+    var vi = Model.Vitals;
+    var adm = Model.AdmissionDetails ?? new HealthcareApp.Models.AdmissionInfo();
+}
+
+<div class="k-card-header pp-header">
+    <h2 class="k-card-title pp-title">Patient Preview</h2>
+    <button class="pp-close-btn" id="btn-close-preview" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#232A36" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+</div>
+<div class="k-card-body pp-body">
+    <div class="pp-avatar-row">
+        <img src="@Model.Avatar" class="pp-avatar" onerror="this.src='/content/patient-images/default.png'" />
+        <div class="pp-name-block">
+            <div class="pp-name-row">
+                <span class="pp-name">@Model.Name</span>
+                <a class="pp-view-profile-link btn-view-patient" data-id="@Model.Id">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                    View profile
+                </a>
+            </div>
+            <span class="pp-age-gender">@Model.Age years, @Model.Gender</span>
+        </div>
+    </div>
+
+    @if (Model.Allergies?.Count > 0)
+    {
+        <div class="pp-allergy-card">
+            <div class="pp-allergy-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFD760" stroke-width="2">
+                    <path d="M9 3H4a1 1 0 0 0-1 1v5l10 10 6-6L9 3z"/>
+                    <circle cx="15" cy="9" r="1.5" fill="#FFD760" stroke="none"/>
+                </svg>
+            </div>
+            <div class="pp-allergy-text">
+                <span class="pp-allergy-title">Allergy Alert</span>
+                <span class="pp-allergy-desc">@string.Join(", ", Model.Allergies)</span>
+            </div>
+            <a class="pp-details-link">Details
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+        </div>
+    }
+
+    <div class="k-card pp-info-card">
+        <div class="k-card-header"><h3 class="k-card-title">Basic Information</h3></div>
+        <div class="k-card-body">
+            <div class="pp-info-row"><span class="pp-info-label">Age / Gender</span><span class="pp-info-value">@Model.Age / @(Model.Gender == "Male" ? "M" : "F")</span></div>
+            <div class="pp-info-row"><span class="pp-info-label">Ward</span><span class="pp-info-value">@Model.Ward</span></div>
+            <div class="pp-info-row"><span class="pp-info-label">Diagnosis</span><span class="pp-info-value">@Model.Diagnosis</span></div>
+            <div class="pp-info-row"><span class="pp-info-label">Last Visit</span><span class="pp-info-value">@Model.LastVisit</span></div>
+        </div>
+    </div>
+
+    <div class="k-card pp-info-card">
+        <div class="k-card-header"><h3 class="k-card-title">Recent Vitals</h3></div>
+        <div class="k-card-body">
+            <div class="pp-info-row"><span class="pp-info-label">Heart Rate</span><span class="pp-info-value@(vi.Hr > 100 || vi.Hr < 60 ? " pp-critical" : "")">@vi.Hr bpm</span></div>
+            <div class="pp-info-row"><span class="pp-info-label">Blood Pressure</span><span class="pp-info-value@(vi.Systolic > 140 ? " pp-critical" : "")">@vi.Bp.Replace(" mmHg", "")</span></div>
+            <div class="pp-info-row"><span class="pp-info-label">Temperature</span><span class="pp-info-value@(vi.Temp > 99.5 ? " pp-critical" : "")">@(vi.Temp)°F</span></div>
+            <div class="pp-info-row"><span class="pp-info-label">O2 Saturation</span><span class="pp-info-value@(vi.Spo2 < 94 ? " pp-critical" : "")">@(vi.Spo2)%</span></div>
+        </div>
+    </div>
+
+    <div class="k-card pp-info-card">
+        <div class="k-card-header"><h3 class="k-card-title">Admission Details</h3></div>
+        <div class="k-card-body">
+            <div class="pp-info-row"><span class="pp-info-label">Department</span><span class="pp-info-value">@(string.IsNullOrEmpty(adm.Department) ? Model.Ward : adm.Department)</span></div>
+            <div class="pp-info-row"><span class="pp-info-label">Ward</span><span class="pp-info-value">@(string.IsNullOrEmpty(adm.WardUnit) ? Model.Ward : adm.WardUnit)</span></div>
+            <div class="pp-info-row"><span class="pp-info-label">Room</span><span class="pp-info-value">@(adm.Room > 0 ? adm.Room.ToString() : "\u2014")</span></div>
+            <div class="pp-info-row"><span class="pp-info-label">Admission Date</span><span class="pp-info-value">@(string.IsNullOrEmpty(adm.AdmissionDate) ? Model.LastVisit : adm.AdmissionDate)</span></div>
+            <div class="pp-info-row"><span class="pp-info-label">Assigned Nurse</span><span class="pp-info-value">@(string.IsNullOrEmpty(adm.AssignedNurse) ? "\u2014" : adm.AssignedNurse)</span></div>
+        </div>
+    </div>
+</div>

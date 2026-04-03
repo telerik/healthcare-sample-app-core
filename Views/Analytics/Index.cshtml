@@ -1,0 +1,181 @@
+@{
+    ViewData["Title"] = "Clinical Analytics — Dr. Carter";
+    ViewData["ActivePage"] = "Analytics";
+}
+
+@section HeadScripts {
+    <script src="~/js/analytics.js" asp-append-version="true"></script>
+}
+
+    <!-- ═══════════════════════════════════════════
+         ANALYTICS BODY
+    ═══════════════════════════════════════════ -->
+    <div id="analytics-body" class="analytics-body">       
+
+        <!-- Row 1: Vitals Over Time (full width) -->
+        <div class="analytics-row">
+            <div class="k-card analytics-chart-card">
+                <div class="k-card-header chart-header">
+                    <div class="chart-title">Vitals Over Time</div>
+                    <div class="chart-subtitle">Multi-series tracking of blood pressure, heart rate, SpO<sub>2</sub>, temperature and pulse</div>
+                </div>
+                <div class="k-card-body">
+                @(Html.Kendo().Chart()
+                    .Name("vitals-chart")
+                    .HtmlAttributes(new { style = "min-height:300px" })
+                    .Legend(l => l.Position(ChartLegendPosition.Bottom).Item(i => i.Visual("legendItemVisual")))
+                    .SeriesDefaults(sd => sd.Line().Style(ChartSeriesStyle.Smooth).Markers(m => m.Visible(true).Size(5)))
+                    .Series(s =>
+                    {
+                        s.Line("Systolic").Name("Systolic BP").Color("#e84c6e");
+                        s.Line("Diastolic").Name("Diastolic BP").Color("#f0c040");
+                        s.Line("HeartRate").Name("Heart Rate").Color("#27ae60");
+                        s.Line("Spo2").Name("SpO\u2082 (%)").Color("#2980b9");
+                        s.Line("Temperature").Name("Temperature").Color("#8e44ad");
+                        s.Line("Pulse").Name("Pulse").Color("#e91e8c");
+                    })
+                    .CategoryAxis(a => a
+                        .Field("Date")
+                        .MajorGridLines(m => m.Visible(false))
+                        .Labels(l => l.Rotation(0))
+                    )
+                    .ValueAxis(a => a
+                        .Labels(l => l.Format("{0}"))
+                        .MajorGridLines(m => m.Color("#f0eeff"))
+                    )
+                    .Tooltip(t => t.Visible(true).Shared(true))
+                    .ChartArea(ca => ca.Background("transparent"))
+                    .DataSource(ds => ds.Read(r => r.Action("VitalsHistory", "Analytics").Data("getSelectedPatientId").Type(HttpVerbs.Get)))
+                    .AutoBind(false)
+                )
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 2: Alerts Over Time (full width) -->
+        <div class="analytics-row">
+            <div class="k-card analytics-chart-card">
+                <div class="k-card-header chart-header">
+                    <div class="chart-title">Alerts Over Time</div>
+                    <div class="chart-subtitle">Alert count trend by severity level</div>
+                </div>
+                <div class="k-card-body">
+                @(Html.Kendo().Chart()
+                    .Name("alerts-column-chart")
+                    .HtmlAttributes(new { style = "min-height:280px" })
+                    .Legend(l => l.Position(ChartLegendPosition.Bottom).Item(i => i.Visual("legendItemVisual")))
+                    .SeriesDefaults(sd => sd.Column().Stack(true))
+                    .Series(s =>
+                    {
+                        s.Column("Critical").Name("Critical").Color("#c0345a");
+                        s.Column("Warning").Name("Warning").Color("#b8860b");
+                        s.Column("Info").Name("Info").Color("#1a6db8");
+                    })
+                    .CategoryAxis(a => a
+                        .Field("Day")
+                        .MajorGridLines(m => m.Visible(false))
+                    )
+                    .ValueAxis(a => a
+                        .Title("Alert Count")
+                        .MajorGridLines(m => m.Color("#f0eeff"))
+                    )
+                    .Tooltip(t => t.Visible(true).Shared(true))
+                    .ChartArea(ca => ca.Background("transparent"))
+                    .DataSource(ds => ds.Read(r => r.Action("AlertsOverTime", "Analytics").Data("getSelectedPatientId").Type(HttpVerbs.Get)))
+                    .AutoBind(false)
+                )
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 3: Lab Results Range (full width) -->
+        <div class="analytics-row">
+            <div class="k-card analytics-chart-card">
+                <div class="k-card-header chart-header">
+                    <div class="chart-title">Lab Results Range</div>
+                    <div class="chart-subtitle">Multi-metric range chart showing latest lab results against optimal ranges</div>
+                </div>
+                <div class="k-card-body">
+                    <div id="labs-charts-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 4: Alerts by Category + Risk Score -->
+        <div class="analytics-row analytics-row-2col-equal">
+
+            <div class="k-card analytics-chart-card">
+                <div class="chart-header">
+                    <div class="chart-title">Alerts by Category</div>
+                    <div class="chart-subtitle">Distribution of alerts by clinical category</div>
+                </div>
+                @(Html.Kendo().Chart()
+                    .Name("alerts-donut-chart")
+                    .HtmlAttributes(new { style = "min-height:340px" })
+                    .Legend(l => l.Position(ChartLegendPosition.Bottom).Item(i => i.Visual("legendItemVisual")))
+                    .SeriesColors(new[] { "#f0c040", "#27ae60", "#2c3e8a", "#e91e8c", "#e8735a", "#9b59b6" })
+                    .Series(s =>
+                    {
+                        s.Donut("Value", "Category")
+                            .Padding(20).HoleSize(72)
+                            .Labels(l => l.Visible(true).Template("#= category #").Align(ChartSeriesLabelsAlign.Column).Position(ChartSeriesLabelsPosition.OutsideEnd))
+                            .Overlay(o => o.Gradient(ChartSeriesGradient.None));
+                    })
+                    .Tooltip(t => t.Visible(true).Template("#= category #: #= value # alerts (#= kendo.format('{0:P0}', percentage) #)"))
+                    .ChartArea(ca => ca.Background("transparent"))
+                    .DataSource(ds => ds.Read(r => r.Action("AlertsByCategory", "Analytics").Data("getSelectedPatientId").Type(HttpVerbs.Get)))
+                    .AutoBind(false)
+                )
+            </div>
+
+            <div class="k-card analytics-chart-card analytics-gauge-card">
+                <div class="chart-header" style="width:100%">
+                    <div class="chart-title">Risk Score</div>
+                    <div class="chart-subtitle">Patient health risk assessment</div>
+                </div>
+                <div class="risk-gauge-wrap">
+                    @(Html.Kendo().ArcGauge()
+                        .Name("risk-gauge")
+                        .Value(0)
+                        .CenterTemplateHandler("riskGaugeCenterTemplate")
+                        .Colors(colors => {
+                            colors.Add().To(25).Color("#0058e9");
+                            colors.Add().From(25).To(50).Color("#37b400");
+                            colors.Add().From(50).To(75).Color("#ffc000");
+                            colors.Add().From(75).Color("#f31700");
+                        })
+                        .Scale(s => s
+                            .Min(0).Max(100)
+                            .Labels(l => l.Visible(false))
+                            .MajorTicks(t => t.Visible(false))
+                            .MinorTicks(t => t.Visible(false))
+                            .RangePlaceholderColor("#e8e8e8")
+                            .RangeSize(16)
+                        )
+                        .GaugeArea(g => g.Background("transparent").Margin(m => m.Top(30).Bottom(30).Left(30).Right(30)))
+                    )
+                </div>
+                <div class="risk-score-legend">
+                    <div class="risk-legend-item">
+                        <span class="rsl-dot rsl-high"></span>
+                        <span class="rsl-label">High Risk</span>
+                        <span class="rsl-range">0–39</span>
+                    </div>
+                    <div class="risk-legend-item">
+                        <span class="rsl-dot rsl-medium"></span>
+                        <span class="rsl-label">Medium Risk</span>
+                        <span class="rsl-range">40–69</span>
+                    </div>
+                    <div class="risk-legend-item">
+                        <span class="rsl-dot rsl-low"></span>
+                        <span class="rsl-label">Low Risk</span>
+                        <span class="rsl-range">70–100</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+

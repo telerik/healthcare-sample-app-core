@@ -1,0 +1,189 @@
+@{
+    ViewData["Title"] = "Patients — Dr. Carter";
+    ViewData["ActivePage"] = "Patients";
+}
+
+@section HeadScripts {
+    <script src="~/js/patients.js" asp-append-version="true"></script>
+}
+
+    <!-- Breadcrumb (shown only in detail view) -->
+    <nav id="patients-breadcrumb" class="patients-breadcrumb" style="display:none">
+        <a id="breadcrumb-back" class="breadcrumb-link">
+            <span class="nav-icon">&#128100;</span> Patients
+        </a>
+        <span class="breadcrumb-sep">&#8250;</span>
+        <span class="breadcrumb-current">
+            <span class="breadcrumb-edit-icon">&#9998;</span> Patient Profile
+        </span>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════
+         VIEW A — PATIENT LIST
+    ═══════════════════════════════════════════ -->
+    <div id="patients-list-view">
+
+        <!-- Main body: grid  +  AI panel (panel toggled by button) -->
+        <div id="patients-list-body" class="patients-list-body">
+
+            <!-- Grid column -->
+            <div class="patients-grid-col">
+                <div class="k-card patients-grid-card">
+                    @(Html.Kendo().Grid<PatientRecord>()
+                        .Name("patients-grid")
+                        .Columns(columns =>
+                        {
+                            columns.Bound(c => c.Name).Title("Patient Name").Width(185)
+                                .ClientTemplate("<div class='patient-name-cell'><img src='#= Avatar #' class='patient-avatar-sm' onerror=\"this.src='/content/patient-images/women/thumb/aiony-haust-3TLl_97HNJo-unsplash.jpg'\" /><div><strong>#= Name #</strong></div></div>");
+                            columns.Bound(c => c.Age).Title("Age").Width(70);
+                            columns.Bound(c => c.Status).Title("Status").Width(130)
+                                .ClientTemplate("<span class='k-badge-status' data-status='#= Status #'></span>");
+                            columns.Bound(c => c.Gender).Title("Gender").Width(90);
+                            columns.Bound(c => c.BloodType).Title("Blood Type").Width(105);
+                            columns.Bound(c => c.Ward).Title("Ward").Width(160);
+                            columns.Bound(c => c.Diagnosis).Title("Diagnosis").Width(200);
+                            columns.Template("<a class='btn-view-patient grid-view-link' data-id='#= Id #'><svg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' style='vertical-align:-2px;margin-right:4px'><path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/><circle cx='12' cy='12' r='3'/></svg>View Profile</a>")
+                                .Title("Actions").Width(130);
+                        })
+                        .Sortable()
+                        .Filterable(f => f.Mode(GridFilterMode.Row))
+                        .Reorderable(r => r.Columns(true))
+                        .Resizable(r => r.Columns(true))
+                        .ColumnMenu()
+                        .Pageable(p => p
+                            .PageSizes(new[] { 10, 13, 20, 50 })
+                            .Refresh(true)
+                        )
+                        .Excel(e => e.FileName("Patients.xlsx").AllPages(true))
+                        .Events(e => e.DataBound("onPatientsGridDataBound"))
+                        .DataSource(ds => ds
+                            .Ajax()
+                            .PageSize(10)
+                            .Read(r => r.Action("Patients_Read", "Patients"))
+                        )
+                    )
+                </div>
+            </div>
+
+            <!-- AI Assistant panel (hidden until button clicked) -->
+            <div id="list-ai-panel" class="k-card patients-ai-panel" style="display:none">               
+                @(Html.Kendo().Chat()
+                    .Name("list-ai-chat")
+                    .AuthorId("dr-carter")
+                    .Height("600")
+                    .User(u => u.Name("Dr. Carter"))
+                    .Messages(m => m.Placeholder("Ask AI about patients…"))
+                    .HeaderItems(items =>
+                    {
+                        items.Add().Type(AppBarItemType.ContentItem).Template("<span class='sparkles'></span>");
+                        items.Add().Type(AppBarItemType.ContentItem).Template("<strong class='ai-chat-header-title'>AI Assistant</strong>");
+                        items.Add().Type(AppBarItemType.Spacer);
+                        items.Add().Type(AppBarItemType.ContentItem).Template("<span class='close-chat'></span>");
+                    })
+                    .Suggestions(suggestions =>  {
+                            suggestions.Add().Text("What are today's critical care priorities?");
+                            suggestions.Add().Text("What are common patient risk factors?");
+                            suggestions.Add().Text("What follow-up protocols should I apply?");
+                            suggestions.Add().Text("How do I interpret abnormal lab results?");
+                    })
+                    .Events(e => e
+                        .SendMessage("onListAiChatSendMessage")
+                        .SuggestionClick("onListAiChatSuggestionClick")
+                    )
+                )
+            </div>
+
+            <!-- Patient Preview panel (shown on patient name double-click) -->
+            <div id="patient-preview-panel" class="k-card patient-preview-panel" style="display:none"></div>
+
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         VIEW B — PATIENT DRILLDOWN
+    ═══════════════════════════════════════════ -->
+    <div id="patients-detail-view" style="display:none">
+        <div id="detail-main" class="detail-main-wrap"></div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         CONTEXT MENU
+    ═══════════════════════════════════════════ -->
+    @(Html.Kendo().ContextMenu()
+        .Name("patients-context-menu")
+        .Target("#patients-grid")
+        .Filter("tr[role='row']")
+        .Items(items =>
+        {
+            items.Add().Text("<span class='ctx-icon'>&#128203;</span> Open Patient Record").Encoded(false).HtmlAttributes(new { data_action = "view" });
+            items.Add().Text("<span class='ctx-icon'>&#9998;</span> Change Status").Encoded(false).HtmlAttributes(new { data_action = "status" });
+        })
+        .Events(e => e.Select("onPatientsContextMenuSelect"))
+    )
+
+    <!-- ═══════════════════════════════════════════
+         DIALOG CONTAINERS
+    ═══════════════════════════════════════════ -->
+
+    <!-- Change Status dialog (content injected at runtime) -->
+    @(Html.Kendo().Dialog()
+        .Name("change-status-dialog")
+        .Title("Change Status")
+        .Width(360)
+        .Modal(true)
+        .Visible(false)
+        .Actions(actions =>
+        {
+            actions.Add().Text("Save").Primary(true).Action("onChangeStatusSave");
+            actions.Add().Text("Cancel");
+        })
+        .Events(e => e.Open("onChangeStatusOpen"))
+    )
+
+    <!-- Add New Patient dialog -->
+    <div id="add-patient-dialog" style="display:none">
+        <div class="dialog-field-row">
+            <div class="dialog-field dialog-field-half">
+                <label class="dialog-label">Full Name</label>
+                <input id="np-name" type="text" class="np-text-input" placeholder="Full name" />
+            </div>
+            <div class="dialog-field dialog-field-half">
+                <label class="dialog-label">Patient ID</label>
+                <input id="np-id" type="text" class="np-text-input" placeholder="P-10xx" />
+            </div>
+        </div>
+        <div class="dialog-field-row">
+            <div class="dialog-field dialog-field-half">
+                <label class="dialog-label">Age</label>
+                <input id="np-age" type="number" style="width:100%" />
+            </div>
+            <div class="dialog-field dialog-field-half">
+                <label class="dialog-label">Gender</label>
+                <select id="np-gender" style="width:100%"></select>
+            </div>
+        </div>
+        <div class="dialog-field">
+            <label class="dialog-label">Ward</label>
+            <select id="np-ward" style="width:100%"></select>
+        </div>
+        <div class="dialog-field">
+            <label class="dialog-label">Primary Diagnosis</label>
+            <input id="np-diagnosis" type="text" class="np-text-input" placeholder="e.g. Hypertension" />
+        </div>
+        <div class="dialog-field-row">
+            <div class="dialog-field dialog-field-half">
+                <label class="dialog-label">Status</label>
+                <select id="np-status" style="width:100%"></select>
+            </div>
+            <div class="dialog-field dialog-field-half">
+                <label class="dialog-label">Assigned Doctor</label>
+                <select id="np-doctor" style="width:100%"></select>
+            </div>
+        </div>
+        <div class="dialog-field">
+            <label class="dialog-label">Phone</label>
+            <input id="np-phone" type="text" class="np-text-input" placeholder="+1 555-0XXX" />
+        </div>
+    </div>
+
+

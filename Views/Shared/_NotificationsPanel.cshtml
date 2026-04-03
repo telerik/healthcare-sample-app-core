@@ -1,0 +1,28 @@
+@model HealthcareApp.Models.NotificationsPanelViewModel
+
+<div class="np-header">
+    <span class="np-title">Notifications</span>
+    @if (Model.UnreadCount > 0)
+    {
+        <button class="np-mark-all" id="np-mark-all">Mark all read</button>
+    }
+    else
+    {
+        <span class="np-all-read">All caught up ✓</span>
+    }
+</div>
+<div class="np-list">
+    @foreach (var n in Model.Items)
+    {
+        <div class="k-card k-card-horizontal np-card@(n.Read ? " np-card-read" : "")" data-id="@n.Id">
+            <div class="k-card-image np-card-icon">
+                <img src="/content/notification-bell.png" alt="" class="np-bell-img" />
+            </div>
+            <div class="k-card-body np-card-body">
+                <h6 class="k-card-title np-card-title">@n.Title</h6>
+                <p class="k-card-subtitle np-card-subtitle">@n.Description</p>
+            </div>
+            <div class="np-card-time">@n.Time</div>
+        </div>
+    }
+</div>
