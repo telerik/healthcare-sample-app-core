@@ -1,0 +1,217 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" />
+    <!-- Kendo UI Default Theme -->
+    <link id="kendo-theme" rel="stylesheet" href="https://kendo.cdn.telerik.com/themes/13.1.1/default/default-main.css" />
+    <!-- Kendo Theme Variable Overrides -->
+    <link rel="stylesheet" href="~/css/kendo-theme-overrides.css" asp-append-version="true" />
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true" />
+     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2026.1.325/js/kendo.all.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2026.1.325/js/kendo.aspnetmvc.min.js"></script>
+    <script src="~/js/data.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/profile.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("HeadScripts", required: false)
+</head>
+<body>
+
+    <!-- ═══════════════════════════════════════════
+         APP BAR
+    ═══════════════════════════════════════════ -->
+    <div id="appbar" class="app-appbar">
+        <!-- Logo -->
+        <span class="k-appbar-section appbar-logo">
+            <img src="~/content/logo.png" alt="Logo" class="appbar-logo-img" />
+        </span>
+
+        <!-- Nav -->
+        <span class="k-appbar-section k-appbar-spacer-center appbar-nav">
+            <div id="appbar-nav" data-active-page="@ViewData["ActivePage"]"></div>
+        </span>
+
+        <!-- Right section -->
+        <span class="k-appbar-section appbar-right">
+            @(Html.Kendo().AutoComplete()
+                .Name("appbar-search")
+                .DataTextField("text")
+                .Filter(FilterType.Contains)
+                .MinLength(1)
+                .Rounded(Rounded.Full)
+                .Placeholder("Search patients by name, ID or phone\u2026")
+                .PrefixOptions(p => p.Icon("search").Separator(false))
+                .TemplateHandler("appbarSearchTemplate")
+                .Events(e => e.Filtering("onAppbarSearchFiltering").Select("onAppbarSearchSelect"))
+            )
+            @(Html.Kendo().Button()
+                .Name("btn-settings")
+                .HtmlAttributes(new { @class = "icon-btn", title = "Settings" })
+                .Content("<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><g clip-path=\"url(#clip0_settings)\"><path d=\"M5.99992 10.6667C8.57725 10.6667 10.6666 8.57734 10.6666 6.00001C10.6666 3.42268 8.57725 1.33334 5.99992 1.33334C3.42259 1.33334 1.33325 3.42268 1.33325 6.00001C1.33325 8.57734 3.42259 10.6667 5.99992 10.6667Z\" stroke=\"currentColor\" stroke-width=\"1.33\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M9.99992 14.6667C12.5772 14.6667 14.6666 12.5773 14.6666 10C14.6666 7.42268 12.5772 5.33334 9.99992 5.33334C7.42259 5.33334 5.33325 7.42268 5.33325 10C5.33325 12.5773 7.42259 14.6667 9.99992 14.6667Z\" stroke=\"currentColor\" stroke-width=\"1.33\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></g><defs><clipPath id=\"clip0_settings\"><rect width=\"16\" height=\"16\" fill=\"white\"/></clipPath></defs></svg>")
+                .Events(e => e.Click("onSettingsClick"))
+            )
+            <span class="notif-wrap">
+                <button class="icon-btn" id="notif-btn" title="Notifications">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M8 2C5.8 2 4 3.8 4 6v3.5L2.5 11h11L12 9.5V6c0-2.2-1.8-4-4-4z" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        <path d="M6.5 13c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" fill="none"/>
+                    </svg>
+                </button>
+                @(Html.Kendo().Badge()
+                    .Name("notif-badge")
+                    .Text(" ")
+                    .ThemeColor(BadgeColor.Error)
+                    .Rounded(Rounded.Full)
+                    .Size(BadgeSize.Small)
+                    .Visible(false)
+                )
+            </span>
+            <span class="appbar-sep" aria-hidden="true"></span>
+            <img class="avatar" id="profile-trigger" src="/content/patient-images/women/michael-dam-mEZ3PoFGs_k-unsplash.jpg" alt="Dr. Carter" title="Profile &amp; Settings" />
+        </span>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         PAGE HEADERS — persistent, outside scroll container
+    ═══════════════════════════════════════════ -->
+    <div id="page-headers">
+        <!-- Home -->
+        <div class="page-header greeting home-greeting" data-page="Home">
+            <h1>Good morning, Dr. Carter</h1>
+            <p>Today is <span id="today-date"></span></p>
+        </div>
+        <!-- Patients -->
+        <div class="page-header patients-page-header" data-page="Patients">
+            <div>
+                <h1 class="patients-page-title">Patients</h1>
+                <p class="patients-page-sub">Monitor patient trends, vitals, lab results, and risk levels in one place</p>
+            </div>
+            <div class="patients-header-actions">
+                @(Html.Kendo().Button()
+                    .Name("btn-ai-assistance")
+                    .Content("&#10022; AI Assistance")
+                    .Rounded(Rounded.Large)
+                    .Events(e => e.Click("onAiAssistanceClick"))
+                )
+                @(Html.Kendo().Button()
+                    .Name("btn-export")
+                    .Content("Export")
+                    .Icon("download")
+                    .Rounded(Rounded.Large)
+                    .Events(e => e.Click("onPatientsExportClick"))
+                )
+            </div>
+        </div>
+        <!-- Analytics -->
+        <div class="page-header analytics-page-header" data-page="Analytics">
+            <div>
+                <h1>Clinical Analytics</h1>
+                <p>Track vitals trends, lab results, risk scores, and alert patterns per patient</p>
+            </div>
+            <div class="analytics-header-controls">
+                @(Html.Kendo().DropDownList()
+                    .Name("patient-select")
+                    .DataTextField("Name")
+                    .DataValueField("Id")
+                    .Rounded(Rounded.Large)
+                    .AutoWidth(true)
+                    .Filter(FilterType.Contains)
+                    .TemplateHandler("patientSelectTemplate")
+                    .ValueTemplateHandler("patientSelectValueTemplate")
+                    .AutoBind(false)
+                    .Events(e => e.Change("onPatientSelectChange"))
+                )
+                @(Html.Kendo().Button()
+                    .Name("btn-export-analytics")
+                    .Content("Export")
+                    .Icon("download")
+                    .Rounded(Rounded.Large)
+                    .Events(e => e.Click("onAnalyticsExportClick"))
+                )
+            </div>
+        </div>
+    </div>
+
+    <div id="page-content" class="page-loading">
+        @RenderBody()
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         PROFILE MANAGEMENT WINDOW
+    ═══════════════════════════════════════════ -->
+    @(Html.Kendo().Window()
+        .Name("profile-window")
+        .Title("Profile Management")
+        .Width(420)
+        .Modal(true)
+        .Visible(false)
+        .Actions(a => a.Close())
+        .Events(e => e.Open("onProfileWindowOpen"))
+        .Content(@<text>
+            <div class="pm-section">
+                <label class="pm-label">Profile Image</label>
+                <div class="pm-photo-wrap">
+                    <img id="pm-avatar" class="pm-photo"
+                         src="/content/patient-images/women/michael-dam-mEZ3PoFGs_k-unsplash.jpg" alt="Profile" />
+                </div>
+                @(Html.Kendo().Upload()
+                    .Name("pm-file-input")
+                    .Multiple(false)
+                    .HtmlAttributes(new { accept = "image/*" })
+                    .Async(a => a
+                        .SaveUrl("/api/profile/avatar-upload")
+                        .RemoveUrl("/api/profile/avatar-remove")
+                        .SaveField("file")
+                        .AutoUpload(true)
+                    )
+                    .Validation(v => v.AllowedExtensions(new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" }))
+                    .Events(e => e.Success("onProfileUploadSuccess"))
+                )
+            </div>
+            <div class="pm-callout">
+                <strong>Password Policy</strong>
+                <ul><li>Please change your password every two weeks</li></ul>
+            </div>
+            @(Html.Kendo().Form<HealthcareApp.Models.DoctorProfile>()
+                .Name("profile-form")
+                .HtmlAttributes(new { @class = "pm-form" })
+                .Validatable(v => v.ValidateOnBlur(true).ValidationSummary(vs => vs.Enable(false)))
+                .Items(items =>
+                {
+                    items.Add()
+                        .Field(f => f.FullName)
+                        .Label(l => l.Text("Full Name"));
+                    items.Add()
+                        .Field(f => f.Email)
+                        .Label(l => l.Text("Email Address"));
+                    items.Add()
+                        .Field(f => f.Phone)
+                        .Label(l => l.Text("Phone Number"))
+                        .Editor(e => e.MaskedTextBox().Mask("+(000) 000-00-00"));
+                })
+                .Events(ev => ev.Submit("onProfileFormSubmit").Clear("onProfileFormClear"))
+            )
+        </text>)
+    )
+
+    @(Html.Kendo().Notification()
+        .Name("pm-notif")
+        .Position(p => p.Pinned(true).Top(30).Right(30))
+        .Stacking(NotificationStackingSettings.Down)
+        .AutoHideAfter(3000)
+    )
+
+    <!-- ═══════════════════════════════════════════
+         PAGE-SPECIFIC SCRIPTS
+    ═══════════════════════════════════════════ -->
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

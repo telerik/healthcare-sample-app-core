@@ -1,0 +1,15 @@
+@model HealthcareApp.Models.ChangeStatusViewModel
+
+<div class="dialog-field" style="padding:0">
+    <p style="color:#555;font-size:14px;margin-bottom:16px">
+        Select new status for <strong>@Model.PatientName</strong>:
+    </p>
+    <label class="dialog-label">Status</label>
+    @(Html.Kendo().DropDownList()
+        .Name("new-status-ddl")
+        .BindTo(new[] { "Critical", "Monitoring", "Stable" })
+        .Value(Model.CurrentStatus)
+        .Rounded(Rounded.Large)
+        .HtmlAttributes(new { style = "width:100%" })
+    )
+</div>

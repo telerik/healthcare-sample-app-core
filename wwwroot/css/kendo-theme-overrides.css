@@ -1,0 +1,205 @@
+/*
+  Healthcare App — Kendo UI Theme Overrides
+  Design source: Figma — Healthcare Sample App (node 868-71780)
+
+  Strategy: override Kendo CSS custom properties at :root so all
+  components pick up the brand palette automatically.
+  Requires Kendo Themes >= 8.0.0 (CSS-variable support).
+
+  ═══════════════════════════════════════════════════════════════
+  DESIGN TOKENS (extracted from Figma)
+  ═══════════════════════════════════════════════════════════════
+
+  PRIMARY PALETTE
+    Indigo-900  #1a1a2e   — body text, dark buttons
+    Indigo-700  #3d3d8f   — primary brand, active nav, primary buttons
+    Indigo-500  #6366c1   — hover states
+    Indigo-100  #f0eeff   — tint backgrounds, active nav bg
+    Indigo-50   #faf9ff   — page background end
+
+  NEUTRALS
+    White       #ffffff   — card / surface
+    Gray-600    #888888   — secondary text, placeholders
+    Gray-200    #e8e8f0   — borders
+    Gray-100    #f5f5f8   — input backgrounds
+
+  STATUS COLORS
+    Success     #1a874a / bg #e8f8ee   — Complete
+    Warning     #b8860b / bg #fff8e1   — Medium priority / In-Progress
+    Info        #1a6db8 / bg #e8f4ff   — Upcoming / Low priority
+    Error       #c0345a / bg #fff0f3   — Cancelled / High priority / Emergency
+
+  TYPOGRAPHY
+    Font family : Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif
+    Base size   : 14px
+    Line height : 1.5
+    Weight scale: 400 body · 500 medium · 600 semi · 700 bold · 800 extra-bold
+
+  SHAPE
+    Border radius (inputs / buttons) : 8px
+    Border radius (cards)            : 16px  — applied via custom.css
+    Border radius (chips / badges)   : 12px  — applied via custom.css
+*/
+
+:root {
+    /* ─── PRIMARY / BRAND ────────────────────────────────── */
+    --kendo-color-primary: #3d3d8f;
+    --kendo-color-primary-hover: #6366c1;
+    --kendo-color-primary-active: #1a1a2e;
+    --kendo-color-on-primary: #ffffff;
+    /* ─── BASE (buttons, inputs default state) ───────────── */
+    --kendo-color-base: #f5f5f8;
+    --kendo-color-base-hover: #f0eeff;
+    --kendo-color-base-active: #e0dcfc;
+    --kendo-color-on-base: #1a1a2e;
+    /* ─── SURFACE (popup backgrounds, dropdowns) ─────────── */
+    --kendo-color-surface: #ffffff;
+    --kendo-color-surface-alt: #faf9ff;
+    --kendo-color-on-surface: #1a1a2e;
+    /* ─── APP BACKGROUND ─────────────────────────────────── */
+    --kendo-color-app-surface: #f0eeff;
+    /* ─── BORDER ─────────────────────────────────────────── */
+    --kendo-color-border: #e8e8f0;
+    --kendo-color-border-alt: #d6d0f5;
+    /* ─── TEXT ───────────────────────────────────────────── */
+    --kendo-color-subtle: #888888;
+    /* ─── STATUS: SUCCESS ────────────────────────────────── */
+    --kendo-color-success: #1a874a;
+    --kendo-color-success-hover: #1d6b40;
+    --kendo-color-success-active: #155c35;
+    --kendo-color-on-success: #ffffff;
+    /* ─── STATUS: WARNING ────────────────────────────────── */
+    --kendo-color-warning: #b8860b;
+    --kendo-color-warning-hover: #a07509;
+    --kendo-color-warning-active: #876307;
+    --kendo-color-on-warning: #ffffff;
+    /* ─── STATUS: ERROR ──────────────────────────────────── */
+    --kendo-color-error: #c0345a;
+    --kendo-color-error-hover: #a82c4d;
+    --kendo-color-error-active: #8e2440;
+    --kendo-color-on-error: #ffffff;
+    /* ─── STATUS: INFO ───────────────────────────────────── */
+    --kendo-color-info: #1a6db8;
+    --kendo-color-info-hover: #175fa0;
+    --kendo-color-info-active: #135086;
+    --kendo-color-on-info: #ffffff;
+    /* ─── TYPOGRAPHY ─────────────────────────────────────── */
+    --kendo-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --kendo-font-family-monospace: 'Fira Code', 'Consolas', monospace;
+    --kendo-font-size: 14px;
+    --kendo-font-size-sm: 12px;
+    --kendo-font-size-lg: 16px;
+    --kendo-line-height: 1.5;
+    --kendo-font-weight: 400;
+    --kendo-font-weight-bold: 700;
+    /* ─── SHAPE ──────────────────────────────────────────── */
+    --kendo-border-radius-sm: 4px;
+    --kendo-border-radius-md: 8px;
+    --kendo-border-radius-lg: 12px;
+    --kendo-border-radius-full: 9999px;
+    /* ─── SPACING ────────────────────────────────────────── */
+    --kendo-spacing-1: 4px;
+    --kendo-spacing-2: 8px;
+    --kendo-spacing-3: 12px;
+    --kendo-spacing-4: 16px;
+    /* ─── SHADOW ─────────────────────────────────────────── */
+    --kendo-box-shadow-depth-1: 0 2px 12px rgba(0, 0, 0, 0.07);
+    --kendo-box-shadow-depth-2: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+
+/* ── Grid header ─────────────────────────────────────────────── */
+.k-grid .k-grid-header,
+.k-grid .k-header {
+    background-color: #f8f8fb;
+    color: #888888;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* ── Scheduler ───────────────────────────────────────────────── */
+.k-scheduler .k-scheduler-toolbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e8e8f0;
+}
+
+.k-scheduler .k-nav-current,
+.k-scheduler .k-today {
+    color: #3d3d8f;
+    font-weight: 600;
+}
+
+.k-scheduler .k-scheduler-header-all-day,
+.k-scheduler .k-scheduler-times {
+    background-color: #faf9ff;
+    font-size: 12px;
+    color: #888888;
+}
+
+.k-scheduler .k-today .k-link,
+.k-scheduler .k-today {
+    background-color: #f0eeff;
+    color: #3d3d8f;
+}
+
+.k-scheduler .k-scheduler-date-group .k-link {
+    background-color: #ffffff;
+    color: #1a1a2e;
+}
+
+.k-dialog .k-dialog-content {
+    padding: 20px 24px;
+}
+
+/* ── DropDownList / input widgets ────────────────────────────── */
+.k-input:hover,
+.k-picker:hover {
+    border-color: #6366c1;
+}
+
+.k-input:focus-within,
+.k-picker:focus-within {
+    border-color: #3d3d8f;
+    box-shadow: 0 0 0 3px rgba(61, 61, 143, 0.15);
+}
+
+/* ── ListView ────────────────────────────────────────────────── */
+.k-listview-item {
+    border-bottom: 1px solid #f3f3f7;
+    padding: 0;
+}
+
+    .k-listview-item:last-child {
+        border-bottom: none;
+    }
+
+/* ── Toolbar button group (selected state) ───────────────────── */
+.k-toolbar .k-button-group .k-selected,
+.k-toolbar .k-button-group .k-active {
+    background-color: #f0eeff;
+    color: #3d3d8f;
+    border-color: #d6d0f5;
+}
+
+/* ── AppBar ──────────────────────────────────────────────────── */
+.k-appbar {
+    font-family: var(--kendo-font-family);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.07);
+}
+
+/* ── Chat (AI / Nurse) ───────────────────────────────────────── */
+.k-chat .k-bubble {
+    background-color: #f0eeff;
+    color: #1a1a2e;
+}
+
+.k-chat .k-send-button {
+    background-color: #3d3d8f;
+    color: #ffffff;
+}
+
+    .k-chat .k-send-button:hover {
+        background-color: #6366c1;
+    }

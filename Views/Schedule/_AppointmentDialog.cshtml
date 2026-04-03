@@ -1,0 +1,34 @@
+@model HealthcareApp.Models.AppointmentDialogViewModel
+
+<div class="appt-review@(Model.Expanded ? " is-expanded" : "")">
+    <section class="appt-review-section">
+        <h3 class="appt-review-heading">Appointment time</h3>
+        <div class="appt-review-line">
+            <span class="appt-review-icon appt-icon-date"></span>
+            <span>@Model.Start.ToString("ddd, MMMM d, yyyy")</span>
+        </div>
+        <div class="appt-review-line">
+            <span class="appt-review-icon appt-icon-time"></span>
+            <span>@Model.Start.ToString("h tt") - @Model.End.ToString("h:mm tt")</span>
+        </div>
+        <div class="appt-review-line">
+            <span class="appt-review-icon appt-icon-location"></span>
+            <span>@(string.IsNullOrEmpty(Model.Room) ? "Clinic room pending" : Model.Room)</span>
+        </div>
+        <div class="appt-review-line">
+            <span class="appt-review-icon appt-icon-visit"></span>
+            <span>@(string.IsNullOrEmpty(Model.Reason) ? "In-person visit" : Model.Reason)</span>
+        </div>
+    </section>
+
+    @if (Model.Expanded && Model.Patient != null)
+    {
+        <div class="appt-review-divider"></div>
+        <section class="appt-review-section appt-review-patient">
+            <h3 class="appt-review-heading">Patient Information</h3>
+            <div class="appt-patient-row"><strong>Name:</strong> <span>@Model.Patient.Name</span></div>
+            <div class="appt-patient-row"><strong>Age:</strong> <span>@Model.Patient.Age</span></div>
+            <div class="appt-patient-row"><strong>Gender:</strong> <span>@Model.Patient.Gender</span></div>
+        </section>
+    }
+</div>

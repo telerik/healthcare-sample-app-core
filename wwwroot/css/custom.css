@@ -1,0 +1,4506 @@
+/* ═══════════════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { height: 100%; }
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #FFFFFF;
+    color: #1a1a2e;
+    transition: background 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+
+
+a { text-decoration: none; color: inherit; }
+
+/* ═══════════════════════════════════════════════════════
+   APP BAR
+═══════════════════════════════════════════════════════ */
+.app-appbar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 16px;
+    gap: 10px;
+    height: 76px;
+    background: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.0001);
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.05), 0px 4px 12px -2px rgba(0, 0, 0, 0.08);
+    border-radius: 85px;
+    position: relative;
+    z-index: 100;
+    flex-shrink: 0;
+    width: min(1680px, calc(100% - 32px));
+    margin: 12px auto 0;
+}
+
+.appbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: none;
+}
+
+.appbar-logo-img {
+    height: 33px;
+    width: auto;
+    display: block;
+}
+
+/* Nav — SegmentedControl in the app bar, truly centered in the 3-col grid */
+.appbar-nav {
+    display: flex;
+    justify-content: center;
+    justify-self: center;
+}
+
+/* Container track — Figma: 42px tall, 2px padding, gray gradient pill */
+.appbar-nav .k-segmented-control {
+    height: 42px;
+    background: linear-gradient(0deg, rgba(35, 42, 54, 0.08), rgba(35, 42, 54, 0.08)), #ECEFF3;
+    border-radius: 800px;
+    padding: 2px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: #232A36;
+}
+
+/* Sliding selection indicator — white pill, instant (no slide animation) */
+.appbar-nav .k-segmented-control-thumb {
+    background: #FFFFFF;
+    box-shadow: 0 1px 4px rgba(35, 42, 54, 0.10);
+    transition: none !important;
+}
+
+/* Individual segment buttons */
+.appbar-nav .k-segmented-control-button {
+    padding: 7px 12px;
+    gap: 8px;
+    border-radius: 9999px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #232A36;
+    background: transparent;
+}
+
+.appbar-nav .k-segmented-control-button:hover,
+.appbar-nav .k-segmented-control-button.k-hover {
+    background: rgba(35, 42, 54, 0.05);
+}
+
+.appbar-nav .k-segmented-control-button.k-selected,
+.appbar-nav .k-segmented-control-button.k-selected:hover,
+.appbar-nav .k-segmented-control-button.k-selected.k-hover {
+    background: transparent;
+    color: #232A36;
+}
+
+/* Icons — 16×16 px, inherit dark color */
+.appbar-nav .k-segmented-control-button .k-svg-icon,
+.appbar-nav .k-segmented-control-button .k-icon {
+    width: 16px;
+    height: 16px;
+    color: #232A36;
+}
+
+/* Right section */
+.appbar-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    justify-content: flex-end;
+    justify-self: end;
+    height: 40px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   CONTEXTUAL SEARCH — autocomplete widget
+═══════════════════════════════════════════════════════ */
+/* Hide the bare <input> until Kendo wraps it inside .k-autocomplete */
+#appbar-search:not(.k-input-inner) { opacity: 0; position: absolute; }
+.appbar-right .k-autocomplete {
+    width: 272px;
+    height: 40px;
+    background: #FFFFFF;
+    border: 1px solid rgba(23, 56, 99, 0.08);
+}
+.appbar-right .k-autocomplete:hover,
+.appbar-right .k-autocomplete.k-focus {
+    background: #FFFFFF;
+    border-color: rgba(23, 56, 99, 0.2);
+}
+.appbar-right .k-autocomplete .k-input-prefix .k-icon {
+    color: #4A5666;
+}
+.appbar-right .k-autocomplete .k-input-inner {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: #232A36;
+}
+.appbar-right .k-autocomplete .k-input-inner::placeholder { color: #4A5666; }
+.appbar-right .k-autocomplete .k-input-inner.search-no-match {
+    color: #c0345a;
+    animation: search-shake 0.35s ease;
+}
+
+.k-input-prefix.k-input-prefix-horizontal{
+    margin-left: 10px;
+    margin-top: 2px;
+}
+@keyframes search-shake {
+    0%,100% { transform: translateX(0); }
+    20%      { transform: translateX(-5px); }
+    60%      { transform: translateX(5px); }
+    80%      { transform: translateX(-3px); }
+}
+
+/* Suggestion popup */
+.k-autocomplete-popup.k-popup,
+.k-dropdownlist-popup.k-popup {
+    border-radius: 12px;
+    border: 1px solid #e4e0f5;
+    box-shadow: 0 8px 32px rgba(61,61,143,0.13);
+    background: #fff;
+    overflow: hidden;
+    min-width: 280px;
+}
+.k-autocomplete-popup .k-list-item,
+.k-dropdownlist-popup .k-list-item {
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: background 0.12s;
+}
+.k-autocomplete-popup .k-list-item:hover,
+.k-autocomplete-popup .k-list-item.k-selected,
+.k-dropdownlist-popup .k-list-item:hover,
+.k-dropdownlist-popup .k-list-item.k-selected {
+    background: #f0eeff;
+}
+
+/* Two-line result rows */
+.search-result-item {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    padding: 2px 0;
+}
+.search-result-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1a2e;
+    line-height: 1.3;
+}
+.search-result-sub {
+    font-size: 11px;
+    color: #888;
+    line-height: 1.3;
+}
+
+.icon-btn {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.0001);
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    color: #232A36;
+    transition: background 0.15s;
+    flex-shrink: 0;
+}
+.icon-btn svg { width: 16px; height: 16px; display: block; }
+.icon-btn:hover { background: rgba(23, 56, 99, 0.06); }
+
+/* Notification button keeps square corners per Figma */
+#notif-btn.icon-btn { border-radius: 4px; }
+
+.notif-wrap { position: relative; display: inline-flex; }
+
+.appbar-sep {
+    width: 1px;
+    height: 20px;
+    background: rgba(23, 56, 99, 0.08);
+    flex-shrink: 0;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 9999px;
+    object-fit: cover;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: opacity 0.15s;
+    padding: 0px;
+}
+.avatar:hover { opacity: 0.85; }
+
+/* ═══════════════════════════════════════════════════════
+   PAGE BODY — TWO COLUMN LAYOUT
+═══════════════════════════════════════════════════════ */
+.page-body {
+    display: grid;
+    grid-template-columns: 1fr 600px;
+    gap: 20px;
+    padding: 12px 16px 24px;
+    max-width: 1680px;
+    margin: 0 auto;
+}
+
+/* Left column — mirrors col-side so Appointments card stretches to match Alerts card */
+.col-main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+.col-main .appointments-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    margin-bottom: 0;
+}
+
+.col-side {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+}
+
+.next-patient-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    position: relative;
+    border-radius: 16px;
+    overflow: visible;
+    margin-bottom: 0px !important;
+}
+
+.next-patient-card > .k-card-header {
+    padding: 20px 20px 10px;
+    border: none;
+}
+
+.next-patient-card > .k-card-header > .k-card-title {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.5;
+    color: #232A36;
+    margin: 0;
+}
+
+.next-patient-card > .k-card-body {
+    padding: 10px 20px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: none;
+}
+
+.next-patient-card > .k-card-separator {
+    margin: 0 20px;
+}
+
+.np-alerts-body.k-card-body {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #4A5666 transparent;
+}
+
+.np-alerts-body::-webkit-scrollbar        { width: 5px; }
+.np-alerts-body::-webkit-scrollbar-track  { background: transparent; }
+.np-alerts-body::-webkit-scrollbar-thumb  { background: #4A5666; opacity: 0.5; border-radius: 12px; }
+
+#alerts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PAGE HEADERS — persistent, outside scroll container
+═══════════════════════════════════════════════════════ */
+#page-headers {
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    margin-top: -40px;
+    padding-top: 40px;
+}
+
+#page-headers .page-header {
+    display: none;          /* toggled by JS via .active */
+}
+
+#page-headers .page-header.active {
+    display: block;
+    margin-top: 30px;
+}
+
+#page-headers .page-header.active.patients-page-header,
+#page-headers .page-header.active.analytics-page-header {
+    display: flex;
+}
+
+#page-content {
+    transition: opacity 0.15s ease;
+    position: relative;
+    overflow-x: clip;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+}
+
+#page-content::before {
+    content: "";
+    position: fixed;
+    width: 3233.52px;
+    height: 1015.11px;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    background: conic-gradient(from 269.87deg at 47.29% 49.93%, #e5bdcf 0deg, #d2c2e0 166.15deg, #c5c0e8 226.73deg, #a8aae5 308.08deg, #b7bff0 351.35deg, #e5bdcf 360deg);
+    filter: blur(150px);
+    transform: rotate(-15.79deg);
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 0;
+}
+
+#page-content > * {
+    position: relative;
+    z-index: 1;
+}
+
+#page-content.page-dimmed::before {
+    opacity: 0.35;
+}
+
+#page-content:has(.patients-breadcrumb) {
+    padding: 0 0 32px;
+}
+
+#page-content.page-loading {
+    opacity: 0;
+    pointer-events: none;
+}
+
+@keyframes page-fade-in {
+    to { opacity: 1; pointer-events: auto; }
+}
+
+#page-content.page-ready {
+    animation: page-fade-in 0.15s ease forwards;
+}
+
+/* AppBar — translucent background when dimmed */
+.app-appbar.page-dimmed {
+    background: linear-gradient(179.48deg, rgba(255, 255, 255, 0.2) 0.02%, rgba(255, 255, 255, 0.5) 99.11%);
+    transition: background 0.3s ease;
+}
+
+/* Settings toggle — dim grid chrome (scheduler handled in the schedule-page
+   section below, after base .sched-card rules, so specificity wins) */
+.page-dimmed .k-grid-header,
+.page-dimmed .k-grid-footer,
+.page-dimmed .k-grid-pager {
+    background-color: rgba(239, 232, 239, 0.72);
+    transition: background-color 0.3s ease;
+}
+
+/* schedule-body — transparent so the page background (blur orb) shows through */
+.page-dimmed .schedule-body {
+    background: transparent;
+}
+
+/* appointments-card — tint the card and its header, but keep grid content rows clear */
+.page-dimmed .appointments-card {
+    position: relative;
+    isolation: isolate;
+}
+
+.page-dimmed .appointments-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: rgba(239, 232, 239, 0.66);
+    pointer-events: none;
+    z-index: 1;
+    transition: background-color 0.3s ease;
+}
+
+.page-dimmed .appointments-card .k-grid-content,
+.page-dimmed .appointments-card .k-grid-content td,
+.page-dimmed #btn-view-schedule,
+.page-dimmed img {
+    position: relative;
+    z-index: 2;
+}
+
+/* Card dimming uses transparent overlays so selected nested content can stay
+   fully visible while the surrounding surface picks up the blush tint. */
+.page-dimmed .quick-actions-card,
+.page-dimmed .next-patient-card,
+.page-dimmed .next-patient-card > .k-card-header,
+.page-dimmed .next-patient-card > .k-card-body,
+.page-dimmed .next-patient-card > .k-card-footer,
+.page-dimmed .next-patient-card > .k-card-separator,
+.page-dimmed .tasks-card,
+.page-dimmed .tasks-card-header,
+.page-dimmed .tasks-filter-row,
+.page-dimmed .patient-detail-row,
+.page-dimmed #tasks-list{
+    isolation: isolate;
+}
+
+/* Quick actions — tint the card surface but keep shortcut cards clear. */
+.page-dimmed .quick-actions-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: rgba(239, 232, 239, 0.66);
+    pointer-events: none;
+    z-index: 1;
+    transition: background-color 0.3s ease;
+}
+
+.page-dimmed .quick-actions-card .shortcut-card, .page-dimmed .alert-card {
+    position: relative;
+    z-index: 2;
+}
+
+/* Next patient — contain each ::after within its own element so the overlay
+   does not spill onto the card-body (and the detail rows). */
+.page-dimmed .next-patient-card > .k-card-header,
+.page-dimmed .next-patient-card > .k-card-footer,
+.page-dimmed .next-patient-card > .k-card-separator {
+    position: relative;
+}
+
+.page-dimmed .next-patient-card > .k-card-header::after,
+.page-dimmed .next-patient-card > .k-card-footer::after,
+.page-dimmed .next-patient-card > .k-card-separator::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: rgba(239, 232, 239, 0.66);
+    pointer-events: none;
+    z-index: 1;
+    transition: background-color 0.3s ease;
+}
+
+/* Card body uses background-color directly so .patient-detail-row elements
+   (which have their own solid white background) naturally appear undimmed —
+   no z-index stacking required. Both scrollable and non-scrollable body
+   sections use this same approach for consistency. */
+.page-dimmed .next-patient-card > .k-card-body:not(.np-alerts-body),
+.page-dimmed .next-patient-card > .np-alerts-body {
+    background-color: rgba(239, 232, 239, 0.66);
+    transition: background-color 0.3s ease;
+}
+
+/* Tasks card — tint the header and list container surfaces, but keep task
+   items clear. */
+.page-dimmed .tasks-card-header::after,
+.page-dimmed .tasks-filter-row::after,
+.page-dimmed #tasks-list::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: rgba(239, 232, 239, 0.66);
+    pointer-events: none;
+    z-index: 1;
+    transition: background-color 0.3s ease;
+}
+
+.page-dimmed .tasks-card .k-listview-item {
+    position: relative;
+    z-index: 2;
+}
+
+/* Tasks card header — keep title, search, and add button above the overlay */
+.page-dimmed .tasks-card-header > * {
+    position: relative;
+    z-index: 2;
+}
+
+.home-greeting {
+    padding: 0 16px 20px;
+    max-width: 1680px;
+    margin: 0 auto;
+}
+
+@media (max-width: 960px) {
+    .page-body { grid-template-columns: 1fr; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   CARDS
+═══════════════════════════════════════════════════════ */
+.card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.04), 0px 2px 6px -1px rgba(0, 0, 0, 0.06);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* Override Kendo's k-card defaults to match our design system */
+.k-card {
+    border-radius: 16px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.04), 0px 2px 6px -1px rgba(0, 0, 0, 0.06);
+    margin-bottom: 20px;
+    border: none;
+    background: #fff;
+}
+.k-card > .k-card-header {
+    border-bottom: none;
+}
+
+.card-title, .k-card-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 16px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   GREETING
+═══════════════════════════════════════════════════════ */
+.greeting {
+    margin-bottom: 16px;
+}
+.greeting h1 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #1a1a2e;
+    line-height: 1.2;
+}
+.greeting p {
+    font-size: 14px;
+    color: #888;
+    margin-top: 6px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   QUICK ACTIONS
+═══════════════════════════════════════════════════════ */
+.shortcut-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+@media (max-width: 700px) {
+    .shortcut-grid { grid-template-columns: 1fr; }
+}
+
+.shortcut-card {
+    border: 1px solid #eee;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #F1F5F9;
+    transition: box-shadow 0.15s;
+}
+.shortcut-card:hover { box-shadow: 0 4px 16px rgba(61,61,143,0.1); }
+
+.shortcut-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.shortcut-icon {
+    width: 32px;
+    height: 32px;
+    color: #bbb;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+.shortcut-card:hover .shortcut-icon {
+    transform: scale(1.18);
+}
+
+.shortcut-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1a2e;
+    line-height: 1.3;
+}
+.shortcut-desc {
+    font-size: 12px;
+    color: #888;
+    margin-top: 2px;
+}
+
+.shortcut-add-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: auto !important;
+    min-width: 36px;
+    height: 36px !important;
+    align-self: flex-start;
+    padding: 0 10px !important;
+    border: 1px solid #1a1a2e !important;
+    overflow: hidden;
+    white-space: nowrap;
+    background: #1a1a2e !important;
+    transition: background 0.18s ease, border-color 0.18s ease !important;
+}
+.shortcut-add-btn .btn-label,
+.shortcut-add-btn .k-button-text {
+    display: none;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+.shortcut-add-btn:hover {
+    background: #3d3d8f !important;
+    border-color: #3d3d8f !important;
+}
+.shortcut-add-btn:hover .btn-label,
+.shortcut-add-btn:hover .k-button-text,
+.shortcut-add-btn:focus-visible .btn-label,
+.shortcut-add-btn:focus-visible .k-button-text {
+    display: inline-block;
+}
+
+/* Quick actions card — k-card-header + k-card-body padding */
+.quick-actions-card > .k-card-header {
+    padding: 20px 20px 0;
+}
+.quick-actions-card > .k-card-body {
+    padding: 16px 20px 20px;
+}
+
+/* Appointments card — k-card-header replaces appointments-header outer spacing */
+.appointments-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 20px 16px;
+}
+.col-main .appointments-card > .k-card-body {
+    flex: 1;
+    padding: 0 20px 20px;
+    min-height: 0;
+}
+
+/* Shortcut cards — k-card sub-element padding */
+.shortcut-card.k-card {
+    border: 1px solid #eee;
+    padding: 0;
+    gap: 0;
+    background: #f9fafb;
+}
+.shortcut-card .k-card-body {
+    padding: 16px 16px 0;
+    flex: 1;
+}
+.shortcut-card .k-actions.k-card-actions {
+    padding: 12px 16px 16px;
+    border-top: none;
+    justify-content: flex-start;
+}
+.appointments-header .card-title, .appointments-header .k-card-title { margin-bottom: 0; }
+
+.view-schedule-btn {
+    background: #1a1a2e !important;
+}
+.view-schedule-btn:hover { background: #3d3d8f !important; }
+
+/* Grid overrides */
+#appointments-grid .k-grid {
+    border: 0px solid rgba(23, 56, 99, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.0001);
+}
+#appointments-grid .k-grid-header th {
+    background: #F9FAFB;
+    font-size: 14px;
+    font-weight: 500;
+    color: #232A36;
+    border-bottom: 1px solid rgba(23, 56, 99, 0.08);
+    padding: 8px 12px;
+    height: 37px;
+}
+#appointments-grid .k-grid-content td {
+    font-size: 14px;
+    font-weight: 400;
+    color: #232A36;
+    padding: 8px 12px;
+    border-bottom: none;
+    vertical-align: middle;
+    height: 42px;
+    background: #FFFFFF;
+}
+#appointments-grid .k-grid-content tr.k-alt td,
+#appointments-grid .k-grid-content tr:nth-child(even) td {
+    background: linear-gradient(0deg, rgba(56, 66, 80, 0.05), rgba(56, 66, 80, 0.05)), #FFFFFF;
+}
+#appointments-grid .k-grid-content tr:hover td {
+    background: rgba(56, 66, 80, 0.08) !important;
+}
+/* Status badge pill dimensions */
+#appointments-grid .k-badge {
+    height: 30px;
+    padding: 4px 8px;
+    font-weight: 400;
+    line-height: 1;
+}
+
+/* Keep badge text consistent across Kendo size variants. */
+.k-badge,
+.k-badge.k-badge-sm,
+.k-badge.k-badge-md,
+.k-badge.k-badge-lg,
+.k-badge.k-badge-xl {
+    font-size: 12px;
+}
+
+.k-badge.k-badge-inline.k-badge-tertiary {   
+    background: #FDF6FF;
+    border: 1px solid #DDB5FB;
+    color: #37164B;
+}
+
+.k-badge.k-badge-inline.k-badge-info {    
+    background: #D2E2FB;
+    border: 1px solid #6098F2;
+    color: #002259;
+}
+
+.k-badge.k-badge-inline.k-badge-secondary {    
+    background: #EBECFF;
+    border: 1px solid #D4D6FF;
+    color: #383BA8;
+}
+
+
+.k-grid .k-badge.k-badge-success, .k-grid .k-badge.k-badge-success:hover {
+    background: #EAEFF5;
+    border: 1px solid #CBD5E1;
+    color: #000214;
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   NEXT PATIENT
+═══════════════════════════════════════════════════════ */
+.next-patient-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.patient-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.patient-info { flex: 1; }
+
+.patient-name-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.patient-name {
+    font-size: 20px;
+    font-weight: 400;
+    color: #232A36;
+    line-height: 1.5;
+}
+
+.view-profile-link {
+    font-size: 14px;
+    color: #4A5666;
+    font-weight: 400;
+    line-height: 1.42;
+}
+.view-profile-link:hover { text-decoration: underline; }
+
+.patient-meta {
+    font-size: 14px;
+    color: #4A5666;
+    margin-top: 0;
+    line-height: 1.42;
+}
+
+.appt-time {
+    text-align: right;
+    flex-shrink: 0;
+}
+.appt-time-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #4A5666;
+    line-height: 1.42;
+}
+.appt-time-icon {
+    width: 16px;
+    height: 16px;
+    color: #4A5666;
+}
+.appt-time-sub {
+    font-size: 14px;
+    color: #4A5666;
+    line-height: 1.42;
+}
+
+/* Detail rows (reason for visit, allergy) */
+.patient-detail-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background-color: #FFFFFF;
+    border: 1px solid rgba(23, 56, 99, 0.08);
+    border-radius: 12px;
+}
+
+.detail-icon-image {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+.detail-body { flex: 1; }
+.detail-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #3D3D3D;
+    line-height: 1.5;
+}
+.detail-value {
+    font-size: 14px;
+    color: #4A5666;
+    margin-top: 2px;
+    line-height: 1.42;
+}
+
+.detail-link {
+    font-size: 14px;
+    color: #4A5666;
+    white-space: nowrap;
+    line-height: 1.42;
+}
+.detail-link:hover { color: #232A36; }
+
+.next-patient-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+.next-patient-actions .k-button {
+    flex: 1;
+    font-size: 13px !important;
+}
+
+/* ═══════════════════════════════════════════════════════
+   DAILY ALERTS
+═══════════════════════════════════════════════════════ */
+
+/* Daily alert Kendo Card overrides */
+.alert-card {
+    border-left: 4px solid #CBD5E1;
+    border-radius: 8px;
+    background: #F1F5F9;
+    border-top: 1px solid rgba(23, 56, 99, 0.08);
+    border-right: 1px solid rgba(23, 56, 99, 0.08);
+    border-bottom: 1px solid rgba(23, 56, 99, 0.08);
+    box-shadow: none;
+}
+.alert-card:last-child { margin-bottom: 0; }
+
+.alert-card-body {
+    padding: 8px 16px !important;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.alert-card-title {
+    font-size: 16px !important;
+    font-weight: 400;
+    color: #232A36;
+    margin: 0 !important;
+    line-height: 1.5;
+}
+.alert-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.alert-card-time {
+    font-size: 14px;
+    color: #4A5666;
+    line-height: 1.42;
+}
+
+.alert-review {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    color: #334155;
+    white-space: nowrap;
+    cursor: pointer;
+    line-height: 1.42;
+}
+.alert-review:hover { color: #232A36; }
+.alert-review svg { vertical-align: middle; }
+
+/* ═══════════════════════════════════════════════════════
+   DIALOG CONTENT
+═══════════════════════════════════════════════════════ */
+.dialog-field {
+    margin-bottom: 18px;
+}
+.dialog-field:last-child { margin-bottom: 0; }
+.dialog-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 6px;
+}
+
+.note-textarea {
+    width: 100%;
+    min-height: 140px;
+    border: 1px solid #d8d8e8;
+    border-radius: 6px;
+    padding: 12px 14px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #333;
+    background: #fff;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.15s;
+    line-height: 1.6;
+}
+.note-textarea::placeholder {
+    color: #aaa;
+    font-size: 13.5px;
+}
+.note-textarea:focus {
+    border-color: #3d3d8f;
+    box-shadow: 0 0 0 3px rgba(61,61,143,0.08);
+}
+
+/* ── Lab test checkbox list ──────────────────────────── */
+.lab-search-wrap {
+    position: relative;
+    margin-bottom: 10px;
+}
+.lab-test-search {
+    width: 100%;
+    border: 1px solid #d8d8e8;
+    border-radius: 6px;
+    padding: 9px 36px 9px 12px;
+    font-size: 13.5px;
+    font-family: inherit;
+    color: #333;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.15s;
+}
+.lab-test-search:focus { border-color: #3d3d8f; box-shadow: 0 0 0 3px rgba(61,61,143,0.08); }
+.lab-test-search::placeholder { color: #aaa; }
+.lab-search-clear {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #999;
+    line-height: 1;
+    padding: 0;
+}
+.lab-search-clear:hover { color: #333; }
+.lab-test-list {
+    border: 1px solid #d8d8e8;
+    border-radius: 6px;
+    max-height: 280px;
+    overflow-y: auto;
+}
+.lab-test-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f6;
+    transition: background 0.12s;
+    user-select: none;
+}
+.lab-test-item:last-child { border-bottom: none; }
+.lab-test-item:hover { background: #f5f5fb; }
+.lab-test-item.selected { background: #f0f0fb; }
+.lab-test-check {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    border: 2px solid #c8c8d8;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    transition: border-color 0.12s, background 0.12s;
+}
+.lab-test-item.selected .lab-test-check {
+    background: #3d3d8f;
+    border-color: #3d3d8f;
+}
+.lab-chk-tick {
+    color: #fff;
+    font-size: 13px;
+    line-height: 1;
+}
+.lab-test-name {
+    font-size: 13.5px;
+    color: #333;
+}
+.lab-test-empty {
+    padding: 16px;
+    font-size: 13px;
+    color: #999;
+    text-align: center;
+}
+
+/* Nurse message form */
+.nurse-msg-form { display: flex; flex-direction: column; gap: 16px; padding: 4px 0; }
+.nurse-msg-field { display: flex; flex-direction: column; gap: 6px; }
+.nurse-msg-label { font-size: 13px; font-weight: 600; color: #1a1a2e; }
+.nurse-msg-input {
+    width: 100%;
+    height: 38px;
+    padding: 0 12px;
+    border: 1px solid #e8e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #1a1a2e;
+    background: #fff;
+    outline: none;
+}
+.nurse-msg-input:focus { border-color: #6366c1; box-shadow: 0 0 0 2px rgba(99,102,193,0.15); }
+.nurse-msg-textarea {
+    width: 100%;
+    min-height: 160px;
+    padding: 12px;
+    border: 1px solid #e8e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #1a1a2e;
+    background: #fff;
+    resize: vertical;
+    outline: none;
+    font-family: inherit;
+    line-height: 1.6;
+}
+.nurse-msg-textarea:focus { border-color: #6366c1; box-shadow: 0 0 0 2px rgba(99,102,193,0.15); }
+.nurse-msg-form .k-multicolumncombobox,
+.nurse-msg-form .k-input { width: 100%; }
+
+/* ═══════════════════════════════════════════════════════
+   FLOATING AI ASSISTANT
+═══════════════════════════════════════════════════════ */
+/* Visual overrides — positioning handled by kendoFloatingActionButton */
+#ai-float-btn {
+    width: 64px !important;
+    height: 64px !important;
+    background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%) !important;
+    border-color: transparent !important;
+    box-shadow: 0 6px 24px rgba(99, 102, 241, 0.45) !important;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+#ai-float-btn:hover {
+    transform: scale(1.07);
+    box-shadow: 0 8px 32px rgba(99, 102, 241, 0.58) !important;
+}
+#ai-float-btn .k-button-icon {
+    color: white !important;
+    font-size: 24px !important;
+}
+
+.k-chat .k-message-list-content, .k-message-list, .k-message-box-wrapper {
+    background-color: white;
+}
+/* AI dialog anchored above FAB (bottom-right of right column) */
+.ai-dialog-wrapper {
+    position: fixed !important;
+    bottom: 90px !important;
+    right: 28px !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    z-index: 199;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+}
+
+
+.ai-dialog-wrapper .k-window-content,
+.ai-dialog-wrapper .k-content {
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+#ai-chat {
+    flex: 1;
+    min-height: 0;
+}
+
+#ai-chat .k-chat {
+    height: 100%;
+}
+
+.close-chat {
+    cursor: pointer;
+}
+
+.k-chat .k-icon.k-svg-i-sparkles,
+.ai-chat-button svg path {
+    color: #6610f2;
+    fill: #6610f2;
+}
+
+.k-svg-i-ai-sparkles.k-svg-icon.k-icon {
+    width: 32px;
+    height: 32px;
+}
+
+
+/* Sender / receiver layout */
+#ai-chat .k-message-group-sender {
+    justify-content: flex-end;
+}
+#ai-chat .k-message-group-sender .k-message-group-content {
+    align-items: flex-end;
+}
+#ai-chat .k-message-group-receiver {
+    justify-content: flex-start;
+}
+#ai-chat .k-message-group-receiver .k-message-group-content {
+    align-items: flex-start;
+}
+
+/* Bot (receiver) messages — strip ALL bubble styling, show flat text on the left */
+#ai-chat .k-message-group-receiver .k-chat-bubble {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    min-height: 0 !important;
+}
+#ai-chat .k-message-group-receiver .k-message-box,
+#ai-chat .k-message-group-receiver .k-message-box-wrapper,
+#ai-chat .k-message-group-receiver .k-chat-bubble .k-bubble-content {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+/* Hide the empty avatar circle when no iconUrl is set */
+#ai-chat .k-message-group-receiver .k-avatar {
+    display: none;
+}
+/* Bot message text — left-aligned, no bubble */
+#ai-chat .k-message-group-receiver .ai-msg-content {
+    display: block;
+    max-width: 100%;
+    font-size: 16px;
+    color: #1a1a2e;
+}
+/* User (sender) messages — styled bubbles on the right */
+#ai-chat .k-message-group-sender .ai-msg-content {
+    display: block;
+    max-width: 280px;
+    background: #3d3d8f;
+    color: #fff;
+    border-radius: 12px;
+    padding: 8px 14px;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* ── AI Patient Summary — no-bubble flat card ─── */
+.ai-summary-msg {
+    padding: 4px 2px;
+}
+
+.ai-pt-intro {
+    margin: 0 0 12px;
+    font-size: 16px;
+    color: #374151;
+    line-height: 1.6;
+}
+.ai-patient-card p {
+    margin: 5px 0;
+    font-size: 13px;
+    color: #1a1a2e;
+    line-height: 1.6;
+}
+.ai-patient-card p strong {
+    font-weight: 700;
+}
+.ai-pt-section {
+    margin-top: 10px !important;
+    margin-bottom: 2px !important;
+}
+.ai-pt-history {
+    margin: 2px 0 0 16px;
+    padding: 0;
+    list-style: disc;
+}
+.ai-pt-history li {
+    font-size: 13px;
+    color: #374151;
+    line-height: 1.65;
+}
+/* Feedback action row */
+.ai-feedback-actions {
+    display: flex;
+    gap: 4px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #f0f0f5;
+}
+.ai-feedback-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #fff;
+    color: #6b7280;
+    cursor: pointer;
+    transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+.ai-feedback-btn:hover {
+    background: #f5f3ff;
+    border-color: #c4b5fd;
+    color: #7c3aed;
+}
+
+/* Badge */
+#notif-badge {
+    position: absolute;
+    top: 2px;
+    left: 17px;
+}
+
+/* ── Notifications dropdown ─────────────────────── */
+.notif-wrap { position: relative; }
+
+.np-dropdown {
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(61,61,143,.18), 0 2px 8px rgba(0,0,0,.08);
+    overflow: hidden;
+    border: 1px solid #e8e6f4;
+    position: absolute;
+    z-index: 10002;
+    top: calc(100% + 8px);
+    right: -40px;
+    width: 380px;
+    background: #fff;
+    display: none;
+}
+.np-dropdown.np-open {
+    display: block;
+}
+.np-dropdown .np-header,
+.np-dropdown .np-list {
+    /* content already styled below */
+}
+
+.np-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid #eeedf8;
+}
+.np-title { font-size: 18px; font-weight: 700; color: #1a1a2e; }
+.np-mark-all {
+    background: none; border: none; cursor: pointer;
+    font-size: 14px; color: #444; font-weight: 400;
+    padding: 0; text-decoration: none;
+}
+.np-mark-all:hover { color: #1a1a2e; text-decoration: underline; }
+.np-all-read { font-size: 14px; color: #1a874a; font-weight: 400; }
+
+.np-list { max-height: 400px; overflow-y: auto; }
+
+/* Notification card overrides */
+.np-card {
+    border: none;
+    border-bottom: 1px solid #f0eff8;
+    border-radius: 0;
+    box-shadow: none;
+    cursor: default;
+    transition: background .1s;
+}
+.np-card:last-child { border-bottom: none; }
+.np-card:hover { background: #f9f8ff; }
+.np-card-read { opacity: .6; }
+
+.np-card-icon {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 12px 0 12px 12px;
+    background: none;
+    border: none;
+}
+.np-bell-img {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    border-radius: 14px;
+}
+
+.np-card-body { padding: 12px 12px 12px 14px !important; min-width: 0; }
+.np-card-title { font-size: 14px !important; font-weight: 700; color: #1a1a2e; margin: 0 0 2px !important; }
+.np-card-subtitle {
+    font-size: 12px !important;
+    color: #666;
+    margin: 0 !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.np-card-time {
+    font-size: 12px;
+    color: #999;
+    white-space: nowrap;
+    padding: 12px 14px 12px 0;
+    align-self: center;
+    flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════════
+   SCHEDULE PAGE
+═══════════════════════════════════════════════════════ */
+.schedule-body {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 20px 16px;
+    max-width: 1680px;
+    margin: 0 auto;
+}
+@media (max-width: 1060px) {
+    .schedule-body { flex-direction: column; }
+}
+
+.schedule-main {
+    flex: 1 1 1038px;
+    min-width: 0;
+}
+
+.schedule-side {
+    flex: 0 0 610px;
+    width: 610px;
+}
+
+.sched-card {
+    padding: 0;
+    margin-bottom: 0;
+    border-radius: 16px;
+    border: 1px solid rgba(23, 56, 99, 0.08);
+    box-shadow: 0px 2px 6px -1px rgba(0, 0, 0, 0.06), 0px 1px 3px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+}
+.sched-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+.sched-card .k-scheduler {
+    border: none;
+    border-radius: 0;
+}
+
+/* ── Scheduler Toolbar ── */
+.sched-card .k-scheduler-toolbar {
+    background: #F9FAFB !important;
+    border-bottom: 1px solid rgba(23, 56, 99, 0.08) !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    padding: 8px !important;
+    min-height: 47px;
+    border-radius: 0;
+}
+
+.sched-card .k-scheduler-toolbar .k-button,
+.sched-card .k-scheduler-toolbar .k-nav-current {
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    color: #232A36 !important;
+}
+
+/* ── View switcher (SegmentedControl) ── */
+.sched-card .k-scheduler-views-wrapper {
+    background: linear-gradient(0deg, rgba(35, 42, 54, 0.08), rgba(35, 42, 54, 0.08)), #ECEFF3 !important;
+    border-radius: 800px !important;
+    padding: 2px !important;
+    border: none !important;
+}
+
+.sched-card .k-scheduler-views-wrapper .k-button {
+    border-radius: 9999px !important;
+    background: transparent !important;
+    border: none !important;
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    color: #232A36 !important;
+    padding: 3px 12px !important;
+}
+
+.sched-card .k-scheduler-views-wrapper .k-button.k-selected,
+.sched-card .k-scheduler-views-wrapper .k-button:hover {
+    background: #FFFFFF !important;
+    box-shadow: none !important;
+    color: #232A36 !important;
+}
+
+/* ── Day header cells ── */
+.sched-card .k-scheduler-header th,
+.sched-card .k-scheduler-header .k-scheduler-table th {
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    color: #232A36 !important;
+    border-color: rgba(23, 56, 99, 0.08) !important;
+    background: #FFFFFF !important;
+}
+
+/* ── All scheduler cell borders & backgrounds ── */
+.sched-card .k-scheduler-table td,
+.sched-card .k-scheduler-table th {
+    border-color: rgba(23, 56, 99, 0.08) !important;
+    background: #FFFFFF !important;
+}
+
+/* ── Time label column ── */
+.sched-card .k-scheduler-times td,
+.sched-card .k-scheduler-times th {
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    color: #232A36 !important;
+    text-align: right !important;
+}
+
+/* ── Half-hour slot: dashed border at the 30-min mark ── */
+.sched-card .k-scheduler-content .k-scheduler-table tr:nth-child(odd) td {
+    border-bottom: 1px dashed rgba(23, 56, 99, 0.08) !important;
+}
+
+/* ── Full-hour boundary: solid border ── */
+.sched-card .k-scheduler-content .k-scheduler-table tr:nth-child(even) td {
+    border-bottom: 1px solid rgba(23, 56, 99, 0.08) !important;
+}
+
+/* ── Footer toolbar ── */
+.sched-card .k-scheduler-footer {
+    background: #F9FAFB !important;
+    border-top: 1px solid rgba(23, 56, 99, 0.08) !important;
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    padding: 8px !important;
+    min-height: 47px;
+    border-radius: 0;
+}
+
+.sched-card .k-scheduler-footer .k-nav-today {
+    border: 1px solid #232A36 !important;
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    color: #232A36 !important;
+    background: transparent !important;
+}
+
+/* Event card inside scheduler — Figma spec */
+.sched-card .k-event {
+    border-left: 8px solid #6366FB !important;
+    border-top: none !important;
+    border-right: none !important;
+    border-bottom: none !important;
+    border-radius: 8px;
+    background-color: #D4D6FF;
+    box-shadow: none;
+    padding: 8px;
+}
+
+/* Follow-up event — lighter background + hatched left border */
+.sched-card .k-event:has(.sched-ev-followup) {
+    border-left: none !important;
+    background-color: #F5F6FF;
+    padding-left: 16px;
+    overflow: hidden;
+}
+
+.sched-card .k-event:has(.sched-ev-followup)::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 8px;
+    background-color: #6366FB;
+    border-radius: 8px 0 0 8px;
+    background-image: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 2px,
+        rgba(255, 255, 255, 0.65) 2px,
+        rgba(255, 255, 255, 0.65) 4px
+    );
+}
+
+.sched-ev {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    height: 100%;
+    overflow: hidden;
+}
+
+.sched-ev-title {
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 17px;
+    color: #1C1D5B;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sched-ev-meta {
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.33;
+    color: #6366FB;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ═══════════════════════════════════════════════════════
+   SCHEDULE PAGE — DIM MODE OVERRIDES
+   Uses the same ::after overlay that works on the home page.
+   .k-scheduler-layout is elevated above the overlay so the
+   calendar content stays fully visible while the card chrome
+   (toolbar / header / footer) is covered by the tint.
+═══════════════════════════════════════════════════════ */
+
+.page-dimmed .sched-card {
+    position: relative;
+    isolation: isolate;
+}
+
+.page-dimmed .sched-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: rgba(239, 232, 239, 0.66);
+    pointer-events: none;
+    z-index: 1;
+    transition: background-color 0.3s ease;
+}
+
+.page-dimmed .k-scheduler-toolbar::before,
+.page-dimmed .k-scheduler-toolbar {
+    z-index: 1;
+    background-color: unset !important;
+}
+
+
+/* Keep the scheduler layout (content area) above the overlay */
+/* Keep the scheduler toolbar visible above the overlay */
+.page-dimmed .sched-card .k-scheduler-layout,
+.page-dimmed .tasks-card-header {
+    position: relative;
+    z-index: 2;
+}
+
+/* Tasks card on the schedule page — same overlay pattern */
+.page-dimmed .schedule-body .tasks-card {
+    position: relative;
+    isolation: isolate;
+}
+
+/* ═══════════════════════════════════════════════════════
+   TASKS PANEL
+═══════════════════════════════════════════════════════ */
+.tasks-card {
+    padding: 0;
+    margin-bottom: 0;
+    overflow: hidden;
+    border-radius: 16px;
+    max-height: 890px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.04), 0px 2px 6px -1px rgba(0, 0, 0, 0.06);
+    background: #FFFFFF;
+}
+
+.tasks-card-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 20px 20px 10px;
+    gap: 16px;
+}
+
+.tasks-filter-row {
+    padding: 0 20px 12px;
+    display: flex;
+    align-items: center;
+}
+
+.tasks-card-title {
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 150%;
+    color: #232A36;
+    flex: 1;
+    margin: 0;
+}
+
+.tasks-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.tasks-search-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    height: 40px;
+    border: 1px solid rgba(23, 56, 99, 0.08);
+    border-radius: 9999px;
+    padding: 2px 8px;
+    background: #fff;
+}
+
+.tasks-search-icon {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+}
+
+.tasks-search-input {
+    border: none;
+    outline: none;
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-size: 14px;
+    color: #4A5666;
+    background: transparent;
+    width: 148px;
+    padding: 4px 8px;
+}
+
+.tasks-search-input::placeholder { color: #4A5666; }
+
+.tasks-add-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 42px;
+    padding: 0 13px;
+    border-radius: 9999px;
+    background: #334155;
+    border: 1px solid #334155;
+    cursor: pointer;
+    flex-shrink: 0;
+    overflow: hidden;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.tasks-add-label,
+.tasks-add-btn .k-button-text {
+    display: none;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.tasks-add-btn:hover { background: #1e2d3d; border-color: #1e2d3d; }
+
+.tasks-add-btn:hover .tasks-add-label,
+.tasks-add-btn:hover .k-button-text,
+.tasks-add-btn:focus-visible .tasks-add-label,
+.tasks-add-btn:focus-visible .k-button-text {
+    display: inline-block;
+}
+
+#tasks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px 20px 20px;
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+}
+
+/* ── Task item card ── */
+.task-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 10px;
+    padding: 16px;
+    border: 1px solid rgba(23, 56, 99, 0.08);
+    border-radius: 12px;
+    background: #fff;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: box-shadow 0.15s, background 0.15s;
+}
+
+.task-item:hover {
+    background: #f8f9ff;
+    box-shadow: 0 2px 8px rgba(61, 61, 143, 0.08);
+}
+
+/* Task checkbox — Kendo CheckBox overrides for circular style */
+.task-item .k-checkbox {
+    border-radius: 9999px;
+    border-color: rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
+}
+
+.task-item .k-checkbox:checked {
+    background-color: #334155;
+    border-color: #334155;
+}
+
+.task-text {
+    flex: 1;
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 150%;
+    color: #232A36;
+}
+
+.task-done .task-text {
+    text-decoration: line-through;
+    opacity: 0.45;
+}
+
+/* Schedule daily tasks badge colors */ 
+/* Patients grid badge colors — match tasks-list palette */
+/* Patients grid badge colors — match tasks-list palette */
+#tasks-list .k-badge-error,
+#patient-labs-grid .k-badge-error,
+#patients-grid .k-badge-error,
+#patients-grid .k-badge-error:hover {
+    background-color: #fcddda;
+    border-color: #f76f60;
+    color: #7a0c00;
+}
+
+#tasks-list .k-badge-warning,
+#patient-labs-grid .k-badge-warning,
+#patients-grid .k-badge-warning,
+#patients-grid .k-badge-warning:hover {
+    background-color: #FFF4D3;
+    border-color:     #FFD760;
+    color:            #5E4700;
+}
+
+#tasks-list .k-badge-success,
+#patient-labs-grid .k-badge-success,
+#patients-grid .k-badge-success,
+#patients-grid .k-badge-success:hover {
+    background-color: #dcf0d3;
+    border-color:     #81d15f;
+    color:            #1c5a00;
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   ADD TASK DIALOG
+═══════════════════════════════════════════════════════ */
+
+/* Dialog window — outer wrapper */
+.k-dialog-wrapper.app-dialog-shell .k-window {
+    border: 1px solid rgba(23, 56, 99, 0.08);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.07),
+                0px 20px 48px -8px rgba(0, 0, 0, 0.11);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* Title bar */
+.k-dialog-wrapper.app-dialog-shell .k-window-titlebar {
+    padding: 16px;
+    border-bottom: 1px solid rgba(23, 56, 99, 0.08);
+    background: #fff;
+}
+
+.k-dialog-wrapper.app-dialog-shell .k-window-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 125%;
+    color: #232A36;
+}
+
+/* Close button — 30 × 30 circle */
+.k-dialog-wrapper.app-dialog-shell .k-window-titlebar-action {
+    width: 30px;
+    height: 30px;
+    border-radius: 9999px;
+}
+
+/* Content area */
+.k-dialog-wrapper.app-dialog-shell .k-window-content,
+.k-dialog-wrapper.app-dialog-shell .k-dialog-content {
+    padding: 16px;
+    background: #fff;
+}
+
+.add-task-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.atf-field {
+    display: flex;
+    flex-direction: column;
+}
+
+#atf-priority-group{
+    width: 200px;
+}
+
+/* Field labels: Poppins 400 16px */
+.atf-label {
+    display: block;
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 150%;
+    color: #232A36;
+    margin-bottom: 8px;
+}
+
+.atf-error {
+    display: none;
+    margin-top: 6px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    line-height: 1.4;
+    color: #B91C1C;
+}
+
+.atf-error.is-visible {
+    display: block;
+}
+
+/* View-task dialog — read-only field values */
+.vtf-value {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #232A36;
+    line-height: 1.5;
+}
+
+.vtf-description {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: #4A5666;
+    line-height: 1.6;
+}
+
+/* TextBox + TextArea full-width */
+#add-task-dialog .k-input,
+#add-task-dialog .k-textarea {
+    width: 100% !important;
+}
+
+/* Input 34px, border-radius 6px */
+#add-task-dialog .k-input {
+    height: 34px;
+    border: 1px solid rgba(23, 56, 99, 0.08);
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+}
+
+#add-task-dialog .k-input.k-invalid {
+    border-color: #DC2626;
+}
+
+/* TextArea 98px */
+#add-task-dialog .k-textarea {
+    min-height: 98px;
+    border: 1px solid rgba(23, 56, 99, 0.08);
+    border-radius: 6px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: #232A36;
+}
+
+#add-task-dialog textarea {
+    resize: vertical;
+    padding: 12px;
+}
+
+/* SegmentedControl / ButtonGroup — pill track */
+#add-task-dialog .k-button-group {
+    background: linear-gradient(0deg, rgba(35, 42, 54, 0.08), rgba(35, 42, 54, 0.08)), #ECEFF3;
+    border-radius: 800px;
+    padding: 2px;
+    gap: 0;
+}
+
+/* Individual segments */
+#add-task-dialog .k-button-group .k-button {
+    border: none;
+    border-radius: 9999px;
+    padding: 3px 12px;
+    height: 26px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 142%;
+    color: #232A36;
+    background: transparent;
+}
+
+/* Active / selected segment — white pill */
+#add-task-dialog .k-button-group .k-button.k-selected {
+    background: #FFFFFF;
+    box-shadow: none;
+}
+
+/* Footer action bar */
+.k-dialog-wrapper.app-dialog-shell .k-actions {
+    padding: 0 16px 16px;
+    gap: 8px;
+    justify-content: flex-end;
+    border-top: none;
+    background: #fff;
+}
+
+/* Cancel button — flat / light */
+.k-dialog-wrapper.app-dialog-shell .k-actions .k-button:not(.k-primary) {
+    background: #F3F5F7;
+    border: 1px solid rgba(255, 255, 255, 0.0001);
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #232A36;
+    height: 30px;
+    padding: 4px 8px;
+}
+
+/* Save button — primary / dark */
+.k-dialog-wrapper.app-dialog-shell .k-actions .k-primary {
+    background: #334155;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #FFFFFF;
+    height: 30px;
+    padding: 4px 8px;
+}
+
+/* Hide dialog host elements until Kendo Dialog initialises them */
+#appointment-dialog:not(.k-window-content):not(.k-dialog-content),
+#new-appointment-dialog:not(.k-window-content):not(.k-dialog-content),
+#add-task-dialog:not(.k-window-content):not(.k-dialog-content),
+#dialog-new-note:not(.k-window-content):not(.k-dialog-content),
+#dialog-lab-test:not(.k-window-content):not(.k-dialog-content) {
+    display: none;
+}
+
+.context-search-hit > td {
+    background: #eff6ff !important;
+    transition: background 0.2s ease;
+}
+
+.k-event.context-search-hit {
+    outline: 3px solid #3b82f6 !important;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 6px rgba(59, 130, 246, 0.25) !important;
+    transition: outline 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* ═══════════════════════════════════════════════════════
+   EVENT TYPE LEGEND
+═══════════════════════════════════════════════════════ */
+.legend-card { padding: 20px 24px; }
+.legend-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #555;
+}
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════════
+   APPOINTMENT DETAIL DIALOG
+═══════════════════════════════════════════════════════ */
+.k-dialog-wrapper:has(#appointment-dialog) .k-window {
+    border: 1px solid rgba(23, 56, 99, 0.08);
+    border-radius: 16px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.07), 0px 20px 48px -8px rgba(0, 0, 0, 0.11);
+    overflow: hidden;
+    width: 320px !important;
+}
+
+.k-dialog-wrapper:has(#appointment-dialog).appt-dialog-expanded .k-window {
+    width: 360px !important;
+}
+
+.k-dialog-wrapper:has(#appointment-dialog) .k-window-titlebar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 20px;
+    background: #F9FAFB;
+    border-bottom: 1px solid rgba(23, 56, 99, 0.08);
+}
+
+.k-dialog-wrapper:has(#appointment-dialog) .k-window-title {
+    font-family: 'Roboto', 'Poppins', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 125%;
+    display: flex;
+    align-items: center;
+    color: #232A36;
+}
+
+.k-dialog-wrapper:has(#appointment-dialog) .k-window-titlebar-action {
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+}
+
+.k-dialog-wrapper:has(#appointment-dialog) .k-window-titlebar-actions {
+    display: none;
+}
+
+.appt-expand-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    margin-left: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.0001);
+    border-radius: 4px;
+    background: transparent;
+    color: #232A36;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.appt-expand-btn svg {
+    width: 16px;
+    height: 16px;
+    display: block;
+}
+
+.k-dialog-wrapper:has(#appointment-dialog) .k-window-content {
+    padding: 20px 20px 18px;
+    background: #FFFFFF;
+}
+
+.k-dialog-wrapper:has(#appointment-dialog) .k-actions {
+    justify-content: space-between;
+    padding: 16px 20px 20px;
+    border-top: 1px solid rgba(23, 56, 99, 0.08);
+    background: #FFFFFF;
+}
+
+.k-dialog-wrapper:has(#appointment-dialog) .k-actions .k-button {
+    min-width: 76px;
+    height: 34px;
+    border-radius: 9999px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+}
+
+.k-dialog-wrapper:has(#appointment-dialog) .k-actions .k-button.k-primary {
+    min-width: 164px;
+    background: #334155;
+    border-color: #334155;
+    color: #FFFFFF;
+}
+
+.appt-review {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.appt-review-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.appt-review-heading {
+    margin: 0 0 18px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 150%;
+    color: #56637A;
+}
+
+.appt-review-line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    line-height: 150%;
+    color: #232A36;
+}
+
+.appt-review-line + .appt-review-line {
+    margin-top: 16px;
+}
+
+/* Editable date / time pickers inside the appointment dialog */
+.k-dialog-wrapper:has(#appointment-dialog) .appt-date-input,
+.k-dialog-wrapper:has(#appointment-dialog) input.appt-date-input {
+    display: block;
+    flex: 1;
+}
+
+.k-dialog-wrapper:has(#appointment-dialog) .appt-review-line .k-datepicker,
+.k-dialog-wrapper:has(#appointment-dialog) .appt-review-line .k-timepicker {
+    width: 100%;
+    height: 32px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+}
+
+.k-dialog-wrapper:has(#appointment-dialog) .appt-review-line .k-datepicker .k-input-inner,
+.k-dialog-wrapper:has(#appointment-dialog) .appt-review-line .k-timepicker .k-input-inner {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: #232A36;
+    padding: 0 6px;
+}
+
+.appt-time-fields {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+}
+
+.appt-time-fields .k-timepicker {
+    flex: 1;
+    min-width: 0;
+}
+
+.appt-time-sep {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: #56637A;
+    flex-shrink: 0;
+}
+
+.appt-review-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    color: #232A36;
+    flex-shrink: 0;
+}
+
+.appt-review-icon svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+}
+
+.appt-review-divider {
+    margin: 28px 0 22px;
+    border-top: 1px solid rgba(23, 56, 99, 0.08);
+}
+
+.appt-patient-row {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    line-height: 150%;
+    color: #232A36;
+}
+
+.appt-patient-row strong {
+    font-weight: 700;
+}
+
+.appt-patient-row + .appt-patient-row {
+    margin-top: 22px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   ALERT REVIEW DIALOG
+═══════════════════════════════════════════════════════ */
+/* Hide the empty title bar but keep the close button */
+.k-dialog:has(#dialog-alert-review) .k-dialog-titlebar {
+    background: transparent;
+    border-bottom: none;
+    padding: 8px 8px 0;
+    min-height: auto;
+}
+.k-dialog:has(#dialog-alert-review) .k-dialog-titlebar .k-dialog-title { display: none; }
+
+/* Green "Mark as Resolved" button */
+.ar-resolve-btn.k-button-solid-primary,
+.ar-resolve-btn.k-button-solid-primary:hover {
+    background-color: #16a34a;
+    border-color: #16a34a;
+    color: #fff;
+}
+.ar-resolve-btn.k-button-solid-primary:hover { background-color: #15803d; }
+
+/* Content layout */
+.ar-content { padding: 0 4px; }
+
+.ar-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 16px; }
+.ar-icon { flex-shrink: 0; line-height: 0; }
+.ar-title { font-size: 18px; font-weight: 700; color: #1a1a2e; }
+.ar-time  { font-size: 13px; color: #888; margin-top: 2px; }
+
+.ar-badges { display: flex; gap: 8px; margin-bottom: 16px; }
+.ar-badge {
+    display: inline-block;
+    padding: 3px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+.ar-badge-high   { background: #fef3cd; color: #92400e; border: 1px solid #fcd34d; }
+.ar-badge-medium { background: #fef9c3; color: #854d0e; border: 1px solid #fde68a; }
+.ar-badge-type   { background: #f3f4f6; color: #555; border: 1px solid #e5e7eb; }
+
+.ar-details {
+    background: #F1F5F9;
+    border: 1px solid #aeaeaf;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+}
+.ar-details-title { font-weight: 700; font-size: 14px; color: #1a1a2e; margin-bottom: 6px; }
+.ar-details-text  { color: #444; font-size: 13px; line-height: 1.55; margin: 0; }
+
+.ar-divider { border: none; border-top: 1px solid #e5e7eb; margin: 0 0 16px 0; }
+
+.ar-patient-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.ar-patient-icon   { color: #666; flex-shrink: 0; }
+.ar-patient-heading { font-weight: 700; font-size: 15px; color: #1a1a2e; flex: 1; }
+.ar-profile-link {
+    font-size: 13px;
+    color: #2563eb;
+    text-decoration: none;
+    white-space: nowrap;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-weight: 500;
+}
+.ar-profile-link:hover { background: #eff6ff; text-decoration: none; }
+
+.ar-patient-card {
+    background: #F1F5F9;
+    border-radius: 12px;
+    padding: 16px 18px;
+}
+.ar-patient-name { font-weight: 700; font-size: 15px; color: #1a1a2e; }
+.ar-patient-id   { color: #666; font-size: 13px; margin-bottom: 14px; }
+
+.ar-vitals-label { font-weight: 600; font-size: 13px; color: #444; margin-bottom: 10px; }
+.ar-vitals-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; }
+.ar-vital        { display: flex; align-items: flex-start; gap: 10px; }
+.ar-vital-icon {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
+.ar-vital-icon-bp   { background: #ede9fe; color: #7c3aed; }
+.ar-vital-icon-hr   { background: #fce7f3; color: #db2777; }
+.ar-vital-icon-temp { background: #fef3c7; color: #d97706; }
+.ar-vital-icon-spo2 { background: #d1fae5; color: #059669; }
+
+.ar-vital-label { font-size: 12px; color: #888; line-height: 1.3; }
+.ar-vital-value { font-size: 15px; font-weight: 700; color: #1a1a2e; }
+
+/* ═══════════════════════════════════════════════════════
+   INFO DIALOGS (Reason for Visit / Allergy)
+═══════════════════════════════════════════════════════ */
+.info-dialog { padding: 4px 0; }
+
+.info-dialog-header {
+    padding: 12px 14px;
+    background: #f8f8fb;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+.info-dialog-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 6px;
+}
+.info-dialog-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 2px;
+}
+.info-dialog-meta {
+    font-size: 12px;
+    color: #888;
+}
+.info-dialog-section {
+    margin-bottom: 16px;
+}
+.info-dialog-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: #888;
+    margin-bottom: 8px;
+}
+.info-dialog-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid #f0f0f4;
+    font-size: 13px;
+    gap: 12px;
+}
+.info-dialog-row:last-child { border-bottom: none; }
+.info-dialog-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    min-width: 110px;
+}
+.info-dialog-note {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #b8860b;
+    background: #fffbf0;
+    border-left: 3px solid #b8860b;
+    padding: 6px 10px;
+    border-radius: 4px;
+}
+
+/* New appointment dialog field rows */
+.dialog-field-row {
+    display: flex;
+    gap: 12px;
+}
+.dialog-field-half {
+    flex: 1;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PATIENTS PAGE — LAYOUT
+═══════════════════════════════════════════════════════ */
+
+#page-content:has(.patients-breadcrumb) {
+    padding: 0 0 32px;
+}
+
+.patients-page-header,
+.patients-breadcrumb,
+.patients-list-body,
+.detail-main-wrap {
+    position: relative;
+    z-index: 1;
+}
+
+.patients-page-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 0 16px 24px;
+    max-width: 1680px;
+    margin: 0 auto;
+}
+
+.patients-page-header h1 {
+    margin: 0;
+    font-size: 42px;
+    line-height: 1.2;
+    font-weight: 600;
+    color: #232a36;
+}
+
+.patients-page-header p {
+    margin: 8px 0 0;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #4a5666;
+}
+
+.patients-header-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.patients-page-title {
+    font-size: 42px;
+    line-height: 1.2;
+    font-weight: 600;
+    color: #232a36;
+    margin-bottom: 0;
+}
+
+.patients-page-sub {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #4a5666;
+}
+
+.patients-header-actions .k-button {
+    min-height: 34px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    box-shadow: none;
+}
+
+#btn-ai-assistance.k-button {
+    background: #334155;
+    border-color: #334155;
+    color: #ffffff;
+}
+
+#btn-ai-assistance .k-svg-icon {
+    color: #ffffff;
+}
+
+#btn-ai-assistance.k-button:hover,
+#btn-ai-assistance.k-button:focus {
+    background: #273344;
+    border-color: #273344;
+    color: #ffffff;
+}
+
+#btn-export.k-button {
+    background: #f3f5f7;
+    border-color: rgba(23, 56, 99, 0.08);
+    color: #232a36;
+}
+
+#btn-export.k-button:hover,
+#btn-export.k-button:focus {
+    background: #e9edf1;
+    border-color: rgba(23, 56, 99, 0.12);
+    color: #232a36;
+}
+
+.patients-list-body {
+    padding: 0 16px 20px;
+    max-width: 1680px;
+    margin: 0 auto;
+}
+
+.patients-list-body.ai-panel-open {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 400px;
+    gap: 32px;
+    align-items: start;
+}
+
+.patients-list-body.ai-panel-open > .patients-ai-panel {
+    max-height: var(--patients-grid-height, 80vh);
+    position: sticky;
+    top: 100px;
+}
+
+@media (max-width: 1400px) {
+    .patients-page-header,
+    .patients-list-body,
+    .patients-breadcrumb,
+    .detail-main-wrap {
+        padding-left: 48px;
+        padding-right: 48px;
+    }
+}
+
+@media (max-width: 1100px) {
+    .patients-page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .patients-list-body.ai-panel-open {
+        grid-template-columns: 1fr;
+    }
+
+    .patients-ai-panel {
+        position: static !important;
+        max-height: none;
+    }
+}
+
+@media (max-width: 767px) {
+    .patients-page-header,
+    .patients-list-body,
+    .patients-breadcrumb,
+    .detail-main-wrap {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .patients-page-header {
+        gap: 18px;
+        padding-bottom: 24px;
+    }
+
+    .patients-page-title,
+    .patients-page-header h1 {
+        font-size: 34px;
+    }
+
+    .patients-header-actions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+}
+
+.patients-list-body.preview-panel-open {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 400px;
+    gap: 32px;
+    align-items: start;
+}
+
+.patients-list-body.preview-panel-open > .patient-preview-panel {
+    max-height: var(--patients-grid-height, 80vh);
+    position: sticky;
+    top: 100px;
+    overflow-y: auto;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PATIENTS PAGE — DIM MODE OVERRIDES
+   Same ::after overlay approach used on Home & Schedule pages.
+   The card surface is tinted while grid content rows stay clear.
+═══════════════════════════════════════════════════════ */
+
+.page-dimmed .patients-grid-card {
+    position: relative;
+    isolation: isolate;
+}
+
+.page-dimmed .patients-grid-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: rgba(239, 232, 239, 0.66);
+    pointer-events: none;
+    z-index: 1;
+    transition: background-color 0.3s ease;
+}
+
+/* Keep grid content rows and filter row visible above the overlay */
+.page-dimmed .patients-grid-card .k-grid-content,
+.page-dimmed .patients-grid-card .k-filter-row {
+    position: relative;
+    z-index: 2;
+}
+
+/* AI panel & preview panel — same overlay when visible */
+.page-dimmed .patients-ai-panel,
+.page-dimmed .patient-preview-panel {
+    position: relative;
+    isolation: isolate;
+}
+
+.page-dimmed .patients-ai-panel::after,
+.page-dimmed .patient-preview-panel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: rgba(239, 232, 239, 0.66);
+    pointer-events: none;
+    z-index: 1;
+    transition: background-color 0.3s ease;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PATIENTS — PATIENT PREVIEW PANEL
+═══════════════════════════════════════════════════════ */
+.patient-preview-panel {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    border-radius: 16px;
+}
+.patient-preview-panel > .k-card-header.pp-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    padding: 20px 20px 10px;
+    border: none;
+}
+.patient-preview-panel > .k-card-header .k-card-title.pp-title {
+    flex: 1;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 125%;
+    color: #232A36;
+    margin: 0;
+}
+.pp-close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: none;
+    cursor: pointer;
+    padding: 4px;
+    flex-shrink: 0;
+}
+.pp-close-btn:hover { background: #f2f2f5; }
+.patient-preview-panel > .k-card-body.pp-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto;
+    flex: 1 1 0;
+    min-height: 0;
+    padding: 10px 20px 20px;
+    scrollbar-width: thin;
+    scrollbar-color: #4A5666 transparent;
+}
+.pp-body::-webkit-scrollbar        { width: 5px; }
+.pp-body::-webkit-scrollbar-track  { background: transparent; }
+.pp-body::-webkit-scrollbar-thumb  { background: #4A5666; opacity: 0.5; border-radius: 12px; }
+.pp-avatar-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+.pp-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+.pp-name-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+.pp-name-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.pp-name {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 150%;
+    color: #232A36;
+}
+.pp-view-profile-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: #4A5666;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+.pp-view-profile-link:hover { background: #f2f2f5; color: #4A5666; text-decoration: none; }
+.pp-age-gender {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    line-height: 142%;
+    color: #4A5666;
+}
+.pp-allergy-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border: 1px solid rgba(23, 56, 99, 0.08);
+    border-radius: 12px;
+    background: #fff;
+    flex-shrink: 0;
+}
+.pp-allergy-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    background: #FFF4D3;
+    border: 1px solid #FFF4D3;
+    border-radius: 8px;
+}
+.pp-allergy-text {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+}
+.pp-allergy-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #3D3D3D;
+}
+.pp-allergy-desc {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    line-height: 142%;
+    color: #4A5666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.pp-details-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: #4A5666;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+.pp-details-link:hover { background: #f2f2f5; }
+.pp-info-card.k-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(23, 56, 99, 0.08);
+    border-radius: 12px;
+    box-shadow: none;
+    flex-shrink: 0;
+}
+.pp-info-card > .k-card-header {
+    padding: 16px 16px 0;
+    border: none;
+}
+.pp-info-card > .k-card-header > .k-card-title {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 150%;
+    color: #232A36;
+    margin: 0;
+}
+.pp-info-card > .k-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 16px 16px;
+}
+.pp-info-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+.pp-info-label {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 150%;
+    color: #3D3D3D;
+    white-space: nowrap;
+}
+.pp-info-value {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 150%;
+    color: #3D3D3D;
+    text-align: right;
+}
+.pp-info-value.pp-critical { color: #F31700; }
+
+.patients-ai-panel {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid rgba(23, 56, 99, 0.08);
+    border-radius: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 2px 6px -1px rgba(0, 0, 0, 0.06);
+}
+
+.list-ai-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 54px;
+    margin-bottom: 0;
+    padding: 12px 20px;
+    background: #f9fafb;
+    border-bottom: 1px solid rgba(23, 56, 99, 0.08);
+}
+
+.list-ai-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #232a36;
+}
+
+.list-ai-date {
+    padding: 16px 20px 0;
+    font-size: 14px;
+    line-height: 1.42;
+    text-align: center;
+    color: #4a5666;
+}
+
+#list-ai-chat {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+#list-ai-chat .k-chat {
+    display: flex;
+    height: 100%;
+    min-height: 0;
+    border: none;
+    background: transparent;
+}
+
+#list-ai-chat .k-message-list {
+    padding: 20px;
+    gap: 40px;
+}
+
+#list-ai-chat .k-message-group-receiver {
+    justify-content: flex-start;
+}
+
+#list-ai-chat .k-message-group-sender {
+    justify-content: flex-end;
+}
+
+#list-ai-chat .k-message-group-receiver .k-avatar {
+    display: none;
+}
+
+#list-ai-chat .k-message-group-receiver .k-chat-bubble,
+#list-ai-chat .k-message-group-receiver .k-chat-bubble .k-bubble-content {
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    color: #232a36;
+}
+
+#list-ai-chat .k-message-group-receiver .k-bubble-content {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+#list-ai-chat .k-message-group-sender .k-chat-bubble,
+#list-ai-chat .k-message-group-sender .k-chat-bubble .k-bubble-content {
+    background: #334155;
+    color: #ffffff;
+    border: 1px solid #334155;
+    border-radius: 18px;
+    box-shadow: none;
+}
+
+#list-ai-chat .k-message-group-sender .k-bubble-content {
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 10px 14px;
+}
+
+#list-ai-chat .k-message-group-sender .k-avatar {
+    width: 32px;
+    height: 32px;
+    border: none;
+}
+
+#list-ai-chat .k-message-box {
+    margin-top: auto;
+    padding: 12px 20px 20px;
+    border-top: none;
+    background: #ffffff;
+}
+
+#list-ai-chat .k-message-box-wrap {
+    gap: 12px;
+}
+
+#list-ai-chat .k-message-box .k-input-inner,
+#list-ai-chat .k-message-box .k-input,
+#list-ai-chat .k-message-box textarea {
+    min-height: 90px;
+    padding: 12px 12px 0;
+    border: none;
+    box-shadow: none;
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #4a5666;
+    background: transparent;
+}
+
+#list-ai-chat .k-message-box .k-input,
+#list-ai-chat .k-message-box .k-textarea,
+#list-ai-chat .k-message-box .k-input-solid,
+#list-ai-chat .k-message-box .k-picker-solid {
+    border: 1px solid rgba(23, 56, 99, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.038);
+    background: #ffffff;
+}
+
+#list-ai-chat .k-message-box .k-button-solid-base {
+    border-radius: 999px;
+}
+
+#list-ai-chat .k-message-box .k-send-button,
+#list-ai-chat .k-message-box .k-button[type="button"]:last-child {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    border-radius: 999px;
+    background: #f3f5f7;
+    border-color: #f3f5f7;
+    opacity: 0.65;
+}
+
+#list-ai-chat .k-message-box .k-button[type="button"]:last-child:hover,
+#list-ai-chat .k-message-box .k-send-button:hover {
+    opacity: 1;
+    background: #334155;
+    border-color: #334155;
+    color: #ffffff;
+}
+
+#list-ai-chat .k-quick-actions,
+#list-ai-chat .k-suggestions,
+.list-ai-suggestions {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0 20px 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+#list-ai-chat .k-quick-actions::-webkit-scrollbar,
+#list-ai-chat .k-suggestions::-webkit-scrollbar,
+.list-ai-suggestions::-webkit-scrollbar {
+    display: none;
+}
+
+.ai-suggestion-chip-list,
+#list-ai-chat .k-quick-actions .k-button,
+#list-ai-chat .k-suggestions .k-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border: 1px solid rgba(23, 56, 99, 0.08);
+    border-radius: 999px;
+    background: #f9fafb;
+    color: #232a36;
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+.ai-suggestion-chip-list:hover,
+#list-ai-chat .k-quick-actions .k-button:hover,
+#list-ai-chat .k-suggestions .k-button:hover {
+    background: #eef2f6;
+    border-color: rgba(23, 56, 99, 0.16);
+    transform: translateY(-1px);
+}
+
+.k-chat .k-suggestion{
+    font-size: 16px;
+}
+
+/* "View Profile" link in grid rows */
+.grid-view-link {
+    display: inline-flex;
+    align-items: center;
+    color: #3d3d8f;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    gap: 2px;
+}
+.grid-view-link:hover { color: #2a2a6e; text-decoration: underline; }
+
+.patients-grid-col { min-width: 0; }
+
+.patients-grid-card {
+    padding: 0;
+    overflow: hidden;
+    margin-bottom: 0;
+    background: rgba(255, 255, 255, 0.0001);
+    border: 1px solid rgba(23, 56, 99, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 2px 6px -1px rgba(0, 0, 0, 0.06);
+}
+
+.patients-grid-card .k-grid {
+    border: none;
+    border-radius: 16px;
+    background: transparent;
+}
+
+.patients-grid-card .k-grid-header {
+    border-bottom: none;
+    background: #f9fafb;
+}
+
+.patients-grid-card .k-grid-header th {    
+    font-size: 16px;
+    font-weight: 700;
+    color: #232a36;
+    text-transform: none;
+    letter-spacing: 0;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(23, 56, 99, 0.08);
+}
+
+.patients-grid-card .k-filter-row th {
+    padding: 8px;
+    background: #f9fafb;
+    border-bottom: 1px solid rgba(23, 56, 99, 0.08);
+}
+
+.patients-grid-card .k-filtercell > span,
+.patients-grid-card .k-filtercell .k-filtercell-wrapper {
+    gap: 4px;
+}
+
+.patients-grid-card .k-filtercell .k-input,
+.patients-grid-card .k-filtercell .k-picker,
+.patients-grid-card .k-filtercell .k-numerictextbox {
+    border-color: rgba(23, 56, 99, 0.08);
+    background: #ffffff;
+}
+
+.patients-grid-card .k-table-td {
+    height: 48px;
+    font-size: 14px;
+    color: #232a36;
+    padding: 8px 16px;
+    border-bottom: 1px solid rgba(23, 56, 99, 0.08);
+    vertical-align: middle;
+    background: #ffffff;
+}
+
+.patients-grid-card .k-grid-content {
+    background: #ffffff;
+}
+
+.patients-grid-card .k-table-row:nth-child(even) .k-table-td {
+    background: linear-gradient(0deg, rgba(56, 66, 80, 0.05), rgba(56, 66, 80, 0.05)), #ffffff;
+}
+
+.patients-grid-card .k-table-row:last-child .k-table-td { border-bottom: none; }
+.patients-grid-card .k-table-row:hover .k-table-td { background: #f3f6fa; }
+.patients-grid-card .k-table-row.k-selected .k-table-td { background: rgba(30, 41, 59, 0.09); }
+
+.patients-grid-card .k-grid-pager {
+    border-top: 1px solid rgba(23, 56, 99, 0.08);
+    background: #ffffff;
+    padding: 9px 16px;
+}
+
+.patients-grid-card .k-pager-numbers .k-link,
+.patients-grid-card .k-pager-numbers .k-selected {
+    border-radius: 4px;
+}
+
+.patients-grid-card .k-pager-numbers .k-selected {
+    background: rgba(30, 41, 59, 0.16);
+    color: #1e293b;
+}
+
+/* Preview panel */
+.patients-preview-col {
+    position: sticky;
+    top: 84px;
+    max-height: calc(100vh - 108px);
+    overflow-y: auto;
+    padding: 20px;
+    margin-bottom: 0;
+}
+.preview-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 260px;
+    gap: 10px;
+    color: #bbb;
+    font-size: 13px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PATIENTS PAGE — AVATAR SIZES
+═══════════════════════════════════════════════════════ */
+.patient-avatar-sm {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 2px solid #e8e8f0;
+}
+.patient-avatar-lg {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 2px solid #e8e8f0;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PATIENTS PAGE — GRID COLUMN TEMPLATE
+═══════════════════════════════════════════════════════ */
+.patient-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+.patient-name-cell:hover strong { text-decoration: underline; }
+.small-text  { font-size: 11px; }
+.text-muted  { color: #888; }
+
+
+/* ═══════════════════════════════════════════════════════
+   PATIENTS PAGE — PREVIEW PANEL SECTIONS
+═══════════════════════════════════════════════════════ */
+.preview-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f0eeff;
+}
+.preview-header-info { flex: 1; min-width: 0; }
+.preview-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1a2e;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.preview-id-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0;
+}
+.preview-id   { font-size: 11px; color: #888; }
+.preview-meta { font-size: 12px; color: #888; }
+
+.preview-open-btn {
+    width: 100% !important;
+    justify-content: center !important;
+    border-radius: 8px !important;
+    font-size: 13px !important;
+    margin-bottom: 16px;
+}
+
+.preview-section { margin-bottom: 14px; }
+.preview-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 8px;
+}
+
+/* Vitals in preview panel */
+.preview-vitals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 8px;
+}
+.preview-vital {
+    background: #f9f8ff;
+    border-radius: 8px;
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #f0eeff;
+}
+.preview-vital-value {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a1a2e;
+    display: block;
+}
+.preview-vital-value.critical { color: #c0345a; }
+.preview-vital-label {
+    font-size: 10px;
+    color: #888;
+    margin-top: 2px;
+    display: block;
+    line-height: 1.2;
+}
+
+/* Allergy strip */
+.preview-allergy-strip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    flex-wrap: wrap;
+}
+.allergy-present { background: #fff0f3; border: 1px solid #f7c5d0; color: #c0345a; }
+.allergy-none    { background: #e8f8ee; border: 1px solid #b8e8c4; color: #1a874a; }
+.allergy-icon    { font-style: normal; flex-shrink: 0; }
+.allergy-label   { font-weight: 600; flex-shrink: 0; }
+
+/* Labs table */
+.labs-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+.labs-table th {
+    text-align: left;
+    color: #888;
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-bottom: 1px solid #e8e8f0;
+}
+.labs-table td { padding: 6px 8px; border-bottom: 1px solid #f3f3f7; }
+.labs-table tr:last-child td { border-bottom: none; }
+
+/* Preview meds list */
+.preview-meds-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+    color: #444;
+    padding: 0;
+    margin: 0;
+}
+.preview-meds-list li { display: flex; align-items: center; gap: 6px; }
+
+/* Preview visits */
+.preview-visit-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid #f3f3f7;
+}
+.preview-visit-item:last-child { border-bottom: none; }
+.visit-date-badge {
+    display: inline-block;
+    background: #f0eeff;
+    color: #3d3d8f;
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.visit-reason { font-size: 12px; color: #444; line-height: 1.35; }
+.visit-doctor { font-size: 11px; color: #888; margin-top: 2px; }
+
+/* ═══════════════════════════════════════════════════════
+   PATIENTS PAGE — BREADCRUMB
+═══════════════════════════════════════════════════════ */
+.patients-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 16px 12px;
+    max-width: 1680px;
+    margin: 0 auto;
+    font-size: 14px;
+}
+.patients-breadcrumb .breadcrumb-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #4a5666;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.15s;
+}
+.patients-breadcrumb .breadcrumb-link:hover { color: #334155; }
+.patients-breadcrumb .breadcrumb-sep       { color: #9aa5b1; font-size: 14px; }
+.patients-breadcrumb .breadcrumb-current   {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #232a36;
+    font-weight: 600;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PATIENTS PAGE — PROFILE DRILLDOWN LAYOUT
+═══════════════════════════════════════════════════════ */
+.detail-main-wrap {
+    max-width: 1680px;
+    margin: 0 auto;
+    padding: 0 16px 24px;
+}
+
+/* Three-card row at top of profile */
+.profile-top-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+@media (max-width: 900px) {
+    .profile-top-cards { grid-template-columns: 1fr; }
+}
+
+/* Patient Info card — k-card-body handles padding */
+.profile-info-card.k-card  { margin-bottom: 0; padding: 0; display: flex; flex-direction: column; }
+.profile-section-card.k-card { margin-bottom: 0; padding: 0; display: flex; flex-direction: column; }
+.profile-info-card .k-card-body,
+.profile-section-card .k-card-body { padding: 20px 24px; flex: 1; }
+
+.profile-info-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #f0eeff;
+}
+.patient-avatar-profile {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 2px solid #e8e8f0;
+}
+.profile-name-status {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+/* Status chip in patient profile card — smaller, right-aligned (match grid badge size) */
+.profile-name-status .k-chip {
+    align-self: flex-end;
+    height: 22px !important;
+    min-height: 22px !important;
+    font-size: 12px !important;
+    padding: 0 !important;
+}
+.profile-name-status .k-chip .k-chip-content {
+    font-size: 12px !important;
+    padding: 0 8px !important;
+    line-height: 20px !important;
+}
+.profile-name-status .k-chip .k-chip-action { display: none; }
+
+.profile-patient-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1a2e;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profile-basic-heading {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 8px;
+}
+.profile-section-heading {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 12px;
+}
+
+/* Label/value rows (used in all three info cards) */
+.profile-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid #f5f5f8;
+    font-size: 13.5px;
+}
+.profile-info-row:last-child { border-bottom: none; }
+.profile-info-label  { color: #666; }
+.profile-info-value  { color: #1a1a2e; text-align: right; }
+.profile-info-value.critical { color: #c0345a; font-weight: 600; }
+
+/* Note card — k-card-header + k-card-body */
+.profile-note-card.k-card { margin-bottom: 20px; padding: 0; }
+.profile-note-card > .k-card-header.detail-card-header-row {
+    padding: 20px 24px 8px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid #f0eeff;
+}
+.profile-note-card > .k-card-body { padding: 0 24px 20px; }
+
+/* Labs card — grid fills card with no extra padding */
+.profile-labs-card {
+    padding: 0;
+    overflow: hidden;
+    margin-bottom: 0;
+}
+.profile-labs-card .k-grid {
+    border: none;
+    border-radius: 16px;
+}
+.profile-labs-card .k-grid-header th {
+    padding: 10px 14px;
+    border-bottom: 1px solid #e8e8f0;
+}
+.profile-labs-card .k-table-td {
+    font-size: 13px;
+    padding: 10px 14px;
+    border-bottom: 1px solid #f3f3f7;
+    vertical-align: middle;
+}
+.profile-labs-card .k-table-row:last-child .k-table-td { border-bottom: none; }
+.profile-labs-card .k-table-row:hover .k-table-td      { background: #faf9ff; }
+
+/* ═══════════════════════════════════════════════════════
+   PATIENTS PAGE — DRILLDOWN (VIEW B — LEGACY KEPT)
+═══════════════════════════════════════════════════════ */
+.detail-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 24px;
+    background: #fff;
+    border-bottom: 1px solid #e8e8f0;
+    position: sticky;
+    top: 64px;
+    z-index: 50;
+}
+.detail-patient-name {
+    flex: 1;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0;
+}
+
+.patients-detail-body {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 20px;
+    padding: 20px 24px;
+    max-width: 1440px;
+    margin: 0 auto;
+    align-items: start;
+}
+@media (max-width: 1100px) {
+    .patients-detail-body { grid-template-columns: 1fr; }
+}
+
+/* Individual detail cards */
+.detail-card {
+    margin-bottom: 16px;
+    padding: 20px 24px;
+}
+.detail-card:last-child { margin-bottom: 0; }
+.detail-card-header {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f0eeff;
+}
+
+/* Card header with inline action button (e.g. Patient Note → Save) */
+.detail-card-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f0eeff;
+}
+.detail-card-header-text {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1a2e;
+}
+.detail-save-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: 1px solid #d0d0e8;
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #3d3d8f;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+.detail-save-btn:hover { background: #f0f0fb; }
+.detail-save-btn--saved { background: #e8f5ee !important; color: #1a874a !important; border-color: #b8e0ca !important; }
+
+/* Summary card */
+.detail-summary-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+.summary-table {
+    border-collapse: collapse;
+    flex: 1;
+    font-size: 13px;
+}
+.summary-table td { padding: 5px 10px 5px 0; vertical-align: top; }
+.summary-table td:first-child { border-bottom: none; }
+.summary-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    padding-right: 16px !important;
+}
+
+/* Vitals in drilldown */
+.vitals-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+}
+@media (max-width: 800px) {
+    .vitals-grid { grid-template-columns: repeat(3, 1fr); }
+}
+.vital-card {
+    background: #f9f8ff;
+    border: 1px solid #f0eeff;
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    position: relative;
+}
+.vital-value {
+    font-size: 17px;
+    font-weight: 800;
+    color: #1a1a2e;
+    display: block;
+    line-height: 1.2;
+}
+.vital-value.critical { color: #c0345a; }
+.vital-label {
+    font-size: 11px;
+    color: #888;
+    margin-top: 4px;
+    display: block;
+}
+.vital-critical-dot {
+    width: 8px;
+    height: 8px;
+    background: #c0345a;
+    border-radius: 50%;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+}
+
+/* Allergy card variants */
+.allergy-card-danger .detail-card-header,
+.allergy-header-danger {
+    color: #c0345a;
+    border-bottom-color: #f7c5d0;
+}
+.allergy-card-ok .detail-card-header,
+.allergy-header-ok { color: #1a874a; border-bottom-color: #b8e8c4; }
+.allergy-chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+/* Detail medications list */
+.detail-meds-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.detail-meds-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #1a1a2e;
+    padding: 6px 10px;
+    background: #f9f8ff;
+    border-radius: 8px;
+}
+.med-icon { flex-shrink: 0; }
+
+/* Detail medications table */
+.meds-detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+.meds-detail-table th {
+    text-align: left;
+    font-weight: 600;
+    color: #666;
+    padding: 6px 10px;
+    border-bottom: 2px solid #eee;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+.meds-detail-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #f3f3f7;
+    color: #1a1a2e;
+}
+.meds-detail-table tr:last-child td { border-bottom: none; }
+.meds-detail-table tr:hover td { background: #f9f8ff; }
+
+/* Detail visits */
+.detail-visit-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f3f3f7;
+}
+.detail-visit-item:last-child { border-bottom: none; }
+.visit-body { flex: 1; }
+
+/* Patient notes card */
+#patient-notes-editor {
+    width: 100%;
+    min-height: 380px;
+}
+.profile-note-card .k-editor {
+    border-radius: 12px;
+    overflow: hidden;
+    height: 300px;
+}
+.profile-note-card .k-editor .k-toolbar {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+.profile-note-card .k-editor .k-editor-content,
+.profile-note-card .k-editor .k-editable-area {
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+.profile-note-card .k-editor .k-editor-content,
+.profile-note-card .k-editor .k-editable-area,
+.profile-note-card .k-editor iframe {
+    font-weight: 400;
+}
+.ai-note-chips-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #f0eeff;
+}
+.ai-note-chip-label {
+    font-size: 11px;
+    color: #888;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PATIENTS PAGE — AI CHAT PANEL
+═══════════════════════════════════════════════════════ */
+.ai-panel-card {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    margin-bottom: 0;
+    position: sticky;
+    top: 120px;
+    max-height: calc(100vh - 144px);
+}
+.ai-panel-subtitle {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 12px;
+    margin-top: -14px;
+}
+.patient-ai-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0eeff;
+    margin-bottom: 10px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PATIENTS PAGE — ADD PATIENT DIALOG INPUTS
+═══════════════════════════════════════════════════════ */
+.np-text-input {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid #e0e0e8;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    color: #1a1a2e;
+    background: #fff;
+}
+.np-text-input:focus { border-color: #3d3d8f; box-shadow: 0 0 0 3px rgba(61,61,143,0.12); }
+
+/* ═══════════════════════════════════════════════════════
+   PATIENTS — LIST SPLITTER
+═══════════════════════════════════════════════════════ */
+#patients-splitter {
+    width: 100%;
+}
+#patients-splitter.k-splitter {
+    border: none;
+    background: transparent;
+    box-shadow: none;
+}
+#patients-splitter .k-splitbar-horizontal {
+    background: transparent;
+    width: 8px;
+    cursor: col-resize;
+}
+#patients-splitter .k-splitbar-horizontal:hover,
+#patients-splitter .k-splitbar-horizontal.k-state-focused {
+    background: rgba(23, 56, 99, 0.06);
+    border-radius: 4px;
+}
+#patients-splitter .k-collapse-prev,
+#patients-splitter .k-collapse-next,
+#patients-splitter .k-expand-prev,
+#patients-splitter .k-expand-next {
+    background: #f9fafb;
+    border: 1px solid rgba(23,56,99,0.1);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* Preview pane card */
+#pane-preview {
+    background: #ffffff;
+    border: 1px solid rgba(23, 56, 99, 0.08);
+    border-radius: 16px;
+    overflow-y: auto;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 2px 6px -1px rgba(0,0,0,0.06);
+    min-height: 420px;
+}
+/* Keep the grid card styling when used as a Splitter pane */
+#pane-grid.patients-grid-card {
+    overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PATIENTS — SIDE PANEL CONTENT (Preview Pane)
+═══════════════════════════════════════════════════════ */
+.sp-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 260px;
+    color: #9aa5b1;
+    font-size: 14px;
+    text-align: center;
+    padding: 24px;
+}
+.sp-wrap {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+.sp-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 14px;
+    margin-bottom: 2px;
+    border-bottom: 1px solid rgba(23, 56, 99, 0.07);
+}
+.sp-avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 2px solid #e8e8f0;
+}
+.sp-name-block { flex: 1; min-width: 0; }
+.sp-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #232a36;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+}
+.sp-meta { font-size: 12px; color: #4a5666; margin-bottom: 5px; }
+.sp-section {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(23, 56, 99, 0.06);
+}
+.sp-section:last-of-type { border-bottom: none; }
+.sp-section-title {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #9aa5b1;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 7px;
+}
+.sp-allergy-title { color: #c0345a; }
+/* Vital rows */
+.sp-vital-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3px 0;
+    font-size: 12.5px;
+}
+.sp-vital-label { color: #4a5666; }
+.sp-vital-val   { font-weight: 600; color: #232a36; }
+.sp-vital-row.sp-vital-critical .sp-vital-val { color: #c0345a; }
+/* Allergy chips */
+.sp-allergy-list { display: flex; flex-wrap: wrap; gap: 4px; }
+/* Lab rows */
+.sp-lab-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3px 0;
+    font-size: 12px;
+    border-bottom: 1px solid rgba(23, 56, 99, 0.04);
+}
+.sp-lab-row:last-child { border-bottom: none; }
+.sp-lab-test { color: #4a5666; }
+.sp-lab-badge {
+    font-weight: 600;
+    font-size: 11.5px;
+    padding: 2px 7px;
+    border-radius: 10px;
+}
+.lab-abnormal { background: #fff0f3; color: #c0345a; border: 1px solid #f7c5d0; }
+.lab-ok       { background: #e8f8ee; color: #1a874a; border: 1px solid #b8e8c4; }
+/* Medication rows */
+.sp-med-row {
+    font-size: 12.5px;
+    color: #232a36;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(23, 56, 99, 0.04);
+}
+.sp-med-row:last-child { border-bottom: none; }
+.sp-more { font-size: 11.5px; color: #9aa5b1; margin-top: 4px; }
+/* Visit rows */
+.sp-visit-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 12px;
+}
+.sp-visit-reason { flex: 1; color: #4a5666; line-height: 1.35; }
+.sp-no-data { color: #9aa5b1; font-size: 12px; font-style: italic; }
+/* Footer */
+.sp-footer { padding-top: 12px; margin-top: 2px; }
+.sp-open-btn { width: 100% !important; justify-content: center !important; }
+
+/* ═══════════════════════════════════════════════════════
+   PATIENTS — GRID COMMAND COLUMN & TOOLBAR
+═══════════════════════════════════════════════════════ */
+.patient-id-sub {
+    font-size: 11px;
+    color: #4a5666;
+    margin-top: 1px;
+}
+/* Shrink the command buttons in the Actions column */
+.patients-grid-card .k-command-cell .k-button,
+#pane-grid .k-command-cell .k-button {
+    min-height: unset;
+    padding: 3px 9px;
+    font-size: 12px;
+}
+
+.btn-change-status { background: #f9fafb; border-color: rgba(23,56,99,0.12); color: #334155; }
+/* Toolbar MultiSelect spacing */
+.patients-grid-card .k-toolbar .k-multiselect,
+#pane-grid .k-toolbar .k-multiselect {
+    vertical-align: middle;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PATIENTS — DETAIL SPLITTER (DRILLDOWN)
+═══════════════════════════════════════════════════════ */
+#detail-splitter {
+    width: 100%;
+    min-height: calc(100vh - 285px);
+}
+#detail-splitter.k-splitter {
+    border: none;
+    background: transparent;
+}
+#detail-splitter .k-splitbar-horizontal {
+    background: rgba(23, 56, 99, 0.06);
+    width: 5px;
+}
+/* Left pane: scrollable detail sections */
+.dd-left-pane {
+    overflow-y: auto;
+    padding: 0 20px 32px 0;
+    background: transparent;
+}
+/* Right pane: AI Chat */
+.dd-right-pane {
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border: 1px solid rgba(23, 56, 99, 0.08);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.dd-ai-header {
+    display: flex;
+    align-items: center;
+    min-height: 52px;
+    padding: 14px 20px;
+    background: #f9fafb;
+    border-bottom: 1px solid rgba(23, 56, 99, 0.08);
+    font-size: 15px;
+    font-weight: 700;
+    color: #232a36;
+    flex-shrink: 0;
+}
+/* ═══════════════════════════════════════════════════════
+   PATIENTS — DETAIL SECTION CARDS
+═══════════════════════════════════════════════════════ */
+.dd-section {
+    margin-bottom: 20px;
+    padding: 20px 24px;
+    background: #ffffff;
+    border: 1px solid rgba(23, 56, 99, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.dd-section:last-child { margin-bottom: 0; }
+.dd-section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #232a36;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(23, 56, 99, 0.07);
+}
+/* Profile section */
+.dd-profile-section { padding: 20px 24px; }
+.dd-profile-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+.dd-avatar  {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 2px solid #e8e8f0;
+}
+.dd-profile-info { flex: 1; min-width: 150px; }
+.dd-patient-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #232a36;
+    margin: 0 0 4px;
+}
+.dd-patient-meta { font-size: 13px; color: #4a5666; margin-bottom: 8px; }
+.dd-admission-info {
+    min-width: 230px;
+    background: #f9fafb;
+    border: 1px solid rgba(23, 56, 99, 0.07);
+    border-radius: 10px;
+    padding: 10px 14px;
+}
+.dd-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    font-size: 12.5px;
+    border-bottom: 1px solid rgba(23, 56, 99, 0.05);
+}
+.dd-info-row:last-child { border-bottom: none; }
+.dd-info-label { color: #4a5666; }
+.dd-info-val   { color: #232a36; }
+.dd-allergy-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 10px 14px;
+    background: rgba(192, 52, 90, 0.04);
+    border: 1px solid #f7c5d0;
+    border-radius: 10px;
+}
+.dd-allergy-label { font-size: 13px; font-weight: 600; color: #c0345a; flex-shrink: 0; }
+.dd-allergy-bar   { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* Vitals grid in drilldown — 6 cards per row */
+.dd-vitals-grid {
+    grid-template-columns: repeat(6, 1fr) !important;
+}
+@media (max-width: 1200px) { .dd-vitals-grid { grid-template-columns: repeat(3, 1fr) !important; } }
+@media (max-width:  600px) { .dd-vitals-grid { grid-template-columns: repeat(2, 1fr) !important; } }
+.vital-card-critical {
+    border-color: #f7c5d0 !important;
+    background: #fff8fa !important;
+}
+.vital-card-critical .vital-value { color: #c0345a; }
+.dd-vital-icon { font-size: 18px; margin-bottom: 5px; }
+.vital-unit    { font-size: 11px; font-weight: 400; }
+
+/* Medications */
+.dd-med-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 10px;
+}
+.dd-med-item {
+    background: #f9fafb;
+    border: 1px solid rgba(23, 56, 99, 0.07);
+    border-radius: 10px;
+    padding: 12px 14px;
+}
+.dd-med-name   { font-size: 14px; font-weight: 600; color: #232a36; margin-bottom: 3px; }
+.dd-med-detail { font-size: 12px; color: #4a5666; }
+
+/* Visit history */
+.dd-visits-list { display: flex; flex-direction: column; }
+.dd-visit-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(23, 56, 99, 0.06);
+    font-size: 13px;
+}
+.dd-visit-item:last-child { border-bottom: none; }
+.dd-visit-reason { flex: 1; color: #232a36; }
+
+/* Labs grid inside drilldown section */
+.dd-section #patient-labs-grid .k-grid {
+    border: none;
+}
+.dd-section #patient-labs-grid .k-grid-header th {
+    background: #f9fafb;
+    font-size: 12px;
+    font-weight: 600;
+    color: #4a5666;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    padding: 8px 14px;
+    border-bottom: 1px solid rgba(23,56,99,0.08);
+}
+.dd-section #patient-labs-grid .k-table-td {
+    font-size: 13px;
+    padding: 8px 14px;
+    border-bottom: 1px solid rgba(23,56,99,0.05);
+    vertical-align: middle;
+}
+.dd-section #patient-labs-grid .k-table-row:last-child .k-table-td { border-bottom: none; }
+.dd-section #patient-labs-grid .k-table-row:hover .k-table-td { background: #f9fafb; }
+
+/* ═══════════════════════════════════════════════════════
+   ANALYTICS PAGE
+═══════════════════════════════════════════════════════ */
+.analytics-wrapper { position:relative; z-index:1; padding:0 16px 24px; max-width: min(1648px, calc(100% - 32px)); margin:0 auto; }
+.analytics-page-header { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; padding-bottom:32px; overflow:hidden; max-width: min(1648px, calc(100% - 32px)); margin:0 auto; }
+.analytics-page-header h1 { font-size:28px; font-weight:800; color:#1a1a2e; margin:0 0 4px; }
+.analytics-page-header p  { font-size:14px; color:#888; margin:0; }
+.analytics-header-controls { display:flex; align-items:center; gap:12px; flex-shrink:1; flex-wrap:wrap; justify-content:flex-end; min-width:0; }
+
+
+/* During PDF capture: remove overflow clipping so chart labels/decorations aren't cut */
+#analytics-body {
+    position: relative;
+    z-index: 1;
+    padding: 0 16px 24px;
+    max-width: min(1648px, calc(100% - 32px));
+    margin: 0 auto;
+}
+#analytics-body.k-pdf-export .analytics-chart-card,
+#analytics-body.k-pdf-export .analytics-row {
+    overflow: visible;
+}
+
+@media (max-width: 1100px) {
+    .analytics-page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 767px) {
+    .analytics-page-header {
+        gap: 18px;
+        padding-bottom: 24px;
+    }
+}
+
+/* KPI row */
+.analytics-kpi-row { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:20px; }
+.kpi-card { padding:20px 24px; display:flex; flex-direction:column; gap:6px; }
+.kpi-icon { font-size:22px; }
+.kpi-label { font-size:12px; color:#888; font-weight:500; text-transform:uppercase; letter-spacing:0.4px; }
+.kpi-value { font-size:28px; font-weight:800; color:#1a1a2e; }
+.kpi-trend { font-size:12px; color:#888; }
+
+/* Chart rows */
+.analytics-row { display:grid; gap:20px; margin-bottom:20px; }
+.analytics-row-2col { grid-template-columns:1.6fr 1fr; }
+.analytics-row-2col-equal { grid-template-columns:1fr 1fr; }
+/* Analytics chart cards — k-card-body padding reset (header uses chart-header styles) */
+.analytics-chart-card .k-card-body {
+    padding: 0;
+}
+
+.analytics-chart-card { padding:0; overflow:hidden; }
+.analytics-gauge-card { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:16px; }
+.chart-card-title { font-size:14px; font-weight:700; color:#1a1a2e; padding:16px 20px 0; margin-bottom:-8px; }
+
+/* Risk gauge labels */
+.risk-label { text-align:center; font-size:15px; font-weight:700; padding:0 0 4px; }
+.risk-label.low      { color:#1a874a; }
+.risk-label.moderate { color:#b8860b; }
+.risk-label.high     { color:#c0345a; }
+.risk-score-number { text-align:center; font-size:13px; color:#888; padding-bottom:12px; }
+
+/* Patient select templates */
+.patient-option { display:flex; align-items:center; gap:8px; padding:2px 0; }
+.patient-option-avatar { width:28px; height:28px; border-radius:50%; object-fit:cover; flex-shrink:0; }
+.patient-option-value  { display:flex; align-items:center; gap:8px; }
+
+/* Risk badge inside KPI card */
+.kpi-risk-pill { display:inline-block; padding:2px 10px; border-radius:12px; font-size:11px; font-weight:600; }
+.kpi-risk-low      { background:#d4f5e2; color:#1a874a; }
+.kpi-risk-moderate { background:#fef3cd; color:#b8860b; }
+.kpi-risk-high     { background:#fde0e8; color:#c0345a; }
+
+/* Patient select width */
+#patient-select-container { min-width: 200px; }
+#patient-select { width: 200px; }
+.analytics-header-controls .k-dropdownlist { min-width:200px; max-width:300px; flex:1 1 200px; }
+.analytics-header-controls .k-daterangepicker { width:260px; }
+
+/* Chart card HTML header (titles above chart canvas) */
+.chart-header { padding:16px 20px 4px; }
+.chart-title   { font-size:14px; font-weight:700; color:#1a1a2e; }
+.chart-subtitle { font-size:12px; color:#888; margin-top:2px; }
+
+/* Lab bullet chart rows — fixed-width label ensures all bars start at the same x */
+.klab-row {
+    display: flex;
+    align-items: center;
+}
+.klab-label {
+    width: 110px;
+    flex-shrink: 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #4a5666;
+    text-align: right;
+    padding-right: 12px;
+    white-space: nowrap;
+}
+.klab-chart { flex: 1; min-width: 0; }
+
+/* Gauge card layout */
+.analytics-gauge-card { display:flex; flex-direction:column; align-items:center; padding:0; justify-content:flex-start; }
+
+/* Risk gauge overlay (shows % inside arc) */
+.risk-gauge-wrap { position:relative; width:100%; }
+.risk-gauge-center { display:flex; flex-direction:column; align-items:center; }
+.risk-score-pct   { font-size:36px; font-weight:800; line-height:1; }
+.risk-score-outof { font-size:13px; color:#888; margin-top:4px; }
+
+/* Risk score legend */
+.risk-score-legend { padding:4px 20px 16px; width:100%; margin-top: 30px; }
+.risk-legend-item  { display:flex; align-items:center; padding:5px 0; font-size:13px; color:#555; border-bottom:1px solid #f4f4f8; }
+.risk-legend-item:last-child { border-bottom:none; }
+.rsl-dot   { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:8px; flex-shrink:0; }
+.rsl-dot.rsl-high   { background:#c0345a; }
+.rsl-dot.rsl-medium { background:#b8860b; }
+.rsl-dot.rsl-low    { background:#1a874a; }
+.rsl-label { flex:1; }
+.rsl-range { color:#aaa; font-size:12px; }
+
+/* ═══════════════════════════════════════════════════════
+   ANALYTICS PAGE — DIM MODE OVERRIDES
+   Same ::after overlay approach used on Home, Schedule &
+   Patients pages. Each chart card gets tinted; chart
+   content stays clear above it.
+═══════════════════════════════════════════════════════ */
+
+.page-dimmed .analytics-chart-card,
+.page-dimmed .kpi-card {
+    position: relative;
+    isolation: isolate;
+}
+
+.page-dimmed .analytics-chart-card::after,
+.page-dimmed .kpi-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: rgba(239, 232, 239, 0.66);
+    pointer-events: none;
+    z-index: 1;
+    transition: background-color 0.3s ease;
+}
+
+/* Keep chart content visible above the overlay */
+.page-dimmed .analytics-chart-card .k-chart,
+.page-dimmed .analytics-chart-card .chart-header,
+.page-dimmed .analytics-gauge-card .risk-gauge-wrap,
+.page-dimmed .analytics-gauge-card .risk-score-legend,
+.page-dimmed .analytics-gauge-card .chart-header,
+.page-dimmed .kpi-card > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PROFILE MANAGEMENT WINDOW
+═══════════════════════════════════════════════════════ */
+
+/* Window container */
+#profile-window { padding: 20px; }
+
+/* Profile Image section */
+.pm-section { margin-bottom: 20px; }
+.pm-label { display: block; font-size: 13px; font-weight: 600; color: #232A36; margin-bottom: 12px; }
+.pm-photo-wrap { width: 100%; margin-bottom: 18px; border-radius: 12px; overflow: hidden; background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%); }
+.pm-photo { width: 100%; height: 408px; display: block; object-fit: cover; object-position: center top; }
+#pm-btn-upload.k-button { width: 100%; min-height: 42px; justify-content: center; background: #334155; border-color: #334155; color: #ffffff; box-shadow: none; }
+#pm-btn-upload.k-button:hover,
+#pm-btn-upload.k-button:focus { background: #273344; border-color: #273344; color: #ffffff; }
+
+/* Password Policy callout */
+.pm-callout { margin-bottom: 20px; border-left: 4px solid #c7d2fe; border-radius: 12px; background: #f1f5f9; border-top: 1px solid rgba(23, 56, 99, 0.08); border-right: 1px solid rgba(23, 56, 99, 0.08); border-bottom: 1px solid rgba(23, 56, 99, 0.08); box-shadow: none; padding: 8px 16px; }
+.pm-callout strong { display: block; font-size: 16px; font-weight: 400; color: #2f3a8f; margin-bottom: 2px; line-height: 1.5; }
+.pm-callout ul { margin: 0; padding-left: 18px; }
+.pm-callout li { font-size: 14px; color: #2f3a8f; line-height: 1.42; }
+
+/* Personal Information section */
+.pm-section-title { font-size: 14px; font-weight: 700; color: #1a1a2e; margin-bottom: 14px; }
+.pm-field { margin-bottom: 14px; }
+.pm-field label { display: block; font-size: 12px; font-weight: 600; color: #555; margin-bottom: 4px; }
+.pm-field .k-widget,
+.pm-field .k-input { width: 100%; }
+
+/* Footer */
+.pm-footer { display: flex; justify-content: flex-end; gap: 10px; padding-top: 10px; border-top: 1px solid #eeedf8; margin-top: 6px; }
+
+/* Avatar trigger */
+#profile-trigger { cursor: pointer; transition: opacity .15s; }
+#profile-trigger:hover { opacity: .82; }

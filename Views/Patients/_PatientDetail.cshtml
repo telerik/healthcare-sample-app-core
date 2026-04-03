@@ -1,0 +1,131 @@
+@model HealthcareApp.Models.PatientRecord
+@{
+    var vi = Model.Vitals;
+    var adm = Model.AdmissionDetails ?? new HealthcareApp.Models.AdmissionInfo();
+    var rrVal = vi.Rr > 0 ? vi.Rr : 16;
+
+    var statusTheme = Model.Status switch
+    {
+        "Critical"   => BadgeColor.Error,
+        "Monitoring" or "Warning" => BadgeColor.Warning,
+        "Stable" or "Complete"    => BadgeColor.Success,
+        "In Progress"             => BadgeColor.Secondary,
+        _ => BadgeColor.Info
+    };
+    var statusFill = Model.Status is "Upcoming" or "Cancelled" ? BadgeFill.Outline : BadgeFill.Solid;
+}
+
+<div class="profile-top-cards">
+    @* Card 1: Patient Info *@
+    <div class="k-card profile-info-card">
+        <div class="k-card-body">
+        <div class="profile-info-header">
+            <img src="@Model.Avatar.Replace("/thumb/", "/")" alt="@Model.Name" class="patient-avatar-profile" />
+            <div class="profile-name-status">
+                <span class="profile-patient-name">@Model.Name</span>
+                @(Html.Kendo().Badge()
+                    .Name("detail-status-badge")
+                    .Text(Model.Status)
+                    .ThemeColor(statusTheme)
+                    .FillMode(statusFill)
+                    .Rounded(Rounded.Full)
+                    .Size(BadgeSize.Large)
+                )
+            </div>
+        </div>
+        <p class="profile-basic-heading">Basic Information</p>
+        <div class="profile-info-row">
+            <span class="profile-info-label">Patient ID</span>
+            <span class="profile-info-value"><strong>@Model.Id</strong></span>
+        </div>
+        <div class="profile-info-row">
+            <span class="profile-info-label">Age/Gender</span>
+            <span class="profile-info-value"><strong>@Model.Age years, @Model.Gender</strong></span>
+        </div>
+        </div>
+    </div>
+
+    @* Card 2: Recent Vitals *@
+    <div class="k-card profile-section-card">
+        <div class="k-card-body">
+        <p class="profile-section-heading">Recent Vitals</p>
+        <div class="profile-info-row">
+            <span class="profile-info-label">Heart Rate</span>
+            <span class="profile-info-value@(vi.Hr > 100 || vi.Hr < 60 ? " critical" : "")">@vi.Hr bpm</span>
+        </div>
+        <div class="profile-info-row">
+            <span class="profile-info-label">Blood Pressure</span>
+            <span class="profile-info-value@(vi.Systolic > 140 ? " critical" : "")">@vi.Bp.Replace(" mmHg", "")</span>
+        </div>
+        <div class="profile-info-row">
+            <span class="profile-info-label">Temperature</span>
+            <span class="profile-info-value@(vi.Temp > 99.5 ? " critical" : "")">@vi.Temp&deg;F</span>
+        </div>
+        <div class="profile-info-row">
+            <span class="profile-info-label">O2 Saturation</span>
+            <span class="profile-info-value@(vi.Spo2 < 94 ? " critical" : "")">@(vi.Spo2)%</span>
+        </div>
+        <div class="profile-info-row">
+            <span class="profile-info-label">Respiratory Rate</span>
+            <span class="profile-info-value@(rrVal > 20 || rrVal < 12 ? " critical" : "")">@rrVal breaths/min</span>
+        </div>
+        </div>
+    </div>
+
+    @* Card 3: Admission Details *@
+    <div class="k-card profile-section-card">
+        <div class="k-card-body">
+        <p class="profile-section-heading">Admission Details</p>
+        <div class="profile-info-row">
+            <span class="profile-info-label">Department</span>
+            <span class="profile-info-value">@(string.IsNullOrEmpty(adm.Department) ? Model.Ward : adm.Department)</span>
+        </div>
+        <div class="profile-info-row">
+            <span class="profile-info-label">Ward</span>
+            <span class="profile-info-value">@(string.IsNullOrEmpty(adm.WardUnit) ? Model.Ward : adm.WardUnit)</span>
+        </div>
+        <div class="profile-info-row">
+            <span class="profile-info-label">Room</span>
+            <span class="profile-info-value">@(adm.Room > 0 ? adm.Room.ToString() : "\u2014")</span>
+        </div>
+        <div class="profile-info-row">
+            <span class="profile-info-label">Admission Date</span>
+            <span class="profile-info-value">@(string.IsNullOrEmpty(adm.AdmissionDate) ? Model.LastVisit : adm.AdmissionDate)</span>
+        </div>
+        <div class="profile-info-row">
+            <span class="profile-info-label">Assigned Nurse</span>
+            <span class="profile-info-value">@(string.IsNullOrEmpty(adm.AssignedNurse) ? "\u2014" : adm.AssignedNurse)</span>
+        </div>
+        </div>
+    </div>
+</div>
+
+@* Patient Note card *@
+<div class="k-card profile-note-card">
+    <div class="k-card-header detail-card-header-row">
+        <span class="k-card-title detail-card-header-text">Patient Note</span>
+        @(Html.Kendo().Button()
+            .Name("btn-save-patient-note")
+            .Content("&#128190; Save")
+            .HtmlAttributes(new { @class = "detail-save-btn" })
+            .Events(e => e.Click("onSavePatientNote"))
+        )
+    </div>
+    <div class="k-card-body">
+    @(Html.Kendo().Editor()
+        .Name("patient-notes-editor")
+        .Tools(t =>
+        {
+            t.Bold(); t.Italic(); t.Underline(); t.Strikethrough();
+            t.JustifyLeft(); t.JustifyCenter(); t.JustifyRight(); t.JustifyFull();
+            t.FontName(); t.Formatting(); t.FontSize();
+        })
+        .Value(Model.Notes)
+    )
+    </div>
+</div>
+
+@* Labs card — loaded as a separate partial *@
+<div class="k-card profile-labs-card">
+    <div id="patient-labs-grid-container"></div>
+</div>

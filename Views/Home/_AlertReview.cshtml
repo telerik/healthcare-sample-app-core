@@ -1,0 +1,74 @@
+@model HealthcareApp.Models.AlertReviewViewModel
+
+<div class="ar-content">
+    @* Header *@
+    <div class="ar-header">
+        <span class="ar-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+        </span>
+        <div>
+            <div class="ar-title">Alert Review</div>
+            <div class="ar-time">@Model.Alert.Time</div>
+        </div>
+    </div>
+
+    @* Badges *@
+    <div class="ar-badges">
+        <span class="ar-badge @Model.SeverityCss">@Model.SeverityLabel</span>
+        <span class="ar-badge ar-badge-type">@Model.AlertType</span>
+    </div>
+
+    @* Alert Details *@
+    <div class="ar-details">
+        <div class="ar-details-title">Alert Details</div>
+        <p class="ar-details-text">@Model.AlertDescription</p>
+    </div>
+
+    <hr class="ar-divider" />
+
+    @* Patient Information *@
+    @if (Model.Patient != null)
+    {
+        var p = Model.Patient;
+        <div class="ar-patient-header">
+            <svg class="ar-patient-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+            <span class="ar-patient-heading">Patient Information</span>
+            <a class="ar-profile-link" href="#" data-patient-id="@p.Id">View Full Profile &rarr;</a>
+        </div>
+        <div class="ar-patient-card">
+            <div class="ar-patient-name">@p.Name</div>
+            <div class="ar-patient-id">Patient ID: @p.Id</div>
+            <div class="ar-vitals-label">Current Vitals</div>
+            <div class="ar-vitals-grid">
+                <div class="ar-vital">
+                    <span class="ar-vital-icon ar-vital-icon-bp">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    </span>
+                    <div><div class="ar-vital-label">Blood Pressure</div><div class="ar-vital-value">@p.Vitals.Bp.Replace(" mmHg", "")</div></div>
+                </div>
+                <div class="ar-vital">
+                    <span class="ar-vital-icon ar-vital-icon-hr">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg>
+                    </span>
+                    <div><div class="ar-vital-label">Heart Rate</div><div class="ar-vital-value">@p.Vitals.Hr bpm</div></div>
+                </div>
+                <div class="ar-vital">
+                    <span class="ar-vital-icon ar-vital-icon-temp">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg>
+                    </span>
+                    <div><div class="ar-vital-label">Temperature</div><div class="ar-vital-value">@(p.Vitals.Temp)°F</div></div>
+                </div>
+                <div class="ar-vital">
+                    <span class="ar-vital-icon ar-vital-icon-spo2">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16.5A5.5 5.5 0 0112.5 11h0A5.5 5.5 0 0118 16.5c0 3-2.5 5.5-5.5 5.5S7 19.5 7 16.5z"/><path d="M12.5 2v9"/></svg>
+                    </span>
+                    <div><div class="ar-vital-label">Oxygen Sat.</div><div class="ar-vital-value">@(p.Vitals.Spo2)%</div></div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

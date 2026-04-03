@@ -1,0 +1,27 @@
+@{
+    var patientId = ViewData["PatientId"]?.ToString() ?? "";
+}
+
+@(Html.Kendo().Grid<HealthcareApp.Models.EnrichedLabRow>()
+    .Name("patient-labs-grid")
+    .Columns(columns =>
+    {
+        columns.Bound(c => c.Test).Title("Test").Width(220);
+        columns.Bound(c => c.Result).Title("Result").Width(160);
+        columns.Bound(c => c.Reference).Title("Reference").Width(150);
+        columns.Bound(c => c.Status).Title("Status").Width(140)
+            .ClientTemplate("<span class='k-badge-status' data-status='#= Status #'></span>");
+        columns.Bound(c => c.Note).Title("Note").Width(300);
+    })
+    .Sortable()
+    .Pageable(p => p
+        .PageSizes(new[] { 5, 10, 20 })
+        .ButtonCount(5)
+        .Messages(m => m.ItemsPerPage("Items per page").Display("{0} - {1} of {2} items"))
+    )
+    .DataSource(ds => ds
+        .Ajax()
+        .Read(r => r.Action("PatientLabs_Read", "Patients").Data("function() { return { patientId: '" + patientId + "' }; }"))
+    )
+    .Events(e => e.DataBound("onPatientLabsGridDataBound"))
+)
