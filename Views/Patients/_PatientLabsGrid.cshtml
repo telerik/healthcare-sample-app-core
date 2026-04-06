@@ -14,6 +14,7 @@
         columns.Bound(c => c.Note).Title("Note").Width(300);
     })
     .Sortable()
+    .Scrollable()
     .Pageable(p => p
         .PageSizes(new[] { 5, 10, 20 })
         .ButtonCount(5)

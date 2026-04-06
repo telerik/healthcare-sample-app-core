@@ -46,12 +46,10 @@ _aiAssistanceClickImpl = function() {
         $("#list-ai-panel").show();
         $("#patients-list-body").addClass("ai-panel-open");
         syncPatientsSidePanelHeights();
-        if (g) { kendo.resize($("#patients-grid")); }
     } else {
         $("#list-ai-panel").hide();
         $("#patients-list-body").removeClass("ai-panel-open");
         clearPatientsSidePanelHeights();
-        if (g) { kendo.resize($("#patients-grid")); }
     }
 };
 
@@ -330,7 +328,6 @@ function openPatientPreview(patient) {
         $("#patient-preview-panel").html(html).css("display", "flex");
         $("#patients-list-body").addClass("preview-panel-open");
         syncPatientsSidePanelHeights();
-        if (grid) { kendo.resize($("#patients-grid")); }
     });
 }
 
@@ -339,7 +336,6 @@ function closePatientPreview() {
     $("#patient-preview-panel").css("display", "none").empty();
     $("#patients-list-body").removeClass("preview-panel-open");
     clearPatientsSidePanelHeights();
-    if (grid) { kendo.resize($("#patients-grid")); }
 }
 
 function openAllergyDetailsDialog(patient) {

@@ -34,14 +34,18 @@ function loadDoctorProfile() {
             populateProfileForm();
         });
 }
-
 /* ═══════════════════════════════════════════════════════
    EVENT HANDLERS — wired by HTML Helpers in _Layout.cshtml
 ═══════════════════════════════════════════════════════ */
 
 /* ── Window Open event ── */
 function onProfileWindowOpen() {
+     
     populateProfileForm();
+    setTimeout(function () {
+        $('.k-upload-button .k-button-text').prepend("<span class='k-icon upload'></span>");
+        kendo.ui.icon($(".upload"), { icon: 'upload' }); // Add icon to upload button         
+    })
 }
 
 /* ── Upload Success event — Kendo Upload async posts the file to the server ── */

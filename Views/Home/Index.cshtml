@@ -153,6 +153,7 @@
                     })
                     .Sortable()
                     .Scrollable()
+                    .Resizable(r => r.Columns(true))
                     .Height(600)
                     .DataSource(ds => ds
                         .Ajax()
