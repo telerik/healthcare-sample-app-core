@@ -117,7 +117,7 @@
                     .Series(s =>
                     {
                         s.Donut("Value", "Category")
-                            .Padding(20).HoleSize(72)
+                            .Padding(30).HoleSize(90)
                             .Labels(l => l.Visible(true).Template("#= category #").Align(ChartSeriesLabelsAlign.Column).Position(ChartSeriesLabelsPosition.OutsideEnd))
                             .Overlay(o => o.Gradient(ChartSeriesGradient.None));
                     })

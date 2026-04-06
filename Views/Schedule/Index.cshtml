@@ -24,7 +24,7 @@
         <div class="schedule-main">
             <div class="k-card sched-card">                
                 @{
-                    var today = DateTime.Today;
+                    var today = new DateTime(2026, 3, 30);
                     var startTime = new DateTime(today.Year, today.Month, today.Day, 7, 0, 0);
                     var endTime = new DateTime(today.Year, today.Month, today.Day, 19, 0, 0);
                 }
@@ -161,8 +161,8 @@
         .Visible(false)
         .Events(e => e.Close("onAddTaskDialogClose").Show("onAddTaskDialogShow"))
         .Actions(actions => {
-            actions.Add().Text("Cancel").Action("onAddTaskCancel");
-            actions.Add().Text("Save").Primary(true).Action("onAddTaskSave");
+            actions.Add().Text("Discard").Action("onAddTaskCancel");
+            actions.Add().Text("Add task").Primary(true).Action("onAddTaskSave");
         })
         .Content(@<text>
             <div class="add-task-form">
@@ -193,6 +193,7 @@
                         .Name("atf-description")
                         .Placeholder("Enter task description...")
                         .Rows(4)
+                        .Resize(TextAreaResize.Both)
                     )
                 </div>
             </div>

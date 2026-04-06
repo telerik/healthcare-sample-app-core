@@ -106,7 +106,10 @@
         <span class="k-card-title detail-card-header-text">Patient Note</span>
         @(Html.Kendo().Button()
             .Name("btn-save-patient-note")
-            .Content("&#128190; Save")
+            .Content("Save")
+            .Icon("save")
+            .Rounded(Rounded.Full)
+            .FillMode(ButtonFillMode.Outline)
             .HtmlAttributes(new { @class = "detail-save-btn" })
             .Events(e => e.Click("onSavePatientNote"))
         )

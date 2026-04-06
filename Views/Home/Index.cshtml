@@ -175,7 +175,7 @@
                 </div>
                 <div class="k-card-body">
                     <div class="next-patient-header">
-                        <img class="patient-avatar" src="/content/patient-images/women/michael-dam-mEZ3PoFGs_k-unsplash.jpg" alt="Emma Johnson" />
+                        <img class="patient-avatar" src="/content/patient-images/women/aiony-haust-3TLl_97HNJo-unsplash.jpg" alt="Emma Johnson" />
                         <div class="patient-info">
                             <div class="patient-name-row">
                                 <span class="patient-name">Emma Johnson</span>
@@ -195,7 +195,13 @@
                             <div class="detail-label">Reason for visit</div>
                             <div class="detail-value">Acute respiratory failure follow-up</div>
                         </div>
-                        <a href="#" class="detail-link" id="link-reason-details">Details &rsaquo;</a>
+                        @(Html.Kendo().Button()
+                            .Name("link-reason-details")
+                            .Content("Details &rsaquo;")
+                            .FillMode(ButtonFillMode.Link)
+                            .HtmlAttributes(new { @class = "detail-link" })
+                            .Events(e => e.Click("onReasonDetailsClick"))
+                        )
                     </div>
 
                     <div class="patient-detail-row">
@@ -204,7 +210,13 @@
                             <div class="detail-label">Allergy Alert</div>
                             <div class="detail-value">Penicillin, NSAIDs</div>
                         </div>
-                        <a href="#" class="detail-link" id="link-allergy-details">Details &rsaquo;</a>
+                        @(Html.Kendo().Button()
+                            .Name("link-allergy-details")
+                            .Content("Details &rsaquo;")
+                            .FillMode(ButtonFillMode.Link)
+                            .HtmlAttributes(new { @class = "detail-link" })
+                            .Events(e => e.Click("onAllergyDetailsClick"))
+                        )
                     </div>
                 </div>
 
@@ -262,7 +274,12 @@
             </div>
             <div class="dialog-field">
                 <label class="dialog-label">Clinical Note</label>
-                <textarea id="note-textarea" class="note-textarea" placeholder="Add clinical notes, observations, treatment plans, etc."></textarea>
+                @(Html.Kendo().TextArea()
+                    .Name("note-textarea")
+                    .Placeholder("Add clinical notes, observations, treatment plans, etc.")
+                    .Rows(6)
+                    .Resize(TextAreaResize.Both)
+                )
             </div>
         </text>)
     )
@@ -296,15 +313,20 @@
             <div class="dialog-field">
                 <label class="dialog-label">Select Lab Tests</label>
                 <div class="lab-search-wrap">
-                    <input id="lab-test-search" type="text" class="lab-test-search" placeholder="Search Lab Tests" />
-                    @(Html.Kendo().Button()
-                        .Name("lab-search-clear")
-                        .Icon("x")
-                        .FillMode(ButtonFillMode.Flat)
-                        .HtmlAttributes(new { @class = "lab-search-clear", title = "Clear" })
+                    @(Html.Kendo().TextBox()
+                        .Name("lab-test-search")
+                        .Placeholder("Search Lab Tests")
+                        .ClearButton(true)
+                        .Events(e => e.Change("onLabTestSearchChange"))
                     )
                 </div>
-                <div id="lab-test-list" class="lab-test-list"></div>
+                @(Html.Kendo().ListView<object>()
+                    .Name("lab-test-list")
+                    .TagName("div")
+                    .HtmlAttributes(new { @class = "lab-test-list" })
+                    .ClientTemplateHandler("labTestItemTemplate")
+                    .Events(e => e.DataBound("onLabTestListDataBound"))
+                )
             </div>
         </text>)
     )
@@ -344,11 +366,20 @@
                 </div>
                 <div class="nurse-msg-field">
                     <label class="nurse-msg-label">Subject</label>
-                    <input id="nurse-msg-subject" type="text" class="nurse-msg-input" placeholder="Subject" />
+                    @(Html.Kendo().TextBox()
+                        .Name("nurse-msg-subject")
+                        .Placeholder("Subject")
+                        .HtmlAttributes(new { @class = "nurse-msg-input" })
+                    )
                 </div>
                 <div class="nurse-msg-field">
                     <label class="nurse-msg-label">Description</label>
-                    <textarea id="nurse-msg-body" class="nurse-msg-textarea" placeholder="Write your message here..."></textarea>
+                    @(Html.Kendo().TextArea()
+                        .Name("nurse-msg-body")
+                        .Placeholder("Write your message here...")
+                        .Rows(4)
+                        .Resize(TextAreaResize.Both)
+                    )
                 </div>
             </div>
         </text>)
@@ -462,7 +493,6 @@
                     items.Add().Type(AppBarItemType.ContentItem).Template("<span class='sparkles'></span>");
                     items.Add().Type(AppBarItemType.ContentItem).Template("<strong class='ai-chat-header-title'>AI Assistant</strong>");
                     items.Add().Type(AppBarItemType.Spacer);
-                    items.Add().Type(AppBarItemType.ContentItem).Template("<span class='close-chat'>X</span>");
                 })
                 .Suggestions(suggestions =>
                 {
@@ -474,7 +504,6 @@
                 .MessageTemplateHandler("renderHomeAiChatMessage")
                 .Events(events => events
                     .SendMessage("onHomeAiChatSendMessage")
-                    .SuggestionClick("onHomeAiChatSuggestionClick")
                 )
             )
         </text>)

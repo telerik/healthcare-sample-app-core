@@ -135,6 +135,10 @@ function getUnreadCount() {
     return notificationsData.filter(function (n) { return !n.read; }).length;
 }
 
+function initNotifDropdown() {
+    updateBadge();
+}
+
 function updateBadge() {
     var count = getUnreadCount();
     var badge = $("#notif-badge").data("kendoBadge");
@@ -167,24 +171,24 @@ function renderNotifPanel(callback) {
     });
 }
 
-function openNotifPanel() {
-    var $panel = $("#np-dropdown");
-    if ($panel.hasClass("np-open")) {
-        closeNotifPanel();
-        return;
-    }
-
+function onNotifPopoverShow(e) {
     renderNotifPanel(function () {
-        /* Mark all read */
-        $panel.on("click.np", "#np-mark-all", function () {
+        var $panel = $("#np-dropdown");
+
+        /* Remove old delegated handlers to avoid duplicates */
+        $panel.off("click.np");
+
+        /* Mark all read — do NOT close the popover */
+        $panel.on("click.np", "#np-mark-all", function (ev) {
+            ev.stopPropagation();
             $.each(notificationsData, function (_, n) { n.read = true; });
             renderNotifPanel();
             updateBadge();
         });
 
         /* Dismiss individual */
-        $panel.on("click.np", ".np-dismiss", function (e) {
-            e.stopPropagation();
+        $panel.on("click.np", ".np-dismiss", function (ev) {
+            ev.stopPropagation();
             var id = parseInt($(this).data("id"), 10);
             notificationsData = notificationsData.filter(function (n) { return n.id !== id; });
             renderNotifPanel();
@@ -192,8 +196,8 @@ function openNotifPanel() {
         });
 
         /* Action link — mark read and navigate */
-        $panel.on("click.np", ".np-action", function (e) {
-            e.preventDefault();
+        $panel.on("click.np", ".np-action", function (ev) {
+            ev.preventDefault();
             var id = parseInt($(this).data("id"), 10);
             var patientId = $(this).data("patient");
             $.each(notificationsData, function (_, n) { if (n.id === id) n.read = true; });
@@ -201,46 +205,15 @@ function openNotifPanel() {
 
             var notif = notificationsData.filter(function (n) { return n.id === id; })[0];
             if (notif && notif.severity !== "system") {
+                var popover = $("#notif-popover").data("kendoPopover");
+                if (popover) popover.hide();
                 if (patientId) {
-                    window.location.href = "/patients";
+                    window.location.href = navRoutes.Patients;
                 } else if (notif.title.indexOf("Schedule") >= 0 || notif.title.indexOf("Appointment") >= 0) {
-                    window.location.href = "/schedule";
+                    window.location.href = navRoutes.Schedule;
                 }
             }
-            closeNotifPanel();
         });
-
-        $panel.addClass("np-open");
-
-        /* Close on outside click */
-        setTimeout(function () {
-            $(document).one("click.np-outside", function (ev) {
-                if (!$(ev.target).closest("#np-dropdown, #notif-btn").length) {
-                    closeNotifPanel();
-                }
-            });
-        }, 10);
-    });
-}
-
-function closeNotifPanel() {
-    var $panel = $("#np-dropdown");
-    $panel.off("click.np").removeClass("np-open");
-    $(document).off("click.np-outside");
-}
-
-function initNotifDropdown() {
-    /* Inject dropdown container after the notif-wrap */
-    if (!$("#np-dropdown").length) {
-        $(".notif-wrap").append('<div id="np-dropdown" class="np-dropdown"></div>');
-    }
-
-    /* Badge is created by HTML Helper in _Layout.cshtml — just update it */
-    updateBadge();
-
-    $(document).on("click.notif", "#notif-btn", function (e) {
-        e.stopPropagation();
-        openNotifPanel();
     });
 }
 
@@ -249,4 +222,14 @@ $(document).ready(function () {
     initProfileTrigger();
     loadDoctorProfile();
     initNotifDropdown();
+
+    /* Close popover on outside click */
+    $(document).on("click", function (ev) {
+        var popover = $("#notif-popover").data("kendoPopover");
+        if (popover && popover.popup && popover.popup.visible()) {
+            if (!$(ev.target).closest(".k-popover, #notif-btn").length) {
+                popover.hide();
+            }
+        }
+    });
 });

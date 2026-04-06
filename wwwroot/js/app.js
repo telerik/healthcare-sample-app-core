@@ -20,8 +20,20 @@ function onAppointmentsRequestEnd(e) {
     if (_onAppointmentsLoaded) { _onAppointmentsLoaded(); }
 }
 
+function onNotifBtnClick(e) {
+    /* Popover handles show/hide via its own API — no manual toggle needed */
+}
+
 function onViewScheduleClick() {
-    window.location.href = "/schedule";
+    window.location.href = navRoutes.Schedule;
+}
+
+function onReasonDetailsClick() {
+    $("#dialog-reason-visit").data("kendoDialog").open();
+}
+
+function onAllergyDetailsClick() {
+    $("#dialog-allergy-details").data("kendoDialog").open();
 }
 
 var _initAiChatIfNeeded = function () {};
@@ -41,18 +53,6 @@ function onHomeAiChatSendMessage(e) {
     }
     _homeAiChatSendMessage(e);
     e.sender.scrollToBottom();
-}
-
-function onHomeAiChatSuggestionClick(e) {
-    //e.preventDefault();
-    //_homeSkipSuggestionSend = true;
-    //var chat = e.sender;
-    //var input = chat.element.find(".k-input-inner")[0];
-    //if (input) {
-    //    input.value = e.text;
-    //    input.dispatchEvent(new Event("input", { bubbles: true }));
-    //    input.focus();
-    //}
 }
 
 function renderHomeAiChatMessage(message) {
@@ -106,28 +106,42 @@ function renderAlertsList() {
 }
 
 /* ═══════════════════════════════════════════════
-   LAB TEST LIST RENDERING (global — used by handler)
+   LAB TEST LIST — ListView + Card + CheckBox
 ═══════════════════════════════════════════════ */
-function renderLabList(filter) {
+function labTestItemTemplate(data) {
+    var checked = selectedLabTests.indexOf(data.name) !== -1;
+    return '<div class="k-card k-card-horizontal lab-test-item' + (checked ? ' selected' : '') + '" data-test="' + kendo.htmlEncode(data.name) + '">' +
+               '<input type="checkbox" class="lab-test-checkbox"' + (checked ? ' checked="checked"' : '') + ' />' +
+               '<span class="lab-test-name">' + kendo.htmlEncode(data.name) + '</span>' +
+           '</div>';
+}
+
+function onLabTestListDataBound(e) {
+    var listView = e.sender;
+    listView.element.find(".lab-test-checkbox").each(function () {
+        if (!$(this).data("kendoCheckBox")) {
+            $(this).kendoCheckBox({ rounded: "full" });
+        }
+    });
+}
+
+function onLabTestSearchChange(e) {
+    var q = (e.sender.value() || "").toLowerCase().trim();
+    filterLabListView(q);
+}
+
+function filterLabListView(filter) {
     var q = (filter || "").toLowerCase().trim();
-    var items = labTests.filter(function (t) {
+    var listView = $("#lab-test-list").data("kendoListView");
+    if (!listView) return;
+    var filteredData = labTests.filter(function (t) {
         return !q || t.toLowerCase().indexOf(q) !== -1;
-    });
-    var $list = $("#lab-test-list").empty();
-    if (items.length === 0) {
-        $list.append('<div class="lab-test-empty">No tests match your search.</div>');
-        return;
-    }
-    items.forEach(function (t) {
-        var checked = selectedLabTests.indexOf(t) !== -1;
-        var id = "lab-chk-" + t.replace(/[^a-z0-9]/gi, "-");
-        $list.append(
-            '<label class="lab-test-item' + (checked ? ' selected' : '') + '" data-test="' + t + '">' +
-                '<span class="lab-test-check">' + (checked ? '<span class="lab-chk-tick">&#10003;</span>' : '') + '</span>' +
-                '<span class="lab-test-name">' + t + '</span>' +
-            '</label>'
-        );
-    });
+    }).map(function (t) { return { name: t }; });
+    listView.setDataSource(new kendo.data.DataSource({ data: filteredData }));
+}
+
+function renderLabList(filter) {
+    filterLabListView(filter);
 }
 
 /* ═══════════════════════════════════════════════
@@ -148,7 +162,8 @@ function onAllergyDetailsOpen() {
 }
 
 function onNewNoteDiscard() {
-    $("#note-textarea").val("");
+    var ta = $("#note-textarea").data("kendoTextArea");
+    if (ta) ta.value("");
     var ddl = $("#note-patient-ddl").data("kendoDropDownList");
     if (ddl) ddl.select(0);
     return true;
@@ -156,43 +171,51 @@ function onNewNoteDiscard() {
 
 function onNewNoteSave() {
     var ddl  = $("#note-patient-ddl").data("kendoDropDownList");
-    var text = $("#note-textarea").val().trim();
+    var ta = $("#note-textarea").data("kendoTextArea");
+    var text = (ta ? ta.value() : "").trim();
     if (!ddl || !ddl.value()) {
-        alert("Please select a patient.");
+        kendo.alert("Please select a patient.");
         return false;
     }
     if (!text) {
-        alert("Please enter a clinical note.");
+        kendo.alert("Please enter a clinical note.");
         return false;
     }
     var patientId = ddl.value();
+    var patientName = ddl.text();
     $.ajax({
         url:         "/api/patients/" + encodeURIComponent(patientId) + "/add-note",
         type:        "POST",
         contentType: "application/json",
         data:        JSON.stringify({ text: text }),
         error: function () {
-            alert("Could not save the note. Please try again.");
+            kendo.alert("Could not save the note. Please try again.");
         }
     });
-    $("#note-textarea").val("");
+    kendo.alert("Clinical note for <strong>" + kendo.htmlEncode(patientName) + "</strong> has been saved.");
+    if (ta) ta.value("");
     return true;
 }
 
 function onNewNoteOpen() {
+    var dlg = $("#dialog-new-note").data("kendoDialog");
+    if (dlg) applySharedDialogShell(dlg);
     var ddl = $("#note-patient-ddl").data("kendoDropDownList");
     if (ddl && patientsData.length && ddl.dataSource.total() === 0) {
         ddl.setDataSource(new kendo.data.DataSource({
             data: patientsData.map(function (p) { return { text: p.Name + " (" + p.Id + ")", value: p.Id }; })
         }));
     }
-    setTimeout(function () { $("#note-textarea").focus(); }, 100);
+    setTimeout(function () {
+        var ta = $("#note-textarea").data("kendoTextArea");
+        if (ta) ta.focus();
+    }, 100);
 }
 
 function onLabTestDiscard() {
     selectedLabTests = [];
-    $("#lab-test-search").val("");
-    $("#lab-search-clear").hide();
+    var tb = $("#lab-test-search").data("kendoTextBox");
+    if (tb) tb.value("");
     var ddl = $("#lab-patient-ddl").data("kendoDropDownList");
     if (ddl) ddl.select(0);
     return true;
@@ -201,53 +224,76 @@ function onLabTestDiscard() {
 function onLabTestSend() {
     var ddl = $("#lab-patient-ddl").data("kendoDropDownList");
     if (!ddl || !ddl.value()) {
-        alert("Please select a patient.");
+        kendo.alert("Please select a patient.");
         return false;
     }
     if (selectedLabTests.length === 0) {
-        alert("Please select at least one lab test.");
+        kendo.alert("Please select at least one lab test.");
         return false;
     }
-    console.log("Lab request for:", ddl.text(), "Tests:", selectedLabTests);
+    var patientName = ddl.text();
+    var tests = selectedLabTests.join(", ");
+    kendo.alert("Lab test request for <strong>" + kendo.htmlEncode(patientName) + "</strong> has been sent.<br><br>Tests: " + kendo.htmlEncode(tests));
     selectedLabTests = [];
-    $("#lab-test-search").val("");
-    $("#lab-search-clear").hide();
+    var tb2 = $("#lab-test-search").data("kendoTextBox");
+    if (tb2) tb2.value("");
     return true;
 }
 
 function onLabTestOpen() {
+    var dlg = $("#dialog-lab-test").data("kendoDialog");
+    if (dlg) applySharedDialogShell(dlg);
     var ddl = $("#lab-patient-ddl").data("kendoDropDownList");
     if (ddl && patientsData.length && ddl.dataSource.total() === 0) {
         ddl.setDataSource(new kendo.data.DataSource({
             data: patientsData.map(function (p) { return { text: p.Name + " (" + p.Id + ")", value: p.Id }; })
         }));
     }
-    $("#lab-search-clear").hide();
-    $("#lab-test-search").val("");
+    var tb = $("#lab-test-search").data("kendoTextBox");
+    if (tb) {
+        tb.value("");
+        // Bind jQuery input event on the actual <input> for real-time filtering
+        tb.element.off("input.labfilter").on("input.labfilter", function () {
+            var q = $(this).val() || "";
+            filterLabListView(q);
+        });
+        // Fix: clear button should also reset the list
+        tb.wrapper.off("click.labclear", ".k-clear-value").on("click.labclear", ".k-clear-value", function () {
+            setTimeout(function () {
+                filterLabListView("");
+            }, 0);
+        });
+    }
     renderLabList("");
 }
 
 function onNurseChatDiscard() {
     var cb = $("#nurse-msg-to").data("kendoComboBox");
     if (cb) cb.value("");
-    $("#nurse-msg-subject").val("");
-    $("#nurse-msg-body").val("");
+    var subj = $("#nurse-msg-subject").data("kendoTextBox");
+    if (subj) subj.value("");
+    var body = $("#nurse-msg-body").data("kendoTextArea");
+    if (body) body.value("");
     return true;
 }
 
 function onNurseChatSend() {
     var cb      = $("#nurse-msg-to").data("kendoComboBox");
     var to      = cb ? cb.value().trim() : $("#nurse-msg-to").val().trim();
-    var subject = $("#nurse-msg-subject").val().trim();
-    var body    = $("#nurse-msg-body").val().trim();
-    if (!to) { alert("Please specify a recipient."); return false; }
-    if (!subject) { alert("Please enter a subject."); return false; }
-    if (!body) { alert("Please enter a message."); return false; }
+    var subjWidget = $("#nurse-msg-subject").data("kendoTextBox");
+    var bodyWidget = $("#nurse-msg-body").data("kendoTextArea");
+    var subject = (subjWidget ? subjWidget.value() : "").trim();
+    var body    = (bodyWidget ? bodyWidget.value() : "").trim();
+    if (!to) { kendo.alert("Please specify a recipient."); return false; }
+    if (!subject) { kendo.alert("Please enter a subject."); return false; }
+    if (!body) { kendo.alert("Please enter a message."); return false; }
+    kendo.alert("Message to <strong>" + kendo.htmlEncode(to) + "</strong> has been sent.<br><br>Subject: " + kendo.htmlEncode(subject));
     return true;
 }
 
 function onNurseChatOpen() {
-    /* ComboBox is initialized by the HTML Helper with static data — nothing to do here */
+    var dlg = $("#dialog-nurse-chat").data("kendoDialog");
+    if (dlg) applySharedDialogShell(dlg);
 }
 
 function onAiAssistantDialogOpen() {
@@ -312,45 +358,32 @@ $(document).ready(function () {
         var patientId = $(this).data("patient-id");
         if (patientId) {
             sessionStorage.setItem("openPatientId", patientId);
-            window.location.href = "/patients";
+            window.location.href = navRoutes.Patients;
         }
     });
 
     /* ═══════════════════════════════════════════════
        DIALOG — REASON FOR VISIT (initialized via Html Helper)
+       Button click events wired via Html Helper .Events()
     ═══════════════════════════════════════════════ */
 
-    $("#link-reason-details").on("click", function (e) {
-        e.preventDefault();
-        $("#dialog-reason-visit").data("kendoDialog").open();
-    });
-
-    $("#link-allergy-details").on("click", function (e) {
-        e.preventDefault();
-        $("#dialog-allergy-details").data("kendoDialog").open();
-    });
-
-    $(document).on("click", "#lab-test-list .lab-test-item", function () {
-        var t = $(this).data("test");
+    $(document).on("click", "#lab-test-list .lab-test-item", function (e) {
+        var $item = $(this);
+        var t = $item.data("test");
         var idx = selectedLabTests.indexOf(t);
         if (idx === -1) {
             selectedLabTests.push(t);
         } else {
             selectedLabTests.splice(idx, 1);
         }
-        renderLabList($("#lab-test-search").val());
-    });
-
-    $(document).on("input", "#lab-test-search", function () {
-        var q = $(this).val();
-        $("#lab-search-clear").toggle(q.length > 0);
-        renderLabList(q);
-    });
-
-    $(document).on("click", "#lab-search-clear", function () {
-        $("#lab-test-search").val("");
-        $(this).hide();
-        renderLabList("");
+        // Toggle visual state in-place without re-rendering
+        var isNowSelected = selectedLabTests.indexOf(t) !== -1;
+        $item.toggleClass("selected", isNowSelected);
+        var cb = $item.find(".lab-test-checkbox");
+        cb.prop("checked", isNowSelected);
+        // Sync Kendo CheckBox visual state
+        var kendoCb = cb.data("kendoCheckBox");
+        if (kendoCb) { kendoCb.check(isNowSelected); }
     });
 
 
@@ -362,7 +395,7 @@ $(document).ready(function () {
         e.preventDefault();
         var pid = $(this).data("patient-id") || (_nextPt && _nextPt.Id);
         if (pid) sessionStorage.setItem("openPatientId", pid);
-        window.location.href = "/patients";
+        window.location.href = navRoutes.Patients;
     });
 
     /* ═══════════════════════════════════════════════
@@ -385,6 +418,7 @@ $(document).ready(function () {
         if (_aiInitialised || !patientsData.length || !appointmentsData.length) return;
         _aiInitialised = true;
         if (_fab) { $("#ai-float-btn").show(); }
+        if ($(".sparkles").length) { kendo.ui.icon($(".sparkles"), { icon: 'sparkles' }); }
 
         _nextPt = patientsData.find(function (p) { return p.Id === "P-1001"; }) ||
                   (patientsData.length > 1 ? patientsData[1] : patientsData[0]);
