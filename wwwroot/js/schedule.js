@@ -290,7 +290,8 @@ function onAddTaskDialogClose() {
 }
 
 function onAddTaskDialogShow() {
-    /* Widgets are now created by HTML Helpers — nothing to initialize */
+    var dlg = $("#add-task-dialog").data("kendoDialog");
+    if (dlg) applySharedDialogShell(dlg);
 }
 
 function onAddTaskCancel() {

@@ -930,6 +930,19 @@ a { text-decoration: none; color: inherit; }
     line-height: 1.42;
 }
 .detail-link:hover { color: #232A36; }
+/* Kendo Button with FillMode.Link — strip default button chrome */
+button.detail-link.k-button {
+    padding: 0;
+    border: none;
+    background: none;
+    height: auto;
+    min-width: 0;
+    font-family: inherit;
+    font-size: 14px;
+    color: #4A5666;
+    cursor: pointer;
+}
+button.detail-link.k-button:hover { color: #232A36; background: none; }
 
 .next-patient-actions {
     display: flex;
@@ -995,42 +1008,179 @@ a { text-decoration: none; color: inherit; }
 .alert-review svg { vertical-align: middle; }
 
 /* ═══════════════════════════════════════════════════════
-   DIALOG CONTENT
+   DIALOG CONTENT — Shared styles for all form dialogs
+   (New Clinical Note, Request Lab Tests, Message Nurse,
+    Add Task)
 ═══════════════════════════════════════════════════════ */
+
+/* ── Shared dialog window overrides ────────────────── */
+.k-dialog-wrapper:has(#dialog-new-note) .k-window,
+.k-dialog-wrapper:has(#dialog-lab-test) .k-window,
+.k-dialog-wrapper:has(#dialog-nurse-chat) .k-window {
+    width: 690px !important;
+    border: 1px solid rgba(23, 56, 99, 0.08);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.07),
+                0px 20px 48px -8px rgba(0, 0, 0, 0.11);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* ── Title bar ─────────────────────────────────────── */
+.k-dialog-wrapper:has(#dialog-new-note) .k-window-titlebar,
+.k-dialog-wrapper:has(#dialog-lab-test) .k-window-titlebar,
+.k-dialog-wrapper:has(#dialog-nurse-chat) .k-window-titlebar {
+    padding: 16px;
+    border-bottom: 1px solid rgba(23, 56, 99, 0.08);
+    background: #FFFFFF;
+}
+
+.k-dialog-wrapper:has(#dialog-new-note) .k-window-title,
+.k-dialog-wrapper:has(#dialog-lab-test) .k-window-title,
+.k-dialog-wrapper:has(#dialog-nurse-chat) .k-window-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 150%;
+    color: #232A36;
+}
+
+/* ── Close button — 30 × 30 circle ────────────────── */
+.k-dialog-wrapper:has(#dialog-new-note) .k-window-titlebar-action,
+.k-dialog-wrapper:has(#dialog-lab-test) .k-window-titlebar-action,
+.k-dialog-wrapper:has(#dialog-nurse-chat) .k-window-titlebar-action {
+    width: 30px;
+    height: 30px;
+    border-radius: 9999px;
+}
+
+/* ── Content area ──────────────────────────────────── */
+.k-dialog-wrapper:has(#dialog-new-note) .k-window-content,
+.k-dialog-wrapper:has(#dialog-new-note) .k-dialog-content,
+.k-dialog-wrapper:has(#dialog-lab-test) .k-window-content,
+.k-dialog-wrapper:has(#dialog-lab-test) .k-dialog-content,
+.k-dialog-wrapper:has(#dialog-nurse-chat) .k-window-content,
+.k-dialog-wrapper:has(#dialog-nurse-chat) .k-dialog-content {
+    padding: 16px;
+    background: #FFFFFF;
+}
+
+/* ── Footer action bar ─────────────────────────────── */
+.k-dialog-wrapper:has(#dialog-new-note) .k-actions,
+.k-dialog-wrapper:has(#dialog-lab-test) .k-actions,
+.k-dialog-wrapper:has(#dialog-nurse-chat) .k-actions {
+    padding: 0 16px 16px;
+    gap: 8px;
+    justify-content: flex-end;
+    border-top: none;
+    background: #FFFFFF;
+}
+
+/* Cancel / Discard button — flat / light */
+.k-dialog-wrapper:has(#dialog-new-note) .k-actions .k-button:not(.k-primary):not(.k-button-primary),
+.k-dialog-wrapper:has(#dialog-lab-test) .k-actions .k-button:not(.k-primary):not(.k-button-primary),
+.k-dialog-wrapper:has(#dialog-nurse-chat) .k-actions .k-button:not(.k-primary):not(.k-button-primary) {
+    background: #F3F5F7;
+    border: 1px solid rgba(255, 255, 255, 0.0001);
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 142%;
+    color: #232A36;
+    height: 30px;
+    padding: 4px 8px;
+}
+
+/* ── Field layout ──────────────────────────────────── */
 .dialog-field {
-    margin-bottom: 18px;
+    margin-bottom: 16px;
 }
 .dialog-field:last-child { margin-bottom: 0; }
 .dialog-label {
     display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: #444;
-    margin-bottom: 6px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 150%;
+    color: #232A36;
+    margin-bottom: 8px;
 }
 
-.note-textarea {
-    width: 100%;
-    min-height: 140px;
-    border: 1px solid #d8d8e8;
+/* ── Shared textarea styles (all dialogs) ──────────── */
+.k-dialog-wrapper:has(#dialog-new-note) .k-textarea,
+.k-dialog-wrapper:has(#dialog-nurse-chat) .k-textarea,
+#add-task-dialog .k-textarea {
+    width: 100% !important;
+    border: 1px solid rgba(23, 56, 99, 0.08);
     border-radius: 6px;
-    padding: 12px 14px;
-    font-size: 14px;
-    font-family: inherit;
-    color: #333;
-    background: #fff;
-    resize: vertical;
-    outline: none;
-    transition: border-color 0.15s;
-    line-height: 1.6;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    line-height: 150%;
+    color: #232A36;
+    background: #FFFFFF;
 }
-.note-textarea::placeholder {
-    color: #aaa;
-    font-size: 13.5px;
+
+.k-dialog-wrapper:has(#dialog-new-note) .k-textarea textarea,
+.k-dialog-wrapper:has(#dialog-nurse-chat) .k-textarea textarea,
+#add-task-dialog .k-textarea textarea {
+    padding: 12px;
+    resize: none;
 }
-.note-textarea:focus {
-    border-color: #3d3d8f;
-    box-shadow: 0 0 0 3px rgba(61,61,143,0.08);
+
+.k-dialog-wrapper:has(#dialog-new-note) .k-textarea textarea::placeholder,
+.k-dialog-wrapper:has(#dialog-nurse-chat) .k-textarea textarea::placeholder,
+#add-task-dialog .k-textarea textarea::placeholder {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: #4A5666;
+    opacity: 0.6;
+}
+
+/* Clinical note textarea — taller */
+.k-dialog-wrapper:has(#dialog-new-note) .k-textarea {
+    min-height: 208px;
+}
+
+/* Nurse message textarea */
+.k-dialog-wrapper:has(#dialog-nurse-chat) .k-textarea {
+    min-height: auto;
+}
+
+/* ── Shared DropDownList / Input styles ─────────────── */
+.k-dialog-wrapper:has(#dialog-new-note) .k-dropdownlist,
+.k-dialog-wrapper:has(#dialog-lab-test) .k-dropdownlist {
+    width: 249px;
+    height: 34px;
+    border: 1px solid rgba(23, 56, 99, 0.08);
+    border-radius: 6px;
+    background: #FFFFFF;
+}
+
+.k-dialog-wrapper:has(#dialog-new-note) .k-dropdownlist .k-input-inner,
+.k-dialog-wrapper:has(#dialog-lab-test) .k-dropdownlist .k-input-inner {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 150%;
+    color: #232A36;
+    padding: 4px 12px;
+}
+
+/* ── Nurse message-specific inputs ─────────────────── */
+.k-dialog-wrapper:has(#dialog-nurse-chat) .k-input,
+.k-dialog-wrapper:has(#dialog-nurse-chat) .k-combobox {
+    width: 100%;
+    height: 34px;
+    border: 1px solid rgba(23, 56, 99, 0.08);
+    border-radius: 6px;
+    background: #FFFFFF;
+}
+
+.k-dialog-wrapper:has(#dialog-nurse-chat) .k-input .k-input-inner {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 150%;
+    color: #232A36;
+    padding: 4px 12px;
 }
 
 /* ── Lab test checkbox list ──────────────────────────── */
@@ -1038,116 +1188,105 @@ a { text-decoration: none; color: inherit; }
     position: relative;
     margin-bottom: 10px;
 }
-.lab-test-search {
+
+.lab-search-wrap .k-input {
     width: 100%;
-    border: 1px solid #d8d8e8;
+    height: 34px;
+    border: 1px solid rgba(23, 56, 99, 0.08);
     border-radius: 6px;
-    padding: 9px 36px 9px 12px;
-    font-size: 13.5px;
-    font-family: inherit;
-    color: #333;
-    background: #fff;
-    outline: none;
-    transition: border-color 0.15s;
+    background: #FFFFFF;
 }
-.lab-test-search:focus { border-color: #3d3d8f; box-shadow: 0 0 0 3px rgba(61,61,143,0.08); }
-.lab-test-search::placeholder { color: #aaa; }
-.lab-search-clear {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    color: #999;
-    line-height: 1;
-    padding: 0;
+
+.lab-search-wrap .k-input .k-input-inner {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: #4A5666;
+    padding: 4px 12px;
 }
-.lab-search-clear:hover { color: #333; }
+
+.lab-search-wrap .k-input .k-input-inner::placeholder {
+    color: #4A5666;
+    opacity: 0.6;
+}
+
+.lab-search-wrap .k-clear-value {
+    color: #232A36;
+    opacity: 0.5;
+}
+.lab-search-wrap .k-clear-value:hover {
+    color: #232A36;
+    opacity: 0.8;
+}
+
 .lab-test-list {
-    border: 1px solid #d8d8e8;
+    border: 1px solid rgba(23, 56, 99, 0.08);
     border-radius: 6px;
-    max-height: 280px;
+    max-height: 208px;
     overflow-y: auto;
+    background: #FFFFFF;
 }
-.lab-test-item {
+.lab-test-list .k-listview-content {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    gap: 20px;
+}
+.lab-test-item.k-card {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 11px 14px;
+    gap: 16px;
+    padding: 16px;
     cursor: pointer;
-    border-bottom: 1px solid #f0f0f6;
+    border: 1px solid rgba(23, 56, 99, 0.08);
+    border-radius: 4px;
+    box-shadow: none;
     transition: background 0.12s;
     user-select: none;
+    margin: 0;
+    min-height: 56px;
+    background: #FFFFFF;
 }
-.lab-test-item:last-child { border-bottom: none; }
-.lab-test-item:hover { background: #f5f5fb; }
-.lab-test-item.selected { background: #f0f0fb; }
-.lab-test-check {
-    width: 20px;
-    height: 20px;
+.lab-test-item.k-card:hover { background: #F9FAFB; }
+.lab-test-item.selected { background: #F9FAFB; }
+
+/* Round Kendo CheckBox for lab tests */
+.lab-test-item .k-checkbox {
+    border-radius: 9999px;
+    border-color: rgba(0, 0, 0, 0.08);
     flex-shrink: 0;
-    border: 2px solid #c8c8d8;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #fff;
-    transition: border-color 0.12s, background 0.12s;
+    cursor: pointer;
 }
-.lab-test-item.selected .lab-test-check {
-    background: #3d3d8f;
-    border-color: #3d3d8f;
+
+.lab-test-item .k-checkbox:checked {
+    background-color: #334155;
+    border-color: #334155;
 }
-.lab-chk-tick {
-    color: #fff;
-    font-size: 13px;
-    line-height: 1;
-}
+
 .lab-test-name {
-    font-size: 13.5px;
-    color: #333;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    line-height: 150%;
+    color: #232A36;
+    cursor: pointer;
 }
 .lab-test-empty {
     padding: 16px;
-    font-size: 13px;
-    color: #999;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: #4A5666;
     text-align: center;
 }
 
-/* Nurse message form */
-.nurse-msg-form { display: flex; flex-direction: column; gap: 16px; padding: 4px 0; }
-.nurse-msg-field { display: flex; flex-direction: column; gap: 6px; }
-.nurse-msg-label { font-size: 13px; font-weight: 600; color: #1a1a2e; }
-.nurse-msg-input {
-    width: 100%;
-    height: 38px;
-    padding: 0 12px;
-    border: 1px solid #e8e8f0;
-    border-radius: 8px;
-    font-size: 14px;
-    color: #1a1a2e;
-    background: #fff;
-    outline: none;
+/* ── Nurse message form ────────────────────────────── */
+.nurse-msg-form { display: flex; flex-direction: column; gap: 16px; padding: 0; }
+.nurse-msg-field { display: flex; flex-direction: column; gap: 8px; }
+.nurse-msg-label {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 150%;
+    color: #232A36;
 }
-.nurse-msg-input:focus { border-color: #6366c1; box-shadow: 0 0 0 2px rgba(99,102,193,0.15); }
-.nurse-msg-textarea {
-    width: 100%;
-    min-height: 160px;
-    padding: 12px;
-    border: 1px solid #e8e8f0;
-    border-radius: 8px;
-    font-size: 14px;
-    color: #1a1a2e;
-    background: #fff;
-    resize: vertical;
-    outline: none;
-    font-family: inherit;
-    line-height: 1.6;
-}
-.nurse-msg-textarea:focus { border-color: #6366c1; box-shadow: 0 0 0 2px rgba(99,102,193,0.15); }
 .nurse-msg-form .k-multicolumncombobox,
 .nurse-msg-form .k-input { width: 100%; }
 
@@ -1346,28 +1485,16 @@ a { text-decoration: none; color: inherit; }
     left: 17px;
 }
 
-/* ── Notifications dropdown ─────────────────────── */
+/* ── Notifications popover ──────────────────────── */
 .notif-wrap { position: relative; }
 
-.np-dropdown {
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(61,61,143,.18), 0 2px 8px rgba(0,0,0,.08);
-    overflow: hidden;
-    border: 1px solid #e8e6f4;
-    position: absolute;
-    z-index: 10002;
-    top: calc(100% + 8px);
-    right: -40px;
-    width: 380px;
-    background: #fff;
-    display: none;
+/* Remove default Popover padding so notification content fills the body */
+.k-popover .k-popover-body {
+    padding: 0;
 }
-.np-dropdown.np-open {
-    display: block;
-}
-.np-dropdown .np-header,
-.np-dropdown .np-list {
-    /* content already styled below */
+.k-popover .k-popover-body .np-header,
+.k-popover .k-popover-body .np-list {
+    /* content styled below */
 }
 
 .np-header {
@@ -1396,6 +1523,7 @@ a { text-decoration: none; color: inherit; }
     box-shadow: none;
     cursor: default;
     transition: background .1s;
+    margin-bottom: 0;
 }
 .np-card:last-child { border-bottom: none; }
 .np-card:hover { background: #f9f8ff; }
@@ -1996,13 +2124,8 @@ a { text-decoration: none; color: inherit; }
 }
 
 /* TextBox + TextArea full-width */
-#add-task-dialog .k-input,
-#add-task-dialog .k-textarea {
+#add-task-dialog .k-input:not(.k-textarea) {
     width: 100% !important;
-}
-
-/* Input 34px, border-radius 6px */
-#add-task-dialog .k-input {
     height: 34px;
     border: 1px solid rgba(23, 56, 99, 0.08);
     border-radius: 6px;
@@ -2012,21 +2135,6 @@ a { text-decoration: none; color: inherit; }
 
 #add-task-dialog .k-input.k-invalid {
     border-color: #DC2626;
-}
-
-/* TextArea 98px */
-#add-task-dialog .k-textarea {
-    min-height: 98px;
-    border: 1px solid rgba(23, 56, 99, 0.08);
-    border-radius: 6px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 16px;
-    color: #232A36;
-}
-
-#add-task-dialog textarea {
-    resize: vertical;
-    padding: 12px;
 }
 
 /* SegmentedControl / ButtonGroup — pill track */
@@ -2066,38 +2174,14 @@ a { text-decoration: none; color: inherit; }
     background: #fff;
 }
 
-/* Cancel button — flat / light */
-.k-dialog-wrapper.app-dialog-shell .k-actions .k-button:not(.k-primary) {
-    background: #F3F5F7;
-    border: 1px solid rgba(255, 255, 255, 0.0001);
-    border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    color: #232A36;
-    height: 30px;
-    padding: 4px 8px;
-}
-
-/* Save button — primary / dark */
-.k-dialog-wrapper.app-dialog-shell .k-actions .k-primary {
-    background: #334155;
-    border: 1px solid #334155;
-    border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    color: #FFFFFF;
-    height: 30px;
-    padding: 4px 8px;
-}
 
 /* Hide dialog host elements until Kendo Dialog initialises them */
 #appointment-dialog:not(.k-window-content):not(.k-dialog-content),
 #new-appointment-dialog:not(.k-window-content):not(.k-dialog-content),
 #add-task-dialog:not(.k-window-content):not(.k-dialog-content),
 #dialog-new-note:not(.k-window-content):not(.k-dialog-content),
-#dialog-lab-test:not(.k-window-content):not(.k-dialog-content) {
+#dialog-lab-test:not(.k-window-content):not(.k-dialog-content),
+#dialog-nurse-chat:not(.k-window-content):not(.k-dialog-content) {
     display: none;
 }
 
@@ -2221,14 +2305,6 @@ a { text-decoration: none; color: inherit; }
     font-family: 'Poppins', sans-serif;
     font-size: 14px;
 }
-
-.k-dialog-wrapper:has(#appointment-dialog) .k-actions .k-button.k-primary {
-    min-width: 164px;
-    background: #334155;
-    border-color: #334155;
-    color: #FFFFFF;
-}
-
 .appt-review {
     display: flex;
     flex-direction: column;
@@ -2354,13 +2430,13 @@ a { text-decoration: none; color: inherit; }
 .k-dialog:has(#dialog-alert-review) .k-dialog-titlebar .k-dialog-title { display: none; }
 
 /* Green "Mark as Resolved" button */
-.ar-resolve-btn.k-button-solid-primary,
-.ar-resolve-btn.k-button-solid-primary:hover {
+.ar-resolve-btn.k-button-primary,
+.ar-resolve-btn.k-button-primary:hover {
     background-color: #16a34a;
     border-color: #16a34a;
     color: #fff;
 }
-.ar-resolve-btn.k-button-solid-primary:hover { background-color: #15803d; }
+.ar-resolve-btn.k-button-primary:hover { background-color: #15803d; }
 
 /* Content layout */
 .ar-content { padding: 0 4px; }
@@ -2710,32 +2786,20 @@ a { text-decoration: none; color: inherit; }
     isolation: isolate;
 }
 
-.page-dimmed .patients-grid-card::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: rgba(239, 232, 239, 0.66);
-    pointer-events: none;
-    z-index: 1;
+/* Dim only header, footer and pager — grid content stays clear (like home page) */
+.page-dimmed .patients-grid-card .k-grid-header,
+.page-dimmed .patients-grid-card .k-grid-footer,
+.page-dimmed .patients-grid-card .k-grid-pager {
+    background-color: rgba(239, 232, 239, 0.72);
     transition: background-color 0.3s ease;
 }
 
-/* Keep grid content rows and filter row visible above the overlay */
-.page-dimmed .patients-grid-card .k-grid-content,
-.page-dimmed .patients-grid-card .k-filter-row {
-    position: relative;
-    z-index: 2;
-}
-
-/* AI panel & preview panel — same overlay when visible */
-.page-dimmed .patients-ai-panel,
+/* Preview panel — overlay when dimmed */
 .page-dimmed .patient-preview-panel {
     position: relative;
     isolation: isolate;
 }
 
-.page-dimmed .patients-ai-panel::after,
 .page-dimmed .patient-preview-panel::after {
     content: "";
     position: absolute;
@@ -2745,6 +2809,13 @@ a { text-decoration: none; color: inherit; }
     pointer-events: none;
     z-index: 1;
     transition: background-color 0.3s ease;
+}
+
+/* Patient preview — keep content above the overlay for readability */
+.page-dimmed .patient-preview-panel > .k-card-header,
+.page-dimmed .patient-preview-panel > .k-card-body {
+    position: relative;
+    z-index: 2;
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -4502,5 +4573,287 @@ a { text-decoration: none; color: inherit; }
 .pm-footer { display: flex; justify-content: flex-end; gap: 10px; padding-top: 10px; border-top: 1px solid #eeedf8; margin-top: 6px; }
 
 /* Avatar trigger */
-#profile-trigger { cursor: pointer; transition: opacity .15s; }
-#profile-trigger:hover { opacity: .82; }
+#profile-trigger {
+    cursor: pointer;
+    transition: opacity .15s;
+}
+
+    #profile-trigger:hover {
+        opacity: .82;
+    }
+
+    #profile-trigger.k-avatar {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        flex-shrink: 0;
+        overflow: hidden;
+        border-radius: 50%;
+    }
+    /* Force inner span/img generated by the Kendo Avatar widget to fill the container exactly */
+    #profile-trigger .k-avatar-image {
+        width: 100%;
+        height: 100%;
+    }
+    #profile-trigger .k-avatar-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE — PHONE (max-width: 480px)
+   AppBar stacks vertically, all multi-column layouts
+   collapse to a single column.
+═══════════════════════════════════════════════════════ */
+
+/* ── AppBar — vertical stack on smaller screens (≤ 900px) ── */
+@media (max-width: 1100px) {
+    .app-appbar {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        border-radius: 16px;
+        padding: 12px;
+        gap: 8px;
+        width: calc(100% - 16px);
+        margin: 8px auto 0;
+    }
+
+    /* Top row: logo + right section side-by-side */
+    .appbar-logo {
+        order: 1;
+    }
+
+    /* Nav — full width below logo */
+    .appbar-nav {
+        order: 2;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .appbar-right {
+        order: 3;
+    }
+}
+
+
+/* ── Small-tablet helpers (≤ 600px) ──────────────── */
+@media (max-width: 600px) {
+
+    /* Grids — horizontal scroll when content overflows */
+    .k-grid {
+        overflow: visible;
+    }
+    .k-grid .k-grid-content {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .k-grid .k-grid-header-wrap {
+        overflow-x: auto;
+    }
+
+    /* Schedule side panel — allow shrinking when stacked */
+    .schedule-side {
+        flex: 1 1 auto;
+        width: 100%;
+    }
+
+    /* Analytics KPI row — 2 per row */
+    .analytics-kpi-row {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    /* Analytics chart rows — single column */
+    .analytics-row-2col,
+    .analytics-row-2col-equal {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+
+/* ── Phone (≤ 480px) ─────────────────────────────── */
+@media (max-width: 480px) {
+    
+/* ── AppBar — vertical stack ───────────────────── */
+    
+    .appbar-nav .k-segmented-control {
+        width: 100%;
+    }
+    .appbar-nav .k-segmented-control-button {
+        font-size: 12px;
+        padding: 6px 8px;
+    }
+
+    #notif-btn, 
+    #btn-settings,
+    .k-segmented-control-button-text{
+        display: none;
+    }
+
+    /* ── Page headers ──────────────────────────────── */
+    #page-headers .page-header {
+        padding: 12px 12px 8px;
+    }
+    .home-greeting {
+        padding: 0 12px 12px;
+    }
+    .home-greeting h1 {
+        font-size: 22px;
+    }
+    .patients-page-header,
+    .analytics-page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .patients-page-title,
+    .patients-page-header h1,
+    .analytics-page-header h1 {
+        font-size: 24px;
+    }
+
+    /* ── Page content — tighter padding ────────────── */
+    #page-content {
+        padding: 0;
+    }
+
+    /* ── Home page ─────────────────────────────────── */
+    .page-body {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+        padding: 8px 8px 16px;
+    }
+    /* Prevent grid cards from overflowing viewport */
+    .appointments-card,
+    .patients-grid-card {
+        min-width: 0;
+        overflow: hidden;
+    }
+    .col-main,
+    .col-side {
+        min-width: 0;
+    }
+
+    /* Quick actions — single column */
+    .shortcut-grid {
+        grid-template-columns: 1fr !important;
+        gap: 10px;
+    }
+
+    /* Shortcut cards — ensure full visibility */
+    .shortcut-card {
+        overflow: visible;
+        min-width: 0;
+    }
+    .shortcut-card .k-card-body,
+    .shortcut-card .k-actions.k-card-actions {
+        overflow: visible;
+        min-width: 0;
+    }
+
+    /* Next patient card — full width, alerts visible */
+    .next-patient-card {
+        min-height: auto;
+        flex: none;
+    }
+    /* Daily alerts — ensure visible on small screens */
+    .np-alerts-body.k-card-body {
+        flex: none;
+        min-height: auto;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    .next-patient-header {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .appt-time {
+        width: 100%;
+    }
+    .next-patient-actions {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .next-patient-actions .k-button {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    /* ── Schedule page ─────────────────────────────── */
+    .schedule-body {
+        flex-direction: column !important;
+        gap: 12px;
+        padding: 8px 8px 16px;
+    }
+    .schedule-main {
+        flex: 1 1 auto;
+    }
+    .schedule-side {
+        flex: 1 1 auto !important;
+        width: 100% !important;
+    }
+
+    /* Tasks card search and button */
+    .tasks-header-actions {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .tasks-search-wrap {
+        width: 100%;
+    }
+
+    /* ── Patients page ─────────────────────────────── */
+    .patients-page-header,
+    .patients-list-body,
+    .patients-breadcrumb,
+    .detail-main-wrap {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .patients-header-actions {
+        width: 100%;
+        gap: 8px;
+    }
+
+    /* Patient preview panel — full width when stacked */
+    .patients-list-body.preview-panel-open {
+        grid-template-columns: 1fr !important;
+    }
+    .patients-list-body.ai-panel-open {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* ── Analytics page ────────────────────────────── */
+    #analytics-body {
+        padding: 0 8px 16px;
+    }
+    .analytics-kpi-row {
+        grid-template-columns: 1fr !important;
+        gap: 10px;
+    }
+    .analytics-row-2col,
+    .analytics-row-2col-equal {
+        grid-template-columns: 1fr !important;
+    }
+    .analytics-wrapper {
+        padding: 0 8px 16px;
+    }
+
+    /* ── Dialogs — full-width on phone ─────────────── */
+    .k-dialog-wrapper .k-window {
+        max-width: calc(100vw - 16px) !important;
+        min-width: 0 !important;
+    }
+
+    /* ── General typography scale-down ─────────────── */
+    .patient-name {
+        font-size: 16px;
+    }
+    .detail-label,
+    .detail-value {
+        font-size: 13px;
+    }
+}

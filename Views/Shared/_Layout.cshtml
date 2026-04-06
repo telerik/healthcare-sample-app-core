@@ -19,6 +19,14 @@
     <script src="https://kendo.cdn.telerik.com/2026.1.325/js/kendo.all.min.js"></script>
     <script src="https://kendo.cdn.telerik.com/2026.1.325/js/kendo.aspnetmvc.min.js"></script>
     <script src="~/js/data.js" asp-append-version="true"></script>
+    <script>
+        var navRoutes = {
+            "Home":      "@Url.Action("Index", "Home")",
+            "Schedule":  "@Url.Action("Index", "Schedule")",
+            "Patients":  "@Url.Action("Index", "Patients")",
+            "Analytics": "@Url.Action("Index", "Analytics")"
+        };
+    </script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/profile.js" asp-append-version="true"></script>
     @await RenderSectionAsync("HeadScripts", required: false)
@@ -36,7 +44,18 @@
 
         <!-- Nav -->
         <span class="k-appbar-section k-appbar-spacer-center appbar-nav">
-            <div id="appbar-nav" data-active-page="@ViewData["ActivePage"]"></div>
+            @(Html.Kendo().SegmentedControl()
+                .Name("appbar-nav")
+                .Items(items =>
+                {
+                    items.Add().Text("Home").Value("Home").Icon("home");
+                    items.Add().Text("Schedule").Value("Schedule").Icon("calendar");
+                    items.Add().Text("Patients").Value("Patients").Icon("user-outline");
+                    items.Add().Text("Clinical Analytics").Value("Analytics").Icon("chart-bar-stacked");
+                })
+                .SelectedValue((string)ViewData["ActivePage"] ?? "Home")
+                .Events(e => e.Change("onAppBarNavChange"))
+            )
         </span>
 
         <!-- Right section -->
@@ -54,28 +73,40 @@
             )
             @(Html.Kendo().Button()
                 .Name("btn-settings")
-                .HtmlAttributes(new { @class = "icon-btn", title = "Settings" })
+                .HtmlAttributes(new { @class = "icon-btn" })
                 .Content("<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><g clip-path=\"url(#clip0_settings)\"><path d=\"M5.99992 10.6667C8.57725 10.6667 10.6666 8.57734 10.6666 6.00001C10.6666 3.42268 8.57725 1.33334 5.99992 1.33334C3.42259 1.33334 1.33325 3.42268 1.33325 6.00001C1.33325 8.57734 3.42259 10.6667 5.99992 10.6667Z\" stroke=\"currentColor\" stroke-width=\"1.33\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M9.99992 14.6667C12.5772 14.6667 14.6666 12.5773 14.6666 10C14.6666 7.42268 12.5772 5.33334 9.99992 5.33334C7.42259 5.33334 5.33325 7.42268 5.33325 10C5.33325 12.5773 7.42259 14.6667 9.99992 14.6667Z\" stroke=\"currentColor\" stroke-width=\"1.33\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></g><defs><clipPath id=\"clip0_settings\"><rect width=\"16\" height=\"16\" fill=\"white\"/></clipPath></defs></svg>")
                 .Events(e => e.Click("onSettingsClick"))
             )
-            <span class="notif-wrap">
-                <button class="icon-btn" id="notif-btn" title="Notifications">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <path d="M8 2C5.8 2 4 3.8 4 6v3.5L2.5 11h11L12 9.5V6c0-2.2-1.8-4-4-4z" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                        <path d="M6.5 13c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" fill="none"/>
-                    </svg>
-                </button>
-                @(Html.Kendo().Badge()
-                    .Name("notif-badge")
-                    .Text(" ")
-                    .ThemeColor(BadgeColor.Error)
-                    .Rounded(Rounded.Full)
-                    .Size(BadgeSize.Small)
-                    .Visible(false)
-                )
-            </span>
+            @(Html.Kendo().Button()
+                        .Name("notif-btn")
+                        .HtmlAttributes(new { @class = "icon-btn notif-wrap", title = "Notifications" })
+                        .Content("<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><path d=\"M8 2C5.8 2 4 3.8 4 6v3.5L2.5 11h11L12 9.5V6c0-2.2-1.8-4-4-4z\" stroke=\"currentColor\" stroke-width=\"1.33\" stroke-linecap=\"round\" stroke-linejoin=\"round\" fill=\"none\"/><path d=\"M6.5 13c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5\" stroke=\"currentColor\" stroke-width=\"1.33\" stroke-linecap=\"round\" fill=\"none\"/></svg>")
+                        .Badge(b => b
+                            .Text("4")
+                            .ThemeColor(BadgeColor.Error)
+                            .Shape(BadgeShape.Pill)
+                            .Size(BadgeSize.Small)
+                            .Visible(true)
+                        )
+                        )
+            @(Html.Kendo().Popover()
+                        .Name("notif-popover")
+                        .For("#notif-btn")
+                        .Position(PopoverPosition.Bottom)
+                        .ShowOn(PopoverShowOn.Click)
+                        .ToggleOnClick(true)
+                        .Width(380)
+                        .Body("<div id='np-dropdown'></div>")
+                        .Events(e => e.Show("onNotifPopoverShow"))
+            )
             <span class="appbar-sep" aria-hidden="true"></span>
-            <img class="avatar" id="profile-trigger" src="/content/patient-images/women/michael-dam-mEZ3PoFGs_k-unsplash.jpg" alt="Dr. Carter" title="Profile &amp; Settings" />
+            @(Html.Kendo().Avatar()
+                        .Name("profile-trigger")
+                        .Type(AvatarType.Image)
+                        .Image("/content/patient-images/women/michael-dam-mEZ3PoFGs_k-unsplash.jpg")
+                        .Rounded(Rounded.Full)
+                        .HtmlAttributes(new { @class = "avatar", title = "Profile & Settings" })
+                        )
         </span>
     </div>
 

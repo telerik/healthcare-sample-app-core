@@ -30,6 +30,7 @@ function onSavePatientNote() {
 var _aiPanelOpen = false;
 _aiAssistanceClickImpl = function() {
     var g = $("#patients-grid").data("kendoGrid");
+    if ($(".sparkles").length) { kendo.ui.icon($(".sparkles"), { icon: 'sparkles' }); }
 
     // If the user is on the patient detail view, navigate back to the grid first
     if ($("#patients-detail-view").is(":visible")) {
@@ -194,13 +195,13 @@ var _listAiResponses = {
         "Standard follow-up protocols: schedule a review within 2\u20134 weeks post-discharge, confirm medication adherence, repeat any abnormal lab tests within 30 days, and coordinate with specialists where a referral was made.",
     "How do I interpret abnormal lab results?":
         "Abnormal results should be compared against the patient\u2019s historical baseline and clinical context. Elevated CRP or WBC may indicate infection or inflammation. Out-of-range electrolytes (sodium, potassium) carry cardiac risk. Always cross-reference with current medications before acting.",
-    "What are today\u2019s critical care priorities?":
+    "What are today's critical care priorities?":
         "Critical priorities include: monitoring patients with oxygen saturation below 92%, reviewing all flagged lab results before the next round, confirming allergy documentation for any new prescriptions, and ensuring high-risk patients have an updated care plan."
 };
 
 function _replyToListAiMsg(text) {
     if (!listAiChat) listAiChat = $("#list-ai-chat").data("kendoChat");
-    if (!listAiChat) return;
+    if (!listAiChat) return;  
     var reply = _listAiResponses[text] || "I\u2019m sorry, I don\u2019t have information on that right now.";
     setTimeout(function () {
         listAiChat.postMessage({
@@ -213,32 +214,12 @@ function _replyToListAiMsg(text) {
     }, 1000);
 }
 
-/* Global event handlers wired by the Html Helper */
-var _listSkipSuggestionSend = false;
-
-function onListAiChatSendMessage(e) {
-    if (_listSkipSuggestionSend) {
-        _listSkipSuggestionSend = false;
-        e.preventDefault();
-        return;
-    }
+function onListAiChatSendMessage(e) {    
     if (!e.generating) {
         _replyToListAiMsg(e.message.text);
     }
     // Scroll to show the user's sent message; bot reply scrolls inside _replyToListAiMsg
     setTimeout(function () { if (listAiChat) listAiChat.scrollToBottom(); }, 0);
-}
-
-function onListAiChatSuggestionClick(e) {
-    e.preventDefault();
-    _listSkipSuggestionSend = true;
-    var chat = e.sender;
-    var input = chat.element.find(".k-input-inner")[0];
-    if (input) {
-        input.value = e.text;
-        input.dispatchEvent(new Event("input", { bubbles: true }));
-        input.focus();
-    }
 }
 
 function initListAiChat() {
@@ -474,6 +455,9 @@ $(document).ready(function () {
     // Grid + context menu — created by Html Helpers, just get reference
     initGrid();
     initContextMenu();
+
+    kendo.ui.icon($(".status"), { icon: 'plan' });
+    kendo.ui.icon($(".pencil"), { icon: 'pencil' });
 
     // Breadcrumb back navigation
     $(document).on("click", "#breadcrumb-back", function () {

@@ -78,7 +78,6 @@
                         items.Add().Type(AppBarItemType.ContentItem).Template("<span class='sparkles'></span>");
                         items.Add().Type(AppBarItemType.ContentItem).Template("<strong class='ai-chat-header-title'>AI Assistant</strong>");
                         items.Add().Type(AppBarItemType.Spacer);
-                        items.Add().Type(AppBarItemType.ContentItem).Template("<span class='close-chat'></span>");
                     })
                     .Suggestions(suggestions =>  {
                             suggestions.Add().Text("What are today's critical care priorities?");
@@ -88,7 +87,6 @@
                     })
                     .Events(e => e
                         .SendMessage("onListAiChatSendMessage")
-                        .SuggestionClick("onListAiChatSuggestionClick")
                     )
                 )
             </div>
@@ -115,8 +113,8 @@
         .Filter("tr[role='row']")
         .Items(items =>
         {
-            items.Add().Text("<span class='ctx-icon'>&#128203;</span> Open Patient Record").Encoded(false).HtmlAttributes(new { data_action = "view" });
-            items.Add().Text("<span class='ctx-icon'>&#9998;</span> Change Status").Encoded(false).HtmlAttributes(new { data_action = "status" });
+            items.Add().Text("<span class='ctx-icon status'></span> Open Patient Record").Encoded(false).HtmlAttributes(new { data_action = "view" });
+            items.Add().Text("<span class='ctx-icon pencil'></span> Change Status").Encoded(false).HtmlAttributes(new { data_action = "status" });
         })
         .Events(e => e.Select("onPatientsContextMenuSelect"))
     )

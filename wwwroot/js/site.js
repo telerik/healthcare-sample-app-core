@@ -176,12 +176,7 @@ function _urlToPage(url) {
    SegmentedControl HTML Helper requires Telerik.UI.for.AspNet.Core
    >= 2026.1.325; current version is 2026.1.212, so jQuery init is used.
 ═══════════════════════════════════════════════════════ */
-var navRoutes = {
-    "Home":      "/",
-    "Schedule":  "/schedule",
-    "Patients":  "/patients",
-    "Analytics": "/analytics"
-};
+/* navRoutes is defined in _Layout.cshtml via Url.Action() */
 
 function onSettingsClick() {
     $("#page-content").toggleClass("page-dimmed");
@@ -210,20 +205,11 @@ function onAppBarNavChange(e) {
 $(document).ready(function () {
 
     /* ═══════════════════════════════════════════════
-       APP BAR NAV — SegmentedControl (HTML Helper requires >= 2026.1.325)
+       APP BAR NAV — SegmentedControl (initialized via Html Helper)
     ═══════════════════════════════════════════════ */
-    var activePage = $("#appbar-nav").attr("data-active-page") || "Home";
-
-    $("#appbar-nav").kendoSegmentedControl({
-        items: [
-            { text: "Home",               value: "Home",      icon: "home" },
-            { text: "Schedule",           value: "Schedule",  icon: "calendar" },
-            { text: "Patients",           value: "Patients",  icon: "user-outline" },
-            { text: "Clinical Analytics", value: "Analytics", icon: "chart-bar-stacked" }
-        ],
-        selectedValue: activePage,
-        change: onAppBarNavChange
-    });
+    var activePage = $("#appbar-nav").data("kendoSegmentedControl") 
+        ? $("#appbar-nav").data("kendoSegmentedControl").value() 
+        : "Home";
 
     /* Activate the correct page header on initial load */
     showPageHeader(activePage);
