@@ -197,6 +197,7 @@
                     .Name("pm-file-input")
                     .Multiple(false)
                     .HtmlAttributes(new { accept = "image/*" })
+                    .Messages(m => m.Select("Upload Image"))
                     .Async(a => a
                         .SaveUrl("/api/profile/avatar-upload")
                         .RemoveUrl("/api/profile/avatar-remove")

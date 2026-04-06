@@ -46,9 +46,11 @@
                                 .Title("Actions").Width(130);
                         })
                         .Sortable()
+                        .Height(820)
                         .Filterable(f => f.Mode(GridFilterMode.Row))
                         .Reorderable(r => r.Columns(true))
                         .Resizable(r => r.Columns(true))
+                        .Scrollable()
                         .ColumnMenu()
                         .Pageable(p => p
                             .PageSizes(new[] { 10, 13, 20, 50 })
