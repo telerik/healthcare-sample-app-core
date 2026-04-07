@@ -79,6 +79,8 @@ app.UseStaticFiles(new StaticFileOptions
     }
 });
 
+app.UsePathBase("/aspnet-core/healthcare/");
+
 app.UseRouting();
 app.UseSession();           // must be before MapControllerRoute
 app.UseAuthorization();
