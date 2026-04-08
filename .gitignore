@@ -2,3 +2,7 @@ bin/
 obj/
 .github/
 .vs/
+
+# kendo-e2e CLI output
+.kendo-e2e/
+node_modules/
