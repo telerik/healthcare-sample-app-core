@@ -26,6 +26,7 @@
             "Patients":  "@Url.Action("Index", "Patients")",
             "Analytics": "@Url.Action("Index", "Analytics")"
         };
+        var serverActivePage = "@((string)ViewData["ActivePage"] ?? "Home")";
     </script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/profile.js" asp-append-version="true"></script>
@@ -128,7 +129,8 @@
             <div class="patients-header-actions">
                 @(Html.Kendo().Button()
                     .Name("btn-ai-assistance")
-                    .Content("&#10022; AI Assistance")
+                    .Icon("sparkles")
+                    .Content("AI Assistance")
                     .Rounded(Rounded.Large)
                     .Events(e => e.Click("onAiAssistanceClick"))
                 )
@@ -145,7 +147,7 @@
         <div class="page-header analytics-page-header" data-page="Analytics">
             <div>
                 <h1>Clinical Analytics</h1>
-                <p>Track vitals trends, lab results, risk scores, and alert patterns per patient</p>
+                <p>Patient trends, vitals, lab results, and risk assessment overview</p>
             </div>
             <div class="analytics-header-controls">
                 @(Html.Kendo().DropDownList()
@@ -184,6 +186,8 @@
         .Width(420)
         .Modal(true)
         .Visible(false)
+        .Draggable()
+        .Resizable()
         .Actions(a => a.Close())
         .Events(e => e.Open("onProfileWindowOpen"))
         .Content(@<text>

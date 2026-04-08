@@ -41,6 +41,8 @@ function onAddTaskBtnClick() {
 var _taskViewData = null;
 
 function onViewTaskDialogOpen() {
+    var dlg = $("#view-task-dialog").data("kendoDialog");
+    if (dlg) applySharedDialogShell(dlg);
     if (!_taskViewData) return;
     $("#vtf-name").text(_taskViewData.Task || "");
     $("#vtf-description").text(_taskViewData.Description || "No description provided.");
@@ -402,7 +404,7 @@ $(document).ready(function () {
     /* ═══════════════════════════════════════════════
        VIEW TASK — open on task row click
     ═══════════════════════════════════════════════ */
-    $("#tasks-list").on("dblclick", ".task-item", function (e) {
+    $("#tasks-list").on("click", ".task-item", function (e) {
         // Ignore clicks on the checkbox itself
         if ($(e.target).closest(".k-checkbox-wrap, .k-checkbox, .task-cb-wrap").length) return;
         var id   = parseInt($(this).find(".task-checkbox").data("id"), 10);

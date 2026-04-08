@@ -265,6 +265,7 @@ a { text-decoration: none; color: inherit; }
     display: flex;
     flex-direction: column;
     min-height: 100%;
+    min-width: 0;
 }
 
 .col-main .appointments-card {
@@ -272,6 +273,7 @@ a { text-decoration: none; color: inherit; }
     display: flex;
     flex-direction: column;
     min-height: 0;
+    min-width: 0;
     margin-bottom: 0;
 }
 
@@ -280,6 +282,7 @@ a { text-decoration: none; color: inherit; }
     display: flex;
     flex-direction: column;
     overflow: visible;
+    min-width: 0;
 }
 
 .next-patient-card {
@@ -739,6 +742,11 @@ a { text-decoration: none; color: inherit; }
     overflow: hidden;
     background: rgba(255, 255, 255, 0.0001);
 }
+
+#appointments-grid .k-grid .k-grid-content {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
 #appointments-grid .k-grid-header th {
     background: #F9FAFB;
     font-size: 14px;
@@ -1053,7 +1061,7 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 .k-dialog-wrapper:has(#dialog-lab-test) .k-dialog-content,
 .k-dialog-wrapper:has(#dialog-nurse-chat) .k-window-content,
 .k-dialog-wrapper:has(#dialog-nurse-chat) .k-dialog-content {
-    padding: 16px;
+    padding: 32px;
     background: #FFFFFF;
 }
 
@@ -1069,9 +1077,9 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 }
 
 /* Cancel / Discard button — flat / light */
-.k-dialog-wrapper:has(#dialog-new-note) .k-actions .k-button:not(.k-primary):not(.k-button-primary),
-.k-dialog-wrapper:has(#dialog-lab-test) .k-actions .k-button:not(.k-primary):not(.k-button-primary),
-.k-dialog-wrapper:has(#dialog-nurse-chat) .k-actions .k-button:not(.k-primary):not(.k-button-primary) {
+.k-dialog-wrapper:has(#dialog-new-note) .k-actions .k-button:not(.k-button-primary),
+.k-dialog-wrapper:has(#dialog-lab-test) .k-actions .k-button:not(.k-button-primary),
+.k-dialog-wrapper:has(#dialog-nurse-chat) .k-actions .k-button:not(.k-button-primary) {
     background: #F3F5F7;
     border: 1px solid rgba(255, 255, 255, 0.0001);
     border-radius: 8px;
@@ -1082,6 +1090,35 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     color: #232A36;
     height: 30px;
     padding: 4px 8px;
+}
+
+/* Primary button — dark background (Figma: #334155) */
+.k-dialog-wrapper:has(#dialog-new-note) .k-actions .k-button.k-button-primary,
+.k-dialog-wrapper:has(#dialog-new-note) .k-actions .k-button.k-button-primary,
+.k-dialog-wrapper:has(#dialog-lab-test) .k-actions .k-button.k-button-primary,
+.k-dialog-wrapper:has(#dialog-lab-test) .k-actions .k-button.k-button-primary,
+.k-dialog-wrapper:has(#dialog-nurse-chat) .k-actions .k-button.k-button-primary,
+.k-dialog-wrapper:has(#dialog-nurse-chat) .k-actions .k-button.k-button-primary {
+    background: #334155;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 142%;
+    color: #FFFFFF;
+    height: 30px;
+    padding: 4px 8px;
+}
+.k-dialog-wrapper:has(#dialog-new-note) .k-actions .k-button.k-button-primary:hover,
+.k-dialog-wrapper:has(#dialog-new-note) .k-actions .k-button.k-button-primary:hover,
+.k-dialog-wrapper:has(#dialog-lab-test) .k-actions .k-button.k-button-primary:hover,
+.k-dialog-wrapper:has(#dialog-lab-test) .k-actions .k-button.k-button-primary:hover,
+.k-dialog-wrapper:has(#dialog-nurse-chat) .k-actions .k-button.k-button-primary:hover,
+.k-dialog-wrapper:has(#dialog-nurse-chat) .k-actions .k-button.k-button-primary:hover {
+    background: #273344;
+    border-color: #273344;
+    color: #FFFFFF;
 }
 
 /* ── Field layout ──────────────────────────────────── */
@@ -1142,7 +1179,7 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 /* ── Shared DropDownList / Input styles ─────────────── */
 .k-dialog-wrapper:has(#dialog-new-note) .k-dropdownlist,
 .k-dialog-wrapper:has(#dialog-lab-test) .k-dropdownlist {
-    width: 249px;
+    width: 250px;
     height: 34px;
     border: 1px solid rgba(23, 56, 99, 0.08);
     border-radius: 6px;
@@ -1151,7 +1188,7 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 
 .k-dialog-wrapper:has(#dialog-new-note) .k-dropdownlist .k-input-inner,
 .k-dialog-wrapper:has(#dialog-lab-test) .k-dropdownlist .k-input-inner {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-size: 16px;
     line-height: 150%;
     color: #232A36;
@@ -1159,7 +1196,7 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 }
 
 /* ── Nurse message-specific inputs ─────────────────── */
-.k-dialog-wrapper:has(#dialog-nurse-chat) .k-input,
+.k-dialog-wrapper:has(#dialog-nurse-chat) .k-input:not(.k-textarea),
 .k-dialog-wrapper:has(#dialog-nurse-chat) .k-combobox {
     width: 100%;
     height: 34px;
@@ -1169,7 +1206,7 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 }
 
 .k-dialog-wrapper:has(#dialog-nurse-chat) .k-input .k-input-inner {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-size: 16px;
     line-height: 150%;
     color: #232A36;
@@ -2038,8 +2075,8 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 .k-dialog-wrapper.app-dialog-shell .k-window-title {
     font-family: 'Poppins', sans-serif;
     font-weight: 700;
-    font-size: 18px;
-    line-height: 125%;
+    font-size: 20px;
+    line-height: 150%;
     color: #232A36;
 }
 
@@ -2053,7 +2090,7 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 /* Content area */
 .k-dialog-wrapper.app-dialog-shell .k-window-content,
 .k-dialog-wrapper.app-dialog-shell .k-dialog-content {
-    padding: 16px;
+    padding: 32px;
     background: #fff;
 }
 
@@ -2162,6 +2199,40 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     justify-content: flex-end;
     border-top: none;
     background: #fff;
+}
+
+/* Cancel button — flat / light */
+.k-dialog-wrapper.app-dialog-shell .k-actions .k-button:not(.k-button-primary):not(.k-button-solid-primary) {
+    background: #F3F5F7;
+    border: 1px solid rgba(255, 255, 255, 0.0001);
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #232A36;
+    height: 30px;
+    padding: 4px 8px;
+}
+
+/* Save button — primary / slate */
+.k-dialog-wrapper.app-dialog-shell .k-actions .k-button-primary,
+.k-dialog-wrapper.app-dialog-shell .k-actions .k-button-solid-primary {
+    background: #334155;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #FFFFFF;
+    height: 30px;
+    padding: 4px 8px;
+}
+
+.k-dialog-wrapper.app-dialog-shell .k-actions .k-button-primary:hover,
+.k-dialog-wrapper.app-dialog-shell .k-actions .k-button-solid-primary:hover {
+    background: #273344;
+    border-color: #273344;
+    color: #FFFFFF;
 }
 
 
@@ -2412,21 +2483,23 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 ═══════════════════════════════════════════════════════ */
 /* Hide the empty title bar but keep the close button */
 .k-dialog:has(#dialog-alert-review) .k-dialog-titlebar {
-    background: transparent;
+    background: white;
     border-bottom: none;
-    padding: 8px 8px 0;
     min-height: auto;
 }
 .k-dialog:has(#dialog-alert-review) .k-dialog-titlebar .k-dialog-title { display: none; }
 
 /* Green "Mark as Resolved" button */
 .ar-resolve-btn.k-button-primary,
-.ar-resolve-btn.k-button-primary:hover {
+.ar-resolve-btn.k-button-solid-primary,
+.ar-resolve-btn.k-button-primary:hover,
+.ar-resolve-btn.k-button-solid-primary:hover {
     background-color: #16a34a;
     border-color: #16a34a;
     color: #fff;
 }
-.ar-resolve-btn.k-button-primary:hover { background-color: #15803d; }
+.ar-resolve-btn.k-button-primary:hover,
+.ar-resolve-btn.k-button-solid-primary:hover { background-color: #15803d; }
 
 /* Content layout */
 .ar-content { padding: 0 4px; }
@@ -2682,29 +2755,38 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 }
 
 .patients-list-body {
-    position: relative;
     padding: 0 16px 20px;
     max-width: 1680px;
     margin: 0 auto;
 }
 
+/* AI Panel Open: Grid + 400px AI panel side-by-side */
+.patients-list-body.ai-panel-open {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 400px;
+    gap: 32px;
+    align-items: start;
+}
+
 .patients-list-body.ai-panel-open > .patients-ai-panel {
-    position: absolute;
-    top: 0;
-    right: 16px;
-    width: 400px;
     max-height: var(--patients-grid-height, 80vh);
-    z-index: 3;
+    position: sticky;
+    top: 100px;
+}
+
+/* Preview Panel Open: Grid + 400px preview panel side-by-side */
+.patients-list-body.preview-panel-open {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 400px;
+    gap: 32px;
+    align-items: start;
 }
 
 .patients-list-body.preview-panel-open > .patient-preview-panel {
-    position: absolute;
-    top: 0;
-    right: 16px;
-    width: 400px;
     max-height: var(--patients-grid-height, 80vh);
+    position: sticky;
+    top: 100px;
     overflow-y: auto;
-    z-index: 3;
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -4454,11 +4536,31 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 /* Window container */
 #profile-window { padding: 20px; }
 
+/* Profile window — scrollable, max 95vh */
+.k-window:has(#profile-window) {
+    max-height: 95vh;
+}
+.k-window:has(#profile-window) .k-window-content {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #4A5666 transparent;
+}
+
+/* Form action buttons — right-aligned */
+#profile-window .k-form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #eeedf8;
+    margin-top: 6px;
+}
+
 /* Profile Image section */
 .pm-section { margin-bottom: 20px; }
 .pm-label { display: block; font-size: 13px; font-weight: 600; color: #232A36; margin-bottom: 12px; }
-.pm-photo-wrap { width: 100%; margin-bottom: 18px; border-radius: 12px; overflow: hidden; background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%); }
-.pm-photo { width: 100%; height: 408px; display: block; object-fit: cover; object-position: center top; }
+.pm-photo-wrap { width: 100%; max-height: 370px; margin-bottom: 18px; border-radius: 12px; overflow: hidden; background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%); }
+.pm-photo { width: 100%; display: block; object-fit: cover; object-position: center top; }
 #pm-btn-upload.k-button { width: 100%; min-height: 42px; justify-content: center; background: #334155; border-color: #334155; color: #ffffff; box-shadow: none; }
 #pm-btn-upload.k-button:hover,
 #pm-btn-upload.k-button:focus { background: #273344; border-color: #273344; color: #ffffff; }
@@ -4558,25 +4660,6 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     /* Patient detail — vitals grid 3 columns */
     .dd-vitals-grid { grid-template-columns: repeat(3, 1fr) !important; }
 
-    /* AppBar — vertical stack */
-    .app-appbar {
-        display: flex;
-        flex-direction: column;
-        height: auto;
-        border-radius: 16px;
-        padding: 12px;
-        gap: 8px;
-        width: calc(100% - 16px);
-        margin: 8px auto 0;
-    }
-    .appbar-logo { order: 1; }
-    .appbar-nav {
-        order: 2;
-        width: 100%;
-        justify-content: center;
-    }
-    .appbar-right { order: 3; }
-
     /* Grids — horizontal scroll when content overflows */
     .k-grid { overflow: visible; }
     .k-grid .k-grid-content {
@@ -4589,11 +4672,9 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
         align-items: flex-start;
         flex-direction: column;
     }
-    .patients-list-body.ai-panel-open > .patients-ai-panel {
-        position: absolute;
-        width: calc(100% - 40px);
-        right: 20px;
-        max-height: none;
+    .patients-list-body.ai-panel-open,
+    .patients-list-body.preview-panel-open {
+        grid-template-columns: 1fr;
     }
     .patients-detail-body { grid-template-columns: 1fr; }
 
@@ -4604,8 +4685,59 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     }
 }
 
+/* ── ≤ 1100px ── AppBar starts to get tight ───────── */
+@media (max-width: 1100px) {
+    .app-appbar {
+        width: calc(100% - 16px);
+        margin: 8px auto 0;
+        padding: 10px 14px;
+        height: auto;
+        min-height: 60px;
+        border-radius: 48px;
+    }
+
+    .appbar-right .k-autocomplete {
+        width: 180px;
+    }
+
+    .appbar-nav .k-segmented-control-button {
+        padding: 6px 10px;
+        font-size: 14px;
+    }
+}
+
 /* ── ≤ 960px ─────────────────────────────────────── */
 @media (max-width: 960px) {
+    /* AppBar — squeeze grid, horizontal scroll for nav */
+    .app-appbar {
+        grid-template-columns: auto 1fr auto;
+        gap: 6px;
+        padding: 8px 12px;
+        border-radius: 40px;
+    }
+
+    .appbar-nav {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    .appbar-nav::-webkit-scrollbar { display: none; }
+
+    .appbar-nav .k-segmented-control {
+        font-size: 14px;
+        height: 36px;
+        white-space: nowrap;
+    }
+
+    .appbar-nav .k-segmented-control-button {
+        padding: 5px 10px;
+        font-size: 14px;
+    }
+
+    .appbar-right .k-autocomplete {
+        width: 150px;
+    }
+
     /* Schedule page — single column */
     .schedule-body { flex-direction: column; }
     .schedule-side { flex: 1 1 auto; width: 100%; }
@@ -4622,10 +4754,51 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 
     /* Patient profile — top cards single column */
     .profile-top-cards { grid-template-columns: 1fr; }
+
+    /* Profile management — smaller image */
+    .pm-photo { height: 260px; }
 }
 
 /* ── ≤ 800px ─────────────────────────────────────── */
 @media (max-width: 800px) {
+    /* AppBar — column layout */
+    .app-appbar {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        border-radius: 20px;
+        padding: 10px 12px;
+        margin: 6px auto 0;
+        gap: 8px;
+        height: auto;
+        min-height: unset;
+    }
+
+    /* Nav row — full width, centered */
+    .app-appbar .appbar-nav {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Right row — full width, items spread across */
+    .appbar-right {
+        width: 100%;
+        justify-content: space-between;
+        height: auto;
+        gap: 8px;
+    }
+
+    /* Search expands to fill available space */
+    .appbar-right .k-autocomplete {
+        display: flex !important;
+        flex: 1;
+        width: auto;
+    }
+
+    .appbar-sep { display: none; }
+
+    .appbar-logo-img { height: 26px; }
+
     /* Patient drilldown — vitals grid 3 columns */
     .vitals-grid { grid-template-columns: repeat(3, 1fr); }
 
@@ -4650,6 +4823,9 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
         flex-wrap: wrap;
     }
 
+    /* Profile management — smaller image */
+    .pm-photo { height: 200px; }
+
     /* Analytics page — header gap */
     .analytics-page-header {
         gap: 18px;
@@ -4662,6 +4838,22 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 
 /* ── ≤ 600px ─────────────────────────────────────── */
 @media (max-width: 600px) {
+    .app-appbar {
+        border-radius: 20px;
+        padding: 6px 8px;
+        min-height: 52px;
+    }
+
+    .appbar-logo-img { height: 22px; }
+
+    /* Profile management — compact image + window positioning */
+    .pm-photo { height: 160px; width: 160px; }
+    .k-window:has(#profile-window) {
+        top: 16px !important;
+        max-height: calc(100vh - 32px) !important;
+    }
+    #profile-window { padding: 14px; }
+
     /* Schedule side panel */
     .schedule-side {
         flex: 1 1 auto;
@@ -4679,6 +4871,27 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     .analytics-row-2col,
     .analytics-row-2col-equal {
         grid-template-columns: 1fr !important;
+    }
+}
+
+/* ── ≤ 500px ── Nav icon-only ────────────────────── */
+@media (max-width: 500px) {
+    /* Collapse nav to icon-only, no text labels */
+    .appbar-nav .k-segmented-control-button .k-button-text {
+        display: none;
+    }
+
+    .appbar-nav .k-segmented-control {
+        height: 32px;
+        padding: 2px;
+    }
+
+    .appbar-nav .k-segmented-control-button {
+        padding: 4px 10px;
+    }
+
+    .k-segmented-control-button-text{
+        display: none;
     }
 }
 
@@ -4714,14 +4927,21 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     }
 
     /* AppBar — compact */
-    .appbar-nav .k-segmented-control { width: 100%; }
-    .appbar-nav .k-segmented-control-button {
-        font-size: 12px;
-        padding: 6px 8px;
+    .app-appbar {
+        border-radius: 14px;
     }
+
+    .appbar-nav {
+        min-width: 0;
+        max-width: calc(100vw - 130px);
+    }
+
+    .appbar-right {
+        gap: 4px;
+    }
+
     #notif-btn,
-    #btn-settings,
-    .k-segmented-control-button-text {
+    #btn-settings {
         display: none;
     }
 
@@ -4736,12 +4956,7 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     }
     .appointments-card,
     .patients-grid-card {
-        min-width: 0;
         overflow: hidden;
-    }
-    .col-main,
-    .col-side {
-        min-width: 0;
     }
     .shortcut-grid {
         grid-template-columns: 1fr !important;
@@ -4790,11 +5005,14 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     .patients-header-actions { width: 100%; gap: 8px; }
 
     /* Patients — AI/preview panels full width */
+    .patients-list-body.ai-panel-open,
+    .patients-list-body.preview-panel-open {
+        grid-template-columns: 1fr;
+    }
     .patients-list-body.ai-panel-open > .patients-ai-panel,
     .patients-list-body.preview-panel-open > .patient-preview-panel {
-        width: calc(100% - 16px);
-        right: 8px;
         max-height: none;
+        position: static;
     }
 
     /* Analytics page */

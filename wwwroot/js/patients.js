@@ -86,18 +86,6 @@ function onPatientsGridDataBound() {
     initKendoStatusBadges(widget.element);
 }
 
-function onPatientsContextMenuSelect(e) {
-    var g = $("#patients-grid").data("kendoGrid");
-    if (!g) return;
-    var row    = $(e.target).closest("tr");
-    var item   = g.dataItem(row);
-    var patient = item ? getFullPatient(item.Id || item.get("Id")) : null;
-    if (!patient) return;
-    var action = $(e.item).data("action");
-    if (action === "view")   { openPatientDrilldown(patient); }
-    if (action === "status") { openChangeStatusDialog(patient); }
-}
-
 /* ═══════════════════════════════════════════════════════
    PATIENTS PAGE — DATA loaded remotely from /api
 ═══════════════════════════════════════════════════════ */
@@ -416,7 +404,7 @@ function openChangeStatusDialog(patient) {
 }
 
 /* ═══════════════════════════════════════════════════════
-   GRID AND CONTEXT MENU — Initialized by Html Helpers
+   GRID — Initialized by Html Helper
    The grid variable is retrieved from the helper-created widget.
 ═══════════════════════════════════════════════════════ */
 function initGrid() {
@@ -424,20 +412,31 @@ function initGrid() {
     grid = $("#patients-grid").data("kendoGrid");
 }
 
-function initContextMenu() {
-    // Context menu is created by Html Helper — no JS init needed
-}
-
 function syncPatientsSidePanelHeights() {
-    window.requestAnimationFrame(function () {
-        var gridHeight = $(".patients-grid-card:visible").outerHeight();
-        if (!gridHeight) return;
-        $("#list-ai-panel:visible, #patient-preview-panel:visible").css("height", gridHeight + "px");
-    });
+    updateGridHeightVar();
+    deferGridResize();
 }
 
 function clearPatientsSidePanelHeights() {
-    $("#list-ai-panel, #patient-preview-panel").css("height", "");
+    deferGridResize();
+}
+
+/* Reads the grid card height and sets a CSS custom property so
+   side panels can size themselves without repeated JS measurement. */
+function updateGridHeightVar() {
+    var h = $(".patients-grid-card:visible").outerHeight();
+    if (h) {
+        $("#patients-list-body")[0].style.setProperty("--patients-grid-height", h + "px");
+    }
+}
+
+/* Defers kendo.resize so it doesn't block the current frame. */
+var _resizeTimer = 0;
+function deferGridResize() {
+    cancelAnimationFrame(_resizeTimer);
+    _resizeTimer = requestAnimationFrame(function () {
+        if (grid) { kendo.resize($("#patients-grid")); }
+    });
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -448,12 +447,8 @@ $(document).ready(function () {
 
     // Notification badge is managed by profile.js initNotifDropdown()
 
-    // Grid + context menu — created by Html Helpers, just get reference
+    // Grid — created by Html Helper, just get reference
     initGrid();
-    initContextMenu();
-
-    kendo.ui.icon($(".status"), { icon: 'plan' });
-    kendo.ui.icon($(".pencil"), { icon: 'pencil' });
 
     // Breadcrumb back navigation
     $(document).on("click", "#breadcrumb-back", function () {
@@ -522,6 +517,8 @@ $(document).ready(function () {
 
     handleLocationHash();
     $(window).off("hashchange.patients").on("hashchange.patients", handleLocationHash);
-    $(window).off("resize.patientsPanels").on("resize.patientsPanels", syncPatientsSidePanelHeights);
+    $(window).off("resize.patientsPanels").on("resize.patientsPanels", function () {
+        updateGridHeightVar();
+    });
 
 });

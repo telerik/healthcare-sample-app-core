@@ -251,10 +251,11 @@
     @(Html.Kendo().Dialog()
         .Name("dialog-new-note")
         .Title("New Clinical Note")
-        .Width(520)
+        .Width(690)
         .Modal(true)
         .Visible(false)
         .Closable(true)
+        .ButtonLayout("normal")
         .Actions(actions =>
         {
             actions.Add().Text("Discard").Action("onNewNoteDiscard");
@@ -289,10 +290,12 @@
     @(Html.Kendo().Dialog()
         .Name("dialog-lab-test")
         .Title("Request Lab Tests")
-        .Width(480)
+        .Width(690)
+        .Height(560)
         .Modal(true)
         .Visible(false)
         .Closable(true)
+        .ButtonLayout("normal")
         .Actions(actions =>
         {
             actions.Add().Text("Discard").Action("onLabTestDiscard");
@@ -336,10 +339,12 @@
     @(Html.Kendo().Dialog()
         .Name("dialog-nurse-chat")
         .Title("Message Nurse")
-        .Width(520)
+        .Width(690)
+        .Height(650)
         .Modal(true)
         .Visible(false)
         .Closable(true)
+        .ButtonLayout("normal")
         .Actions(actions =>
         {
             actions.Add().Text("Discard").Action("onNurseChatDiscard");
@@ -378,7 +383,7 @@
                     @(Html.Kendo().TextArea()
                         .Name("nurse-msg-body")
                         .Placeholder("Write your message here...")
-                        .Rows(4)
+                        .Rows(10)
                         .Resize(TextAreaResize.Both)
                     )
                 </div>
@@ -408,6 +413,7 @@
         .Width(460)
         .Modal(true)
         .Visible(false)
+        .Events(e => e.Open("onReasonVisitOpen"))
         .Actions(actions =>
         {
             actions.Add().Text("Close");
