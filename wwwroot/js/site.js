@@ -207,8 +207,8 @@ $(document).ready(function () {
     /* ═══════════════════════════════════════════════
        APP BAR NAV — SegmentedControl (initialized via Html Helper)
     ═══════════════════════════════════════════════ */
-    var activePage = $("#appbar-nav").data("kendoSegmentedControl") 
-        ? $("#appbar-nav").data("kendoSegmentedControl").value() 
+    var activePage = (typeof serverActivePage !== "undefined" && serverActivePage)
+        ? serverActivePage
         : "Home";
 
     /* Activate the correct page header on initial load */

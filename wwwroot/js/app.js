@@ -32,6 +32,11 @@ function onReasonDetailsClick() {
     $("#dialog-reason-visit").data("kendoDialog").open();
 }
 
+function onReasonVisitOpen() {
+    var dlg = $("#dialog-reason-visit").data("kendoDialog");
+    if (dlg) applySharedDialogShell(dlg);
+}
+
 function onAllergyDetailsClick() {
     $("#dialog-allergy-details").data("kendoDialog").open();
 }
@@ -158,7 +163,8 @@ function onAlertReviewResolve() {
 }
 
 function onAllergyDetailsOpen() {
-    /* Badges are now created by Html Helpers — nothing to initialize */
+    var dlg = $("#dialog-allergy-details").data("kendoDialog");
+    if (dlg) applySharedDialogShell(dlg);
 }
 
 function onNewNoteDiscard() {
@@ -348,6 +354,7 @@ $(document).ready(function () {
 
         $.get("/Home/AlertReviewPartial", { alertIndex: idx }, function (html) {
             var dlg = $("#dialog-alert-review").data("kendoDialog");
+            if (dlg) applySharedDialogShell(dlg);
             dlg.content(html);
             dlg.open();
         });

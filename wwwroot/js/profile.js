@@ -40,12 +40,20 @@ function loadDoctorProfile() {
 
 /* ── Window Open event ── */
 function onProfileWindowOpen() {
-     
     populateProfileForm();
+    var win = this;
     setTimeout(function () {
-        $('.k-upload-button .k-button-text').prepend("<span class='k-icon upload'></span>");
-        kendo.ui.icon($(".upload"), { icon: 'upload' }); // Add icon to upload button         
-    })
+        // Only add the upload icon once
+        var $btn = $('.k-upload-button .k-button-text');
+        if ($btn.length && !$btn.find('.upload').length) {
+            $btn.prepend("<span class='k-icon upload'></span>");
+            kendo.ui.icon($(".upload"), { icon: 'upload' });
+        }
+        // Cap window height at 98% of viewport; let content determine actual height
+        var maxH = Math.floor(window.innerHeight * 0.95);
+        win.setOptions({ height: "", maxHeight: maxH });
+        win.center();
+    });
 }
 
 /* ── Upload Success event — Kendo Upload async posts the file to the server ── */
@@ -125,13 +133,13 @@ var notificationsData = (function () {
     var n3 = p.length > 4 ? p[4] : n0;
     var n4 = p.length > 3 ? p[3] : n0;
     return [
-        { id: 1, read: false,  severity: "critical", icon: "\uD83D\uDD34", title: "Critical Lab Alert",     desc: "CRP elevated \u2013 " + n1.name,                          time: "2 min ago",  action: "View Patient",   patientId: n1.id },
-        { id: 2, read: false,  severity: "warning",  icon: "\uD83D\uDFE0", title: "Vitals Warning",          desc: "Blood pressure abnormal \u2013 " + n2.name,               time: "8 min ago",  action: "View Patient",   patientId: n2.id },
-        { id: 3, read: false,  severity: "critical", icon: "\uD83D\uDD34", title: "ICU Monitoring Alert",    desc: "Oxygen saturation low \u2013 " + n0.name,                 time: "15 min ago", action: "View Patient",   patientId: n0.id },
-        { id: 4, read: false,  severity: "info",     icon: "\uD83D\uDD35", title: "New Lab Results",         desc: "CBC results posted \u2013 " + n1.name,                    time: "22 min ago", action: "View Results",   patientId: n1.id },
-        { id: 5, read: true,   severity: "info",     icon: "\uD83D\uDFE1", title: "Appointment Update",      desc: "Appointment rescheduled \u2013 " + n4.name + " now at 09:30", time: "1 hr ago",  action: "View Schedule", patientId: null },
-        { id: 6, read: true,   severity: "info",     icon: "\uD83D\uDCAC", title: "New Message",             desc: "Nurse Amanda Reed sent an update for " + n3.name,         time: "1 hr ago",   action: "View Message",   patientId: n3.id },
-        { id: 7, read: true,   severity: "system",   icon: "\u2705",       title: "System Info",             desc: "Daily schedule synced successfully",                       time: "2 hr ago",   action: null,             patientId: null }
+        { id: 1, read: false,  severity: "critical", icon: "\uD83D\uDD34", title: "Critical Lab Alert",      description: "CRP elevated \u2013 " + n1.name,                          time: "2 min ago",  action: "View Patient",   patientId: n1.id },
+        { id: 2, read: false,  severity: "warning",  icon: "\uD83D\uDFE0", title: "Vitals Warning",          description: "Blood pressure abnormal \u2013 " + n2.name,               time: "8 min ago",  action: "View Patient",   patientId: n2.id },
+        { id: 3, read: false,  severity: "critical", icon: "\uD83D\uDD34", title: "ICU Monitoring Alert",    description: "Oxygen saturation low \u2013 " + n0.name,                 time: "15 min ago", action: "View Patient",   patientId: n0.id },
+        { id: 4, read: false,  severity: "info",     icon: "\uD83D\uDD35", title: "New Lab Results",         description: "CBC results posted \u2013 " + n1.name,                    time: "22 min ago", action: "View Results",   patientId: n1.id },
+        { id: 5, read: true,   severity: "info",     icon: "\uD83D\uDFE1", title: "Appointment Update",      description: "Appointment rescheduled \u2013 " + n4.name + " now at 09:30", time: "1 hr ago",  action: "View Schedule", patientId: null },
+        { id: 6, read: true,   severity: "info",     icon: "\uD83D\uDCAC", title: "New Message",             description: "Nurse Amanda Reed sent an update for " + n3.name,         time: "1 hr ago",   action: "View Message",   patientId: n3.id },
+        { id: 7, read: true,   severity: "system",   icon: "\u2705",       title: "System Info",             description: "Daily schedule synced successfully",                       time: "2 hr ago",   action: null,             patientId: null }
     ];
 })();
 

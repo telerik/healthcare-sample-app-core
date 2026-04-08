@@ -84,7 +84,7 @@
     --kendo-color-info-active: #135086;
     --kendo-color-on-info: #ffffff;
     /* ─── TYPOGRAPHY ─────────────────────────────────────── */
-    --kendo-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --kendo-font-family: 'Poppins', sans-serif;
     --kendo-font-family-monospace: 'Fira Code', 'Consolas', monospace;
     --kendo-font-size: 14px;
     --kendo-font-size-sm: 12px;

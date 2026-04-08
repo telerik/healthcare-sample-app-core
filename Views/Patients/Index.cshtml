@@ -51,7 +51,6 @@
                         .Reorderable(r => r.Columns(true))
                         .Resizable(r => r.Columns(true))
                         .Scrollable()
-                        .ColumnMenu()
                         .Pageable(p => p
                             .PageSizes(new[] { 10, 13, 20, 50 })
                             .Refresh(true)
@@ -105,21 +104,6 @@
     <div id="patients-detail-view" style="display:none">
         <div id="detail-main" class="detail-main-wrap"></div>
     </div>
-
-    <!-- ═══════════════════════════════════════════
-         CONTEXT MENU
-    ═══════════════════════════════════════════ -->
-    @(Html.Kendo().ContextMenu()
-        .Name("patients-context-menu")
-        .Target("#patients-grid")
-        .Filter("tr[role='row']")
-        .Items(items =>
-        {
-            items.Add().Text("<span class='ctx-icon status'></span> Open Patient Record").Encoded(false).HtmlAttributes(new { data_action = "view" });
-            items.Add().Text("<span class='ctx-icon pencil'></span> Change Status").Encoded(false).HtmlAttributes(new { data_action = "status" });
-        })
-        .Events(e => e.Select("onPatientsContextMenuSelect"))
-    )
 
     <!-- ═══════════════════════════════════════════
          DIALOG CONTAINERS
