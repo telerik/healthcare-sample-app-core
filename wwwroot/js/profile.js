@@ -153,7 +153,7 @@ function initNotifDropdown() {
 
 function updateBadge() {
     var count = getUnreadCount();
-    var badge = $("#notif-badge").data("kendoBadge");
+    var badge = $("#notif-btn").find(".k-badge").data("kendoBadge");
     if (badge) {
         badge.text(count > 0 ? String(count) : "");
         badge.themeColor(count > 0 ? "error" : "info");
