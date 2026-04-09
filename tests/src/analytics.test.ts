@@ -7,7 +7,6 @@ describe('Analytics Page', () => {
     beforeAll(async () => {
         browser = new Browser();
         await browser.navigateTo(`${BASE_URL}/Analytics`);
-        await browser.executeScript("showPageHeader('Analytics')");
     });
 
     afterAll(async () => {

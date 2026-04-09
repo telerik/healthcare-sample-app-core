@@ -11,7 +11,6 @@ describe('Patients Page', () => {
         browser = new Browser();
         grid = new Grid(browser, '#patients-grid');
         await browser.navigateTo(`${BASE_URL}/Patients`);
-        await browser.executeScript("showPageHeader('Patients')");
     });
 
     afterAll(async () => {
@@ -161,7 +160,6 @@ describe('Patients Page', () => {
     describe('Patients Grid — Items Per Page', () => {
         beforeEach(async () => {
             await browser.navigateTo(`${BASE_URL}/Patients`);
-            await browser.executeScript("showPageHeader('Patients')");
         });
 
         afterEach(async () => {
