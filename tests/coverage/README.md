@@ -1,6 +1,6 @@
 # Test Coverage Report — Healthcare Sample App
 
-**Total: 455 tests (451 passing, 4 skipped) | 11 files**
+**Total: 455 tests | 11 files**
 
 | Page | Tests | Coverage File |
 |---|---|---|
@@ -10,5 +10,5 @@
 | Patient Detail Drilldown | 36 | [patient-detail.md](patient-detail.md) |
 | Analytics | 61 | [analytics.md](analytics.md) |
 | Profile & Search | 21 | [profile-and-search.md](profile-and-search.md) |
-| Notifications | 24 (4 skipped) | [notifications.md](notifications.md) |
+| Notifications | 24 | [notifications.md](notifications.md) |
 | Cross-Page Navigation | 13 | [navigation.md](navigation.md) |

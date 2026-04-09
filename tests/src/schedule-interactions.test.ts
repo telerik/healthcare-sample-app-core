@@ -209,7 +209,7 @@ describe('Schedule Page — Scheduler Interactions', () => {
 
     describe('View Task Dialog', () => {
         it('should open the View Task dialog when clicking a task', async () => {
-            await browser.doubleClick('.task-item');
+            await browser.click('.task-item');
             await browser.expect('#view-task-dialog').toBeVisible();
         });
 
@@ -389,7 +389,7 @@ describe('Schedule Page — Scheduler Interactions', () => {
     describe('View Task Dialog — Keyboard Navigation', () => {
         beforeEach(async () => {
             await browser.navigateTo(`${BASE_URL}/Schedule`);
-            await browser.doubleClick('.task-item');
+            await browser.click('.task-item');
             await browser.expect('#view-task-dialog').toBeVisible();
         });
 

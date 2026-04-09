@@ -79,15 +79,15 @@ describe('Notifications Panel', () => {
         await browser.expect('.np-card-time').toBeVisible();
     });
 
-    it.skip('should display notification description subtitles', async () => {
+    it('should display notification description subtitles', async () => {
         await browser.expect('.np-card-subtitle').toBeVisible();
     });
 
-    it.skip('should show CRP elevated description for Critical Lab Alert', async () => {
+    it('should show CRP elevated description for Critical Lab Alert', async () => {
         await browser.expect('.np-card:nth-child(1) .np-card-subtitle').toContainText('CRP elevated');
     });
 
-    it.skip('should show blood pressure description for Vitals Warning', async () => {
+    it('should show blood pressure description for Vitals Warning', async () => {
         await browser.expect('.np-card:nth-child(2) .np-card-subtitle').toContainText('Blood pressure');
     });
 
@@ -123,7 +123,7 @@ describe('Notifications Panel', () => {
             await browser.expect('.np-all-read').toContainText('All caught up');
         });
 
-        it.skip('should hide the notification badge after marking all read', async () => {
+        it('should hide the notification badge after marking all read', async () => {
             await browser.expect('#notif-btn .k-badge').not.toBeVisible();
         });
     });
