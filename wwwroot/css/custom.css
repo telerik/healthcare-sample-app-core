@@ -1864,9 +1864,11 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 .tasks-card {
     padding: 0;
     margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
     border-radius: 16px;
-    max-height: 890px;
+    height: 890px;
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.04), 0px 2px 6px -1px rgba(0, 0, 0, 0.06);
     background: #FFFFFF;
 }
@@ -1968,11 +1970,13 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 
 #tasks-list {
     display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
     gap: 20px;
+    min-height: 0;
     padding: 10px 20px 20px;
     overflow-y: auto;
-    max-height: calc(100vh - 200px);
+    max-height: none;
 }
 
 /* ── Task item card ── */
@@ -2199,6 +2203,15 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     justify-content: flex-end;
     border-top: none;
     background: #fff;
+}
+
+.k-dialog-wrapper:has(#add-task-dialog) .k-actions {
+    justify-content: flex-end;
+}
+
+.k-dialog-wrapper:has(#add-task-dialog) .k-actions .k-button {
+    flex: 0 0 auto;
+    width: auto;
 }
 
 /* Cancel button — flat / light */
@@ -2485,9 +2498,25 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 .k-dialog:has(#dialog-alert-review) .k-dialog-titlebar {
     background: white;
     border-bottom: none;
-    min-height: auto;
+     min-height: 50px;
+    padding: 12px 32px 0;
 }
-.k-dialog:has(#dialog-alert-review) .k-dialog-titlebar .k-dialog-title { display: none; }
+
+.k-dialog:has(#dialog-alert-review) .k-window-titlebar-action {
+    margin: 0;
+}
+
+.k-dialog:has(#dialog-alert-review) .k-dialog-content {
+    padding: 12px 32px 20px;
+}
+
+.k-dialog:has(#dialog-alert-review) .k-actions {
+    padding: 0 32px 20px;
+}
+
+.k-dialog:has(#dialog-alert-review) .k-actions .k-button {
+    flex: 0 0 auto;
+}
 
 /* Green "Mark as Resolved" button */
 .ar-resolve-btn.k-button-primary,
@@ -2502,7 +2531,7 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 .ar-resolve-btn.k-button-solid-primary:hover { background-color: #15803d; }
 
 /* Content layout */
-.ar-content { padding: 0 4px; }
+.ar-content { padding: 0; }
 
 .ar-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 16px; }
 .ar-icon { flex-shrink: 0; line-height: 0; }
@@ -4539,6 +4568,10 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 /* Profile window — scrollable, max 95vh */
 .k-window:has(#profile-window) {
     max-height: 95vh;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(23, 56, 99, 0.08);
+    box-shadow: -1px 0px 11px rgba(0, 0, 0, 0.08), 1px 1px 11px rgba(0, 0, 0, 0.08);
 }
 .k-window:has(#profile-window) .k-window-content {
     overflow-y: auto;
@@ -4556,10 +4589,22 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     margin-top: 6px;
 }
 
+#profile-window .k-form-buttons .k-button-primary {
+    background-color: #000000;
+    border-color: #000000;
+    color: #ffffff;
+}
+#profile-window .k-form-buttons .k-button-primary:hover,
+#profile-window .k-form-buttons .k-button-primary:focus {
+    background-color: #222222;
+    border-color: #222222;
+    color: #ffffff;
+}
+
 /* Profile Image section */
 .pm-section { margin-bottom: 20px; }
 .pm-label { display: block; font-size: 13px; font-weight: 600; color: #232A36; margin-bottom: 12px; }
-.pm-photo-wrap { width: 100%; max-height: 370px; margin-bottom: 18px; border-radius: 12px; overflow: hidden; background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%); }
+.pm-photo-wrap { width: 100%; max-height: 320px; margin-bottom: 18px; border-radius: 12px; overflow: hidden; background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%); }
 .pm-photo { width: 100%; display: block; object-fit: cover; object-position: center top; }
 #pm-btn-upload.k-button { width: 100%; min-height: 42px; justify-content: center; background: #334155; border-color: #334155; color: #ffffff; box-shadow: none; }
 #pm-btn-upload.k-button:hover,
@@ -4606,6 +4651,9 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 
 /* Footer */
 .pm-footer { display: flex; justify-content: flex-end; gap: 10px; padding-top: 10px; border-top: 1px solid #eeedf8; margin-top: 6px; }
+#pm-btn-submit.k-button { background: #000000; border-color: #000000; color: #ffffff; border-radius: 8px; }
+#pm-btn-submit.k-button:hover,
+#pm-btn-submit.k-button:focus { background: #222222; border-color: #222222; color: #ffffff; }
 
 /* Avatar trigger */
 #profile-trigger {
