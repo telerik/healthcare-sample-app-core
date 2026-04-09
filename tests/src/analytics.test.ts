@@ -38,7 +38,7 @@ describe('Analytics Page', () => {
         });
 
         it('should display the page subtitle', async () => {
-            await browser.expect('.analytics-page-header p').toHaveText('Track vitals trends, lab results, risk scores, and alert patterns per patient');
+            await browser.expect('.analytics-page-header p').toHaveText('Patient trends, vitals, lab results, and risk assessment overview');
         });
 
         it('should display header controls', async () => {
