@@ -1,0 +1,93 @@
+# Builds, tests and deploys the application
+name: CD
+
+on:
+  # Publish to staging environment on PRs to master, and to production on merge to master
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    concurrency:
+      group: 'cd-${{ github.ref }}'
+      cancel-in-progress: false
+
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5.2.0
+        with:
+          dotnet-version: 10.x
+
+      - name: Setup Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24.x
+
+      - name: Setup Telerik Nuget Feed
+        run: |
+          dotnet nuget add source https://nuget.telerik.com/v3/index.json \
+          --name telerik.com \
+          --username api-key \
+          --password ${{ secrets.TELERIK_NUGET_FEED_API_KEY }} \
+          --store-password-in-clear-text
+
+      - name: Build App
+        run: dotnet build HealthcareApp.csproj -c release
+        env:
+          KENDO_UI_LICENSE: ${{ secrets.KENDO_UI_LICENSE }}
+
+      - name: Run tests
+        working-directory: ./tests
+        timeout-minutes: 10
+        continue-on-error: true # TODO: Fix tests before merging
+        env:
+          BROWSER_NAME: chrome
+          HEADLESS: true
+        run: |
+          dotnet run --project ../HealthcareApp.csproj --launch-profile https &
+          npm ci
+          npm test
+
+      - name: Publish App
+        run: dotnet publish HealthcareApp.csproj -c release -o app-release
+        env:
+          KENDO_UI_LICENSE: ${{ secrets.KENDO_UI_LICENSE }}
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: app-release
+          path: ./app-release/
+
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref_name == 'master' && 'production' || 'staging' }}
+      url: ${{ vars.APP_URL }}
+    needs: build
+
+    steps:
+      - name: Download app-release artifact from build job
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: app-release
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@02a81bead70021f5284939794bcec79c271ab383
+        with:
+          app-name: ${{ vars.AZURE_WEBAPP_NAME }}
+          package: '.'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}

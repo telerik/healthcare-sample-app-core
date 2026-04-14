@@ -1,6 +1,5 @@
 bin/
 obj/
-.github/
 .vs/
 
 # kendo-e2e CLI output
