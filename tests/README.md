@@ -17,7 +17,7 @@ End-to-end test suite for the Healthcare Sample App (ASP.NET Core). Uses [Vitest
 From the repo root, start the ASP.NET Core application:
 
 ```bash
-dotnet run
+dotnet run --launch-profile https
 ```
 
 The app must be running at `https://localhost:7016` before tests are executed. The base URL is configured in [`src/config.ts`](src/config.ts).
