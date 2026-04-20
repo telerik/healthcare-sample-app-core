@@ -54,6 +54,8 @@ builder.Services.AddSession(o =>
 
 var app = builder.Build();
 
+app.UsePathBase("/aspnet-core-healthcare");
+
 // Eagerly warm up the seed singleton so the first request is never slow
 _ = app.Services.GetRequiredService<HealthcareSeedStore>();
 
