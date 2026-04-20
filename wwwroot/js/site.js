@@ -372,7 +372,7 @@ function ensurePatientSearchData(forceRefresh) {
         return patientSearchRequest;
     }
 
-    patientSearchRequest = $.getJSON("/api/patients")
+    patientSearchRequest = $.getJSON("./api/patients")
         .done(function (patients) {
             sharedPatients = patients || [];
         })

@@ -190,7 +190,7 @@ function onNewNoteSave() {
     var patientId = ddl.value();
     var patientName = ddl.text();
     $.ajax({
-        url:         "/api/patients/" + encodeURIComponent(patientId) + "/add-note",
+        url:         "./api/patients/" + encodeURIComponent(patientId) + "/add-note",
         type:        "POST",
         contentType: "application/json",
         data:        JSON.stringify({ text: text }),
@@ -346,7 +346,7 @@ $(document).ready(function () {
        DAILY ALERTS + PATIENTS — loaded together
     ═════════════════════════════════════════════ */
     $.when(
-        $.getJSON("/api/alerts"),
+        $.getJSON("./api/alerts"),
         ensurePatientSearchData()
     ).done(function (alertsResp, patients) {
         alertsData   = alertsResp[0];

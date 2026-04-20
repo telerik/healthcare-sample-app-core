@@ -324,7 +324,7 @@ public static class HealthcareDataRepository
             string[] pool = b.Gender == "Male" ? menImages : womenImages;
             string genderFolder = b.Gender == "Male" ? "men" : "women";
             string imgFile = pool[i % pool.Length];
-            string avatar = $"/content/patient-images/{genderFolder}/thumb/{imgFile}";
+            string avatar = $"./content/patient-images/{genderFolder}/thumb/{imgFile}";
 
             // Admission date
             var admDt = new DateTime(2024, 7, 1).AddDays(rng.Next(0, 300));
