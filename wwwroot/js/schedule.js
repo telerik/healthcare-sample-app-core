@@ -294,6 +294,7 @@ function onAddTaskDialogClose() {
 function onAddTaskDialogShow() {
     var dlg = $("#add-task-dialog").data("kendoDialog");
     if (dlg) applySharedDialogShell(dlg);
+    if (dlg) dlg.center();
 }
 
 function onAddTaskCancel() {

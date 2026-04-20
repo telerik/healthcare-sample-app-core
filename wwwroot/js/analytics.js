@@ -1,6 +1,23 @@
 /* ═══════════════════════════════════════════════
    EVENT HANDLERS for Html Helper–initialized widgets
 ═══════════════════════════════════════════════ */
+var lastDonutSmall = null;
+
+function updateDonutLabels() {
+    var donut = $("#alerts-donut-chart").data("kendoChart");
+    if (!donut) return;
+    var isSmall = window.innerWidth < 730;
+    if (isSmall === lastDonutSmall) return;
+    lastDonutSmall = isSmall;
+    var series = donut.options.series[0];
+    series.labels.position = isSmall ? "insideEnd" : "outsideEnd";
+    series.labels.distance = isSmall ? 0 : 20;
+    series.labels.align = isSmall ? "circle" : "column";
+    if (!series.labels.connectors) { series.labels.connectors = {}; }
+    series.labels.connectors.width = isSmall ? 0 : 1;
+    donut.redraw();
+}
+
 _analyticsExportClickImpl = function() {
     kendo.drawing.drawDOM($("#analytics-body"), {
         paperSize: "auto"
@@ -123,7 +140,9 @@ function buildLabCharts(labResults) {
             chartArea: { background: "transparent", height: 75 }
         });
     });
-}
+    // Re-apply responsive donut labels after data refresh
+    lastDonutSmall = null;
+    updateDonutLabels();}
 
 /* ═══════════════════════════════════════════════════════
    HELPERS
@@ -213,5 +232,27 @@ $(document).ready(function () {
 
         $("#page-content").removeClass("page-loading").addClass("page-ready");
     });
+
+    // ── Resize charts on window resize ────────────────
+    var resizeTimer;
+
+    $(window).on("resize", function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function () {
+            $("#vitals-chart, #alerts-column-chart, #alerts-donut-chart").each(function () {
+                var chart = $(this).data("kendoChart");
+                if (chart) { chart.resize(); }
+            });
+            kendo.resize($("#risk-gauge"));
+            $("[id^='klab-']").each(function () {
+                var chart = $(this).data("kendoChart");
+                if (chart) { chart.resize(); }
+            });
+            updateDonutLabels();
+        }, 150);
+    });
+
+    // Apply on initial load too
+    setTimeout(updateDonutLabels, 300);
 
 });

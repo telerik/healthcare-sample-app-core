@@ -1,6 +1,9 @@
 /* ═══════════════════════════════════════════════
    EVENT HANDLERS for Html Helper–initialized widgets
 ═══════════════════════════════════════════════ */
+/* Reset the once-guard so PJAX re-entry re-checks openPatientId */
+window._patientsSearchInit = false;
+
 _patientsExportClickImpl = function() {
     var g = $("#patients-grid").data("kendoGrid");
     if (g) g.saveAsExcel();
@@ -35,21 +38,43 @@ _aiAssistanceClickImpl = function() {
     // If the user is on the patient detail view, navigate back to the grid first
     if ($("#patients-detail-view").is(":visible")) {
         closePatientDrilldown();
-        _aiPanelOpen = false;
     }
 
-    _aiPanelOpen = !_aiPanelOpen;
-    if (_aiPanelOpen) {
-        closePatientPreview();
-        initListAiChat();
-        $("#list-ai-date").text(kendo.toString(new Date(), "dddd, MMMM dd, yyyy"));
-        $("#list-ai-panel").show();
-        $("#patients-list-body").addClass("ai-panel-open");
-        syncPatientsSidePanelHeights();
+    // First click: create dialog and open immediately
+    if (!listAiReady) {
+        listAiReady = true;
+        $("#list-ai-dialog").show();
+        listAiDialog = $("#list-ai-dialog").kendoDialog({
+            title:    false,
+            width:    390,
+            height:   600,
+            modal:    false,
+            visible:  false,
+            resizable: true,
+            draggable: { dragHandle: ".k-dialog-titlebar" },
+            closable: false,
+            actions:  [],
+            open: function () {
+                this.wrapper.addClass("ai-dialog-wrapper");
+                if (window.innerWidth < 900) {
+                    this.wrapper.addClass("chat-fullscreen");
+                } else {
+                    this.wrapper.removeClass("chat-fullscreen");
+                }
+                _initListAiChatIfNeeded();
+            }
+        }).data("kendoDialog");
+        if (listAiDialog) listAiDialog.open();
+        return;
+    }
+
+    // Subsequent clicks: toggle
+    if (!listAiDialog) return;
+    if (listAiDialog.wrapper && listAiDialog.wrapper.is(":visible")) {
+        listAiDialog.close();
     } else {
-        $("#list-ai-panel").hide();
-        $("#patients-list-body").removeClass("ai-panel-open");
-        clearPatientsSidePanelHeights();
+        closePatientPreview();
+        listAiDialog.open();
     }
 };
 
@@ -65,14 +90,9 @@ function onPatientsGridDataBound() {
         window._patientsSearchInit = true;
 
         $("#page-content").removeClass("page-loading").addClass("page-ready");
-
-        var pendingId = sessionStorage.getItem("openPatientId");
-        if (pendingId) {
-            sessionStorage.removeItem("openPatientId");
-            var target = patientsData.find(function (p) { return p.Id === pendingId; });
-            if (target) { openPatientDrilldown(target); }
-        }
     }
+
+    openPendingPatientProfile();
 
     // Row click handlers
     widget.tbody.find("tr[role='row']").off("dblclick.drill");
@@ -98,6 +118,7 @@ var grid             = null;
 var currentPatient   = null;
 var previewPatient   = null;
 var listAiChat       = null;
+var listAiDialog     = null;
 var notesEditor      = null;
 var listAiReady      = false;
 var _aiAssistant    = {
@@ -107,7 +128,7 @@ var _aiAssistant    = {
  var _aiUser         = {
         id: "dr-carter",
         name: "Dr. Carter",
-        iconUrl: "/content/patient-images/women/thumb/michael-dam-mEZ3PoFGs_k-unsplash.jpg"
+     iconUrl: "/content/profile.jpg"
     };
 
 /* ═══════════════════════════════════════════════════════
@@ -209,10 +230,16 @@ function onListAiChatSendMessage(e) {
 }
 
 function initListAiChat() {
-    if (listAiReady) return;
-    listAiReady = true;
+    // no-op — dialog is now created lazily in the button click handler
+}
+
+function _initListAiChatIfNeeded() {
+    if (listAiChat) return;
     listAiChat = $("#list-ai-chat").data("kendoChat");
     if (!listAiChat) return;
+
+    // Add close-chat icon
+    kendo.ui.icon($("#list-ai-chat .close-chat"), { icon: 'x', size: 'large' });
 
     listAiChat.postMessage({
             authorId:   _aiAssistant.id,
@@ -222,6 +249,10 @@ function initListAiChat() {
             text: "\uD83D\uDC4B Hello! I\u2019m your AI Assistant.\n\nI can help you with your daily clinical tasks, patient information, and quick actions. Try one of the suggestions below!"
         });
     listAiChat.scrollToBottom();
+
+    $("#list-ai-chat").on("click", ".close-chat", function () {
+        if (listAiDialog) listAiDialog.close();
+    });
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -254,6 +285,26 @@ function openPatientDrilldown(patient) {
     $("#patients-breadcrumb").show();
     $("#patients-detail-view").show();
     window.scrollTo(0, 0);
+}
+
+function openPendingPatientProfile() {
+    var pendingId = sessionStorage.getItem("openPatientId");
+    if (!pendingId) return;
+
+    function tryOpenPendingPatient() {
+        var patient = getFullPatient(pendingId) || findPatient(pendingId);
+        if (!patient) return false;
+
+        sessionStorage.removeItem("openPatientId");
+        openPatientDrilldown(patient);
+        return true;
+    }
+
+    if (tryOpenPendingPatient()) return;
+
+    ensurePatientSearchData().done(function () {
+        tryOpenPendingPatient();
+    });
 }
 
 function closePatientDrilldown() {
@@ -305,10 +356,8 @@ function onPatientLabsGridDataBound() {
 ═══════════════════════════════════════════════════════ */
 function openPatientPreview(patient) {
     // Close AI panel if open — preview and AI assistant are mutually exclusive
-    if (_aiPanelOpen) {
-        _aiPanelOpen = false;
-        $("#list-ai-panel").hide();
-        $("#patients-list-body").removeClass("ai-panel-open");
+    if (listAiDialog) {
+        listAiDialog.close();
     }
 
     previewPatient = patient;

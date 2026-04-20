@@ -84,8 +84,8 @@
         <div class="schedule-side">
             <!-- Today's Tasks -->
             <div class="k-card tasks-card">
-                <div class="tasks-card-header">
-                    <h2 class="tasks-card-title">Daily Tasks</h2>
+                <div class="k-card-header tasks-card-header">
+                    <h2 class="k-card-title tasks-card-title">Daily Tasks</h2>
                     <div class="tasks-header-actions">
                         <div class="tasks-search-wrap">
                             <svg class="tasks-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4A5666" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -102,7 +102,8 @@
                             .Events(e => e.Click("onAddTaskBtnClick"))
                         )
                     </div>
-                </div>
+                </div>                
+                <div class="k-card-body">
                 @(Html.Kendo().ListView<DailyTask>()
                     .Name("tasks-list")
                     .TagName("div")
@@ -119,6 +120,7 @@
                         .Read(r => r.Action("Tasks_Read", "Schedule"))
                     )
                 )
+                </div>
             </div>            
         </div>
     </div>

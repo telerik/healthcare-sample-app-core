@@ -66,36 +66,37 @@
                 </div>
             </div>
 
-            <!-- AI Assistant panel (hidden until button clicked) -->
-            <div id="list-ai-panel" class="k-card patients-ai-panel" style="display:none">               
-                @(Html.Kendo().Chat()
-                    .Name("list-ai-chat")
-                    .AuthorId("dr-carter")
-                    .Height("600")
-                    .User(u => u.Name("Dr. Carter"))
-                    .Messages(m => m.Placeholder("Ask AI about patients…"))
-                    .HeaderItems(items =>
-                    {
-                        items.Add().Type(AppBarItemType.ContentItem).Template("<span class='sparkles'></span>");
-                        items.Add().Type(AppBarItemType.ContentItem).Template("<strong class='ai-chat-header-title'>AI Assistant</strong>");
-                        items.Add().Type(AppBarItemType.Spacer);
-                    })
-                    .Suggestions(suggestions =>  {
-                            suggestions.Add().Text("What are today's critical care priorities?");
-                            suggestions.Add().Text("What are common patient risk factors?");
-                            suggestions.Add().Text("What follow-up protocols should I apply?");
-                            suggestions.Add().Text("How do I interpret abnormal lab results?");
-                    })
-                    .Events(e => e
-                        .SendMessage("onListAiChatSendMessage")
-                    )
-                )
-            </div>
-
             <!-- Patient Preview panel (shown on patient name double-click) -->
             <div id="patient-preview-panel" class="k-card patient-preview-panel" style="display:none"></div>
 
         </div>
+    </div>
+
+    <!-- AI Assistant Dialog (opened by toolbar button) -->
+    <div id="list-ai-dialog" style="display:none">
+        @(Html.Kendo().Chat()
+            .Name("list-ai-chat")
+            .AuthorId("dr-carter")
+            .Height("600")
+            .User(u => u.Name("Dr. Carter"))
+            .Messages(m => m.Placeholder("Ask AI about patients\u2026"))
+            .HeaderItems(items =>
+            {
+                items.Add().Type(AppBarItemType.ContentItem).Template("<span class='sparkles'></span>");
+                items.Add().Type(AppBarItemType.ContentItem).Template("<strong class='ai-chat-header-title'>AI Assistant</strong>");
+                items.Add().Type(AppBarItemType.Spacer);
+                items.Add().Type(AppBarItemType.ContentItem).Template("<span class='close-chat'></span>");
+            })
+            .Suggestions(suggestions => {
+                suggestions.Add().Text("What are today's critical care priorities?");
+                suggestions.Add().Text("What are common patient risk factors?");
+                suggestions.Add().Text("What follow-up protocols should I apply?");
+                suggestions.Add().Text("How do I interpret abnormal lab results?");
+            })
+            .Events(e => e
+                .SendMessage("onListAiChatSendMessage")
+            )
+        )
     </div>
 
     <!-- ═══════════════════════════════════════════

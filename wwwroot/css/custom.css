@@ -14,6 +14,7 @@ body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    padding-top: 40px;
 }
 
 
@@ -37,8 +38,10 @@ a { text-decoration: none; color: inherit; }
     position: relative;
     z-index: 100;
     flex-shrink: 0;
-    width: min(1680px, calc(100% - 32px));
-    margin: 12px auto 0;
+    max-width: 1648px;
+    width: calc(100% - 32px);
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 
 .appbar-logo {
@@ -255,8 +258,7 @@ a { text-decoration: none; color: inherit; }
     display: grid;
     grid-template-columns: 1fr minmax(0, 600px);
     gap: 20px;
-    padding: 12px 16px 24px;
-    max-width: 1680px;
+    padding: 10px 0px 0px 10px;
     margin: 0 auto;
 }
 
@@ -358,6 +360,7 @@ a { text-decoration: none; color: inherit; }
 #page-headers .page-header.active {
     display: block;
     margin-top: 30px;
+    padding-bottom: 24px;
 }
 
 #page-headers .page-header.active.patients-page-header,
@@ -368,10 +371,11 @@ a { text-decoration: none; color: inherit; }
 #page-content {
     transition: opacity 0.15s ease;
     position: relative;
-    overflow-x: clip;
+    overflow-x: hidden;
     overflow-y: auto;
     flex: 1;
     min-height: 0;
+    padding-bottom: 32px;
 }
 
 #page-content::before {
@@ -552,7 +556,7 @@ a { text-decoration: none; color: inherit; }
 }
 
 .home-greeting {
-    padding: 0 16px 20px;
+    padding: 0 16px;
     max-width: 1680px;
     margin: 0 auto;
 }
@@ -593,11 +597,13 @@ a { text-decoration: none; color: inherit; }
 .greeting {
     margin-bottom: 16px;
 }
-.greeting h1 {
-    font-size: 32px;
-    font-weight: 800;
-    color: #1a1a2e;
-    line-height: 1.2;
+
+/* Shared h1 for all page headers (greeting, patients, analytics) */
+.page-header h1 {
+    font-size: 36px;
+    font-weight: var(--kendo-font-weight-semibold);
+    color: var(--kendo-color-on-app-surface);
+    line-height: 1.4;
 }
 .greeting p {
     font-size: 14px;
@@ -931,6 +937,8 @@ a { text-decoration: none; color: inherit; }
     line-height: 1.42;
 }
 .detail-link:hover { color: #232A36; }
+.detail-link-icon { display: inline-flex; vertical-align: middle; }
+.detail-link-icon .k-svg-icon { width: 14px; height: 14px; }
 /* Kendo Button with FillMode.Link — strip default button chrome */
 button.detail-link.k-button {
     padding: 0;
@@ -1382,6 +1390,11 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     cursor: pointer;
 }
 
+/* AI chat header close button — hidden on large screens */
+.ai-chat-header-close {
+    display: none;
+}
+
 .k-chat .k-icon.k-svg-i-sparkles,
 .ai-chat-button svg path {
     color: #6610f2;
@@ -1599,16 +1612,20 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 /* ═══════════════════════════════════════════════════════
    SCHEDULE PAGE
 ═══════════════════════════════════════════════════════ */
-.schedule-body {
+.schedule-body,
+.patients-list-body,
+#analytics-body {
     position: relative;
     z-index: 1;
+    padding: 24px 0px 0px 10px;
+    margin: 0 auto;
+}
+
+.schedule-body {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
     gap: 24px;
-    padding: 20px 16px;
-    max-width: 1680px;
-    margin: 0 auto;
 }
 
 .schedule-main {
@@ -1968,15 +1985,31 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     display: inline-block;
 }
 
-#tasks-list {
-    display: flex;
+.tasks-card > .k-card-body {
     flex: 1 1 auto;
-    flex-direction: column;
-    gap: 20px;
     min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+}
+
+#tasks-list {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#tasks-list .k-listview-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     padding: 10px 20px 20px;
     overflow-y: auto;
-    max-height: none;
 }
 
 /* ── Task item card ── */
@@ -1984,7 +2017,6 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     display: flex;
     align-items: center;
     gap: 16px;
-    margin: 10px;
     padding: 16px;
     border: 1px solid rgba(23, 56, 99, 0.08);
     border-radius: 12px;
@@ -2701,17 +2733,13 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     align-items: flex-end;
     justify-content: space-between;
     gap: 24px;
-    padding: 0 16px 24px;
+    padding: 0 16px;
     max-width: 1680px;
     margin: 0 auto;
 }
 
 .patients-page-header h1 {
     margin: 0;
-    font-size: 42px;
-    line-height: 1.2;
-    font-weight: 600;
-    color: #232a36;
 }
 
 .patients-page-header p {
@@ -2783,11 +2811,7 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     color: #232a36;
 }
 
-.patients-list-body {
-    padding: 0 16px 20px;
-    max-width: 1680px;
-    margin: 0 auto;
-}
+
 
 /* AI Panel Open: Grid + 400px AI panel side-by-side */
 .patients-list-body.ai-panel-open {
@@ -4415,21 +4439,14 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 /* ═══════════════════════════════════════════════════════
    ANALYTICS PAGE
 ═══════════════════════════════════════════════════════ */
-.analytics-wrapper { position:relative; z-index:1; padding:0 16px 24px; max-width: min(1648px, calc(100% - 32px)); margin:0 auto; }
-.analytics-page-header { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; padding-bottom:32px; overflow:hidden; max-width: min(1648px, calc(100% - 32px)); margin:0 auto; }
-.analytics-page-header h1 { font-size:28px; font-weight:800; color:#1a1a2e; margin:0 0 4px; }
+.analytics-page-header { display:flex; align-items:flex-end; justify-content:space-between; gap:20px; overflow:hidden; max-width: min(1648px, calc(100% - 32px)); margin:0 auto; }
+.analytics-page-header h1 { margin:0 0 4px; }
 .analytics-page-header p  { font-size:14px; color:#888; margin:0; }
 .analytics-header-controls { display:flex; align-items:center; gap:12px; flex-shrink:1; flex-wrap:wrap; justify-content:flex-end; min-width:0; }
 
 
 /* During PDF capture: remove overflow clipping so chart labels/decorations aren't cut */
-#analytics-body {
-    position: relative;
-    z-index: 1;
-    padding: 0 16px 24px;
-    max-width: min(1648px, calc(100% - 32px));
-    margin: 0 auto;
-}
+
 #analytics-body.k-pdf-export .analytics-chart-card,
 #analytics-body.k-pdf-export .analytics-row {
     overflow: visible;
@@ -4444,7 +4461,7 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 .kpi-trend { font-size:12px; color:#888; }
 
 /* Chart rows */
-.analytics-row { display:grid; gap:20px; margin-bottom:20px; }
+.analytics-row { display:grid; gap:24px; }
 .analytics-row-2col { grid-template-columns:1.6fr 1fr; }
 .analytics-row-2col-equal { grid-template-columns:1fr 1fr; }
 /* Analytics chart cards — k-card-body padding reset (header uses chart-header styles) */
@@ -4686,14 +4703,243 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     }
 
 /* ═══════════════════════════════════════════════════════
-   RESPONSIVE — MEDIA QUERIES
-   Ordered from largest breakpoint to smallest.
-   Each breakpoint groups rules for ALL pages/components.
+   HAMBURGER BUTTON & NAV DRAWER
+   Hidden by default, shown in the 575px breakpoint
+═══════════════════════════════════════════════════════ */
+.hamburger-btn { display: none; }
+.hamburger-sep { display: none; }
+.search-icon-btn { display: none; }
+.logo-compact { display: none; }
+
+/* Mobile nav menu popup — Kendo DropDownButton */
+#appbar .k-animation-container > .k-menu-popup.k-popup,
+#appbar .k-menu-popup.k-popup {
+    background: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(23, 56, 99, 0.08);
+    overflow: hidden;
+    min-width: 221px;
+}
+
+#appbar .k-menu-popup .k-menu-group,
+#appbar .k-menu-popup .k-group,
+#appbar .k-menu-popup .k-list {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px;
+}
+
+#appbar .k-menu-popup .k-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0;
+    height: 32px;
+    border-radius: var(--kendo-border-radius-md, 4px);
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+#appbar .k-menu-popup .k-item > .k-link,
+#appbar .k-menu-popup .k-item > .k-menu-link {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    width: 205px;
+    height: 32px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #232A36;
+    border-radius: var(--kendo-border-radius-md, 4px);
+    white-space: nowrap;
+}
+
+#appbar .k-menu-popup .k-item:hover > .k-link,
+#appbar .k-menu-popup .k-item:hover > .k-menu-link,
+#appbar .k-menu-popup .k-item.k-hover > .k-link,
+#appbar .k-menu-popup .k-item.k-hover > .k-menu-link {
+    background: #E2E8F0;
+    color: #232A36;
+}
+
+#appbar .k-menu-popup .k-item.k-selected > .k-link,
+#appbar .k-menu-popup .k-item.k-selected > .k-menu-link {
+    background: #E2E8F0;
+    font-weight: 500;
+    color: #232A36;
+}
+
+#appbar .k-menu-popup .k-item.k-focus > .k-link,
+#appbar .k-menu-popup .k-item.k-focus > .k-menu-link {
+    background: transparent;
+}
+#appbar .k-menu-popup .k-item.k-focus.k-selected > .k-link,
+#appbar .k-menu-popup .k-item.k-focus.k-selected > .k-menu-link {
+    background: #E2E8F0;
+}
+
+#appbar .k-menu-popup .k-item > .k-link .k-svg-icon,
+#appbar .k-menu-popup .k-item > .k-menu-link .k-svg-icon,
+#appbar .k-menu-popup .k-item > .k-link .k-icon,
+#appbar .k-menu-popup .k-item > .k-menu-link .k-icon {
+    width: 16px;
+    height: 16px;
+    color: #232A36;
+    flex-shrink: 0;
+}
+
+.hamburger-btn.k-dropdown-button {
+    display: none;
+    min-width: 30px;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.0001);
+    border-radius: 8px;
+    background: transparent;
+    color: #232A36;
+    flex-shrink: 0;
+}
+
+.hamburger-btn.k-dropdown-button:hover,
+.hamburger-btn.k-dropdown-button.k-hover,
+.hamburger-btn.k-dropdown-button:focus-visible {
+    background: rgba(23, 56, 99, 0.06);
+}
+
+.hamburger-btn.k-dropdown-button .k-button-text {
+    display: none;
+}
+
+.hamburger-btn.k-dropdown-button .k-button-arrow {
+    display: none;
+}
+
+.hamburger-btn.k-dropdown-button .k-svg-icon,
+.hamburger-btn.k-dropdown-button .k-icon {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+}
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE — GLOBAL BREAKPOINTS
+   Breakpoints (desktop-first):
+     1919px  extra large desktop (1920+)
+     1759px  large desktop (1760–1919)
+     1439px  desktop (1440–1759)
+      889px  small desktop / tablet (890–1439)
+      575px  mobile (360–575)
 ═══════════════════════════════════════════════════════ */
 
-/* ── ≤ 1400px ────────────────────────────────────── */
-@media (max-width: 1400px) {
-    /* Patients page — narrower side padding */
+/* ── 1920px+ ── extra large desktop (1920+) ───────── */
+@media (min-width: 1920px) {
+    .app-appbar,
+    .home-greeting,
+    .page-body,
+    .schedule-body,
+    .patients-page-header,
+    .patients-breadcrumb,
+    .patients-list-body,
+    .detail-main-wrap,
+    #analytics-body,
+    .analytics-page-header {
+        width: 87.5%;
+        max-width: none;
+    }
+
+    /* Compensate for the vertical scrollbar that only #page-content has */
+    .app-appbar,
+    .home-greeting,
+    .patients-page-header,
+    .analytics-page-header {
+        width: calc(87.5% - var(--scrollbar-width, 0px));
+    }
+}
+
+/* ── 1919px ── large desktop (1760–1919) ──────────── */
+@media (min-width: 1760px) and (max-width: 1919px) {
+    .app-appbar,
+    .home-greeting,
+    .page-body,
+    .schedule-body,
+    .patients-page-header,
+    .patients-breadcrumb,
+    .patients-list-body,
+    .detail-main-wrap,
+    #analytics-body,
+    .analytics-page-header {
+        width: 1680px;
+        max-width: 1680px;
+    }
+}
+
+/* ── 1759px ── desktop (1440–1759) ────────────────── */
+@media (max-width: 1759px) {
+    .view-profile-link {
+        font-size: 0;
+    }
+
+    .view-profile-link .open-link {
+        font-size: 16px;
+    }
+}
+
+/* ── 1440px–1760px ── add shared side padding ─────── */
+@media (min-width: 1440px) and (max-width: 1759px) {
+    .home-greeting,
+    .patients-page-header,
+    .analytics-page-header,
+    .schedule-body,
+    .patients-breadcrumb,
+    .patients-list-body,
+    .detail-main-wrap,
+    .page-body,
+    #analytics-body {
+        padding-left: 40px;
+        padding-right: 40px;
+        gap: 24px;
+    }
+
+    .col-main { gap: 24px; }
+    .quick-actions-card { margin-bottom: 0px; }
+
+    .app-appbar{
+        max-width: auto;
+        width: calc(100% - 80px);
+    }
+}
+
+@media (min-width: 1440px) {
+    .appbar-nav .k-segmented-control {
+        font-size: 16px;
+        width: auto;
+    }
+
+    .appbar-nav .k-segmented-control-button {
+        padding: 7px 12px;
+        gap: 8px;
+        font-size: 16px;
+    }
+}
+
+/* ── 1439px ── small desktop / tablet (890–1439) ──── */
+@media (max-width: 1439px) {
+
+    body{
+        padding-top: 32px;
+    }
+
+    .home-greeting,
     .patients-page-header,
     .patients-list-body,
     .patients-breadcrumb,
@@ -4701,44 +4947,12 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
         padding-left: 48px;
         padding-right: 48px;
     }
-}
 
-/* ── ≤ 1200px ────────────────────────────────────── */
-@media (max-width: 1200px) {
-    /* Patient detail — vitals grid 3 columns */
     .dd-vitals-grid { grid-template-columns: repeat(3, 1fr) !important; }
 
-    /* Grids — horizontal scroll when content overflows */
-    .k-grid { overflow: visible; }
-    .k-grid .k-grid-content {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    /* Patients page — header stacks, AI panel wider */
-    .patients-page-header {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-    .patients-list-body.ai-panel-open,
-    .patients-list-body.preview-panel-open {
-        grid-template-columns: 1fr;
-    }
-    .patients-detail-body { grid-template-columns: 1fr; }
-
-    /* Analytics page — header stacks */
-    .analytics-page-header {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-}
-
-/* ── ≤ 1100px ── AppBar starts to get tight ───────── */
-@media (max-width: 1100px) {
     .app-appbar {
-        width: calc(100% - 16px);
-        margin: 8px auto 0;
-        padding: 10px 14px;
+        width: calc(100% - 64px);
+        padding: 0px 14px;
         height: auto;
         min-height: 60px;
         border-radius: 48px;
@@ -4748,341 +4962,602 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
         width: 180px;
     }
 
-    .appbar-nav .k-segmented-control-button {
-        padding: 6px 10px;
-        font-size: 14px;
-    }
-}
-
-/* ── ≤ 960px ─────────────────────────────────────── */
-@media (max-width: 960px) {
-    /* AppBar — squeeze grid, horizontal scroll for nav */
-    .app-appbar {
-        grid-template-columns: auto 1fr auto;
-        gap: 6px;
-        padding: 8px 12px;
-        border-radius: 40px;
-    }
-
-    .appbar-nav {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-    }
-    .appbar-nav::-webkit-scrollbar { display: none; }
+    .search-icon-btn { display: flex; }
 
     .appbar-nav .k-segmented-control {
-        font-size: 14px;
+        font-size: 0;
         height: 36px;
+        width: 196px;
         white-space: nowrap;
     }
 
     .appbar-nav .k-segmented-control-button {
-        padding: 5px 10px;
-        font-size: 14px;
+        padding: 8px;
+        font-size: 0;
+        gap: 0;
     }
 
-    .appbar-right .k-autocomplete {
-        width: 150px;
+    .appbar-nav .k-segmented-control-button .k-svg-icon,
+    .appbar-nav .k-segmented-control-button .k-icon {
+        width: 16px;
+        height: 16px;
     }
 
-    /* Schedule page — single column */
-    .schedule-body { flex-direction: column; }
-    .schedule-side { flex: 1 1 auto; width: 100%; }
+    .appbar-right .k-autocomplete { display: none !important; }
 
-    /* Home page — single column */
-    .page-body { grid-template-columns: 1fr; }
-    .next-patient-card { flex: none; }
+    .app-appbar.search-open .appbar-right .k-autocomplete {
+        display: flex !important;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10010;
+        border-radius: 9999px;
+        background: #FFFFFF;
+        border: 1px solid rgba(23, 56, 99, 0.08);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .app-appbar.search-open .appbar-right .k-autocomplete .k-clear-value {
+        display: flex;
+    }
+
+    .page-body {
+        grid-template-columns: 1fr 480px;
+        gap: 24px;
+    }
+
+    .page-body:has(> .col-side) {
+        grid-template-columns: 1fr;
+    }
+
+    .next-patient-card > .k-card-body:not(.np-alerts-body) {
+        overflow-y: auto;
+        max-height: 320px;
+    }
+
     .np-alerts-body.k-card-body {
         flex: none;
-        min-height: auto;
-        max-height: 400px;
+        min-height: unset;
+        max-height: 320px;
         overflow-y: auto;
     }
 
-    /* Patient profile — top cards single column */
-    .profile-top-cards { grid-template-columns: 1fr; }
+    .col-main { gap: 24px; }
 
-    /* Profile management — smaller image */
-    .pm-photo { height: 260px; }
-}
-
-/* ── ≤ 800px ─────────────────────────────────────── */
-@media (max-width: 800px) {
-    /* AppBar — column layout */
-    .app-appbar {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        border-radius: 20px;
-        padding: 10px 12px;
-        margin: 6px auto 0;
-        gap: 8px;
-        height: auto;
-        min-height: unset;
+    .home-greeting,
+    .patients-page-header,
+    .analytics-page-header,
+    .schedule-body,
+    .patients-breadcrumb,
+    .patients-list-body,
+    .detail-main-wrap,
+    .page-body,
+    #analytics-body {
+        padding-left: 32px;
+        padding-right: 32px;
     }
 
-    /* Nav row — full width, centered */
+    .quick-actions-card { margin-bottom: 0px; }
+
+    /* Schedule */
+    .schedule-body { flex-direction: column; gap: 24px; }
+    .schedule-side { flex: 1 1 auto; width: 100%; }
+    .schedule-main { flex: auto; width: 100%; }
+
+    /* Patients */
+    .patients-page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .patients-detail-body { grid-template-columns: 1fr; }
+
+    /* Analytics */
+    .analytics-page-header {
+        align-items: flex-start;
+        flex-direction: column;
+        margin: 0;
+    }
+
+    #analytics-body {
+        margin: 0;
+        max-width: 100%;
+    }
+
+    .k-clear-value {
+        margin-right: 8px;
+    }
+}
+
+/* ── 900px ── tablet / mobile (576–900) ───────────── */
+@media (max-width: 900px) {
+
+    body {
+        padding-top: 24px;
+    }
+
+    .app-appbar,
+    .home-greeting,
+    .page-body,
+    .schedule-body,
+    .patients-page-header,
+    .patients-breadcrumb,
+    .patients-list-body,
+    .detail-main-wrap,
+    #analytics-body,
+    .analytics-page-header {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+    /* Swap to compact logo (no text) */
+    .logo-full { display: none; }
+    .logo-compact { display: block; }
+
+    /* Collapse to single column */
+    .page-body {
+        grid-template-columns: 1fr;
+    }
+
+    .np-alerts-body.k-card-body {
+        flex: none;
+        min-height: unset;
+        max-height: 280px;
+        overflow-y: auto;
+    }
+
+    .app-appbar {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        border-radius: 48px;
+        width: calc(100% - 48px);
+        gap: 12px;
+    }
+
     .app-appbar .appbar-nav {
-        width: 100%;
+        flex: 1;
         justify-content: center;
     }
 
-    /* Right row — full width, items spread across */
+    .appbar-nav .k-segmented-control-button{
+        padding: 12px;
+    }
+
     .appbar-right {
-        width: 100%;
-        justify-content: space-between;
+        width: auto;
+        flex-shrink: 0;
+        justify-content: flex-end;
         height: auto;
         gap: 8px;
     }
 
-    /* Search expands to fill available space */
-    .appbar-right .k-autocomplete {
-        display: flex !important;
-        flex: 1;
-        width: auto;
-    }
-
-    .appbar-sep { display: none; }
-
     .appbar-logo-img { height: 26px; }
 
-    /* Patient drilldown — vitals grid 3 columns */
-    .vitals-grid { grid-template-columns: repeat(3, 1fr); }
+    .page-header h1 {
+        font-size: 28px;
+        font-weight: 600;
+        line-height: 1.2;
+    }
 
-    /* Patients page — tighter padding */
+    .greeting p  {
+        font-size: 16px;
+        line-height: 1.5;
+        color: #4A5666;
+    }
+
+    #page-headers .page-header.active {
+        margin-top: 16px;
+    }
+
+    .page-body {
+        gap: 16px;
+    }
+
+    #page-headers {
+        margin-top: -28px;
+        padding-top: 28px;
+    }
+
+    .card-title, .k-card-title { font-size: 18px; }
+
+    .patients-page-header,
+    .analytics-page-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 16px;
+    }
+
+    .patients-header-actions,
+    .analytics-header-controls {
+        width: 100%;
+        display: flex;
+        gap: 16px;
+    }
+
+    .patients-header-actions > *,
+    .analytics-header-controls > * {
+        flex: 1;
+    }
+
+    /* Profile */
+    .profile-top-cards { grid-template-columns: 1fr; }
+
+    .pm-photo { height: 260px; }
+
+    /* Dialogs — prevent overflow on small screens */
+    .k-dialog-wrapper .k-dialog,
+    .k-window:not(.np-dropdown):not(.ai-dialog-wrapper):not(.ai-dialog-fullscreen) {
+        width: 90vw;
+        max-width: 90vw;
+    }
+
+    .np-dropdown.k-window {
+        width: min(360px, 95vw) !important;
+    }
+
+    /* AI chat close button — show on small screens */
+    .ai-chat-header-close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Chat dialogs — fullscreen below 900px */
+    .chat-fullscreen.k-window,
+    .chat-fullscreen .k-window {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100vw !important;
+        height: 100% !important;
+        max-width: 100vw !important;
+        max-height: 100% !important;
+        border-radius: 0 !important;
+        transform: none !important;
+    }
+
+    /* Show native close button on chat dialogs in fullscreen mode */
+    .chat-fullscreen .k-window-titlebar-action { display: flex; }
+
+    /* Analytics */
+    .analytics-row-2col-equal {
+        grid-template-columns: 1fr;
+    }
+
+    .analytics-row-2col {
+        grid-template-columns: 1fr;
+    }
+
+    .analytics-page-header {
+        gap: 16px;
+    }
+
+    #page-headers .page-header.active {
+        padding-bottom: 16px;
+    }
+
+    /* Quick actions */
+    .shortcut-grid { grid-template-columns: 1fr 1fr; }
+
+    /* Schedule */
+    .sched-card { margin: 0; }
+
+    .patient-detail-row {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    /* Patients */
+    .home-greeting,
     .patients-page-header,
     .patients-list-body,
     .patients-breadcrumb,
     .detail-main-wrap {
-        padding-left: 20px;
-        padding-right: 20px;
+        padding-left: 24px;
+        padding-right: 24px;
     }
+
     .patients-page-header {
-        gap: 18px;
-        padding-bottom: 24px;
+        gap: 16px;
     }
-    .patients-page-title,
-    .patients-page-header h1 {
-        font-size: 34px;
+
+    .patients-page-title {
+        font-size: 32px;
+        line-height: 1.2;
+        font-weight: 600;
+        color: #232A36;
     }
+
+    .patients-page-sub,
+    .patients-page-header p,
+    .analytics-page-header p {
+        font-size: 16px;
+        line-height: 1.5;
+        color: #4A5666;
+    }
+
     .patients-header-actions {
         width: 100%;
         flex-wrap: wrap;
     }
 
-    /* Profile management — smaller image */
-    .pm-photo { height: 200px; }
+    /* AI panel + preview panel — overlay the grid on small screens */
+    .patients-list-body.preview-panel-open {
+        display: block;
+        position: relative;
+    }
 
-    /* Analytics page — header gap */
-    .analytics-page-header {
-        gap: 18px;
+    .patients-list-body.preview-panel-open > .patient-preview-panel {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: min(400px, 100%);
+        max-height: var(--patients-grid-height, 80vh);
+        z-index: 10;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.16);
+    }
+
+    /* Vitals */
+    .vitals-grid { grid-template-columns: repeat(3, 1fr); }
+
+    #page-content {
         padding-bottom: 24px;
     }
-
-    /* Home page — quick actions single column */
-    .shortcut-grid { grid-template-columns: 1fr; }
 }
 
-/* ── ≤ 600px ─────────────────────────────────────── */
-@media (max-width: 600px) {
-    .app-appbar {
-        border-radius: 20px;
-        padding: 6px 8px;
-        min-height: 52px;
+/* ── 575px ── small mobile (360–575) ──────────────── */
+@media (max-width: 575px) {
+
+    body {
+        padding-top: 12px;
     }
 
-    .appbar-logo-img { height: 22px; }
+    #page-content {
+        padding-bottom: 0px;
+    }
 
-    /* Profile management — compact image + window positioning */
-    .pm-photo { height: 160px; width: 160px; }
+    /* ── Hamburger, separator & search icon visible ── */
+    .hamburger-btn,
+    .hamburger-btn.k-dropdown-button { display: flex; }
+    .hamburger-sep { display: block; }
+    .search-icon-btn { display: flex; }
+
+    /* ── App Bar — single row: logo | sep | hamburger ... right ── */
+    .app-appbar {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        border-radius: 85px;
+        padding: 8px;
+        min-height: 46px;
+        height: auto;
+        width: calc(100% - 24px);
+        gap: 8px;
+    }
+
+    .appbar-logo {
+        flex: none;
+    }
+
+    .appbar-logo-img { height: 28px; }
+
+    /* Hide segmented nav — replaced by drawer */
+    .appbar-nav { display: none; }
+
+    /* Hamburger pushes right section to the end */
+    .hamburger-btn,
+    .hamburger-btn.k-dropdown-button {
+        margin-right: auto;
+    }
+
+    .appbar-right {
+        width: auto;
+        gap: 8px;
+        height: auto;
+        flex-shrink: 0;
+        justify-content: flex-end;
+    }
+
+    /* Hide autocomplete search — show icon button instead */
+    .appbar-right .k-autocomplete { display: none !important; }
+
+    /* Full-width search bar when toggled open */
+    .app-appbar.search-open .appbar-right .k-autocomplete {
+        display: flex !important;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10010;
+        border-radius: 9999px;
+        background: #FFFFFF;
+        border: 1px solid rgba(23, 56, 99, 0.08);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .app-appbar.search-open .appbar-right .k-autocomplete .k-clear-value {
+        display: flex;
+    }
+
+    /* Show notification, hide separator before avatar */
+    .hamburger-sep { display: block; }
+    #notif-btn { display: flex; }
+
+    /* Appbar menu items padding */
+    #appbar .k-menu-popup .k-item > .k-link,
+    #appbar .k-menu-popup .k-item > .k-menu-link {
+        padding: 8px;
+    }
+
+    .avatar { display: block; width: 40px; height: 40px; }
+
+    /* ── Page Layout ── */
+    .page-body {
+        padding: 0 12px 12px;
+        gap: 12px;
+        grid-template-columns: 1fr;
+    }
+
+    #analytics-body, .analytics-page-header {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    #page-headers .page-header.active {
+        margin-top: 12px;
+    }
+
+    .page-header h1 {
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 1.2;
+    }
+
+    .greeting p  {
+        font-size: 16px;
+        line-height: 1.5;
+        color: #4A5666;
+    }
+
+    /* ── Cards ── */
+    .k-card > .k-card-body {
+        padding: 16px;
+    }
+
+    .card-title, .k-card-title { font-size: 16px; }
+
+    .quick-actions-card > .k-card-header { padding: 16px 16px 0; }
+    .quick-actions-card > .k-card-body   { padding: 12px 16px 16px; }
+    .appointments-card > .appointments-header.k-card-header { padding: 16px 16px 10px; flex-wrap: wrap !important; align-items: flex-start; gap: 12px; }
+    .appointments-card > .appointments-header.k-card-header .k-card-title { flex: 1 1 100%; }
+    .appointments-header .view-schedule-btn { width: auto; }
+    .col-main .appointments-card > .k-card-body { padding: 0 16px 16px; }
+    .col-main { gap: 12px; }
+    .patient-detail-row .detail-link .k-button-text {
+        font-size: 0;
+    }
+
+    .patient-detail-row .detail-link .detail-link-icon {
+        font-size: 14px;
+    }
+    .next-patient-card > .k-card-header  { padding: 16px 16px 0; }
+    .next-patient-card > .k-card-body    { padding: 12px 16px; }
+
+    .k-card {
+        border-radius: 16px;
+    }
+
+    .alert-card{
+        margin-bottom: 10px;
+    }
+
+    .shortcut-card{
+        margin-bottom: 0px;
+    }
+
+    /* ── Quick Actions — vertical stack ── */
+    .shortcut-grid { grid-template-columns: 1fr; }
+
+    .shortcut-card {
+        border-radius: 12px;
+    }
+
+    /* ── Next Patient — icon-only View Profile ── */
+    .next-patient-header {
+        flex-wrap: wrap;
+    }
+    .patient-info {
+        min-width: 0;
+    }
+    .patient-avatar {
+        width: 52px;
+        height: 52px;
+    }
+    .patient-name {
+        font-size: 16px;
+    }
+    .appt-time {
+        flex-basis: 100%;
+        text-align: left;
+        margin-top: 4px;
+    }
+
+    .next-patient-actions {
+        flex-direction: column;
+    }
+
+    /* ── Page Headers ── */
+
+
+    .home-greeting,
+    .patients-page-header,
+    .patients-list-body,
+    .patients-breadcrumb,
+    .detail-main-wrap {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    /* ── Profile ── */
+    .pm-photo { height: 160px; width: 160px; margin: auto; }
+
     .k-window:has(#profile-window) {
         top: 16px !important;
         max-height: calc(100vh - 32px) !important;
     }
     #profile-window { padding: 14px; }
 
-    /* Schedule side panel */
-    .schedule-side {
-        flex: 1 1 auto;
-        width: 100%;
-    }
-
-    /* Patient detail — vitals grid 2 columns */
     .dd-vitals-grid { grid-template-columns: repeat(2, 1fr) !important; }
 
-    /* Analytics — KPI row 2 per row */
-    .analytics-kpi-row {
-        grid-template-columns: repeat(2, 1fr) !important;
-    }
-    /* Analytics — chart rows single column */
-    .analytics-row-2col,
-    .analytics-row-2col-equal {
-        grid-template-columns: 1fr !important;
-    }
-}
-
-/* ── ≤ 500px ── Nav icon-only ────────────────────── */
-@media (max-width: 500px) {
-    /* Collapse nav to icon-only, no text labels */
-    .appbar-nav .k-segmented-control-button .k-button-text {
-        display: none;
-    }
-
-    .appbar-nav .k-segmented-control {
-        height: 32px;
-        padding: 2px;
-    }
-
-    .appbar-nav .k-segmented-control-button {
-        padding: 4px 10px;
-    }
-
-    .k-segmented-control-button-text{
-        display: none;
-    }
-}
-
-/* ── ≤ 480px (Phone) ─────────────────────────────── */
-@media (max-width: 480px) {
-
-    /* Page headers */
-    #page-headers {
-        flex-shrink: 1;
-        min-height: 0;
-        overflow-y: auto;
-    }
-    #page-headers .page-header {
-        padding: 12px 12px 8px;
-        margin-top: 10px;
-    }
-    .home-greeting {
-        padding: 0 12px 12px;
-    }
-    .home-greeting h1 {
-        font-size: 22px;
-    }
-    .patients-page-header,
-    .analytics-page-header {
-        flex-direction: column;
-        align-items: flex-start;
+    /* ── Schedule ── */
+    .schedule-body {
+        padding: 12px;
         gap: 12px;
     }
-    .patients-page-title,
-    .patients-page-header h1,
-    .analytics-page-header h1 {
-        font-size: 24px;
-    }
 
-    /* AppBar — compact */
-    .app-appbar {
-        border-radius: 14px;
-    }
-
-    .appbar-nav {
-        min-width: 0;
-        max-width: calc(100vw - 130px);
-    }
-
-    .appbar-right {
+    .sched-card .k-scheduler-toolbar {
+        flex-wrap: wrap;
+        height: auto;
+        min-height: 44px;
+        padding: 4px 8px;
         gap: 4px;
     }
 
-    #notif-btn,
-    #btn-settings {
-        display: none;
-    }
-
-    /* Page content — tighter padding */
-    #page-content { padding: 0; }
-
-    /* Home page */
-    .page-body {
-        grid-template-columns: 1fr !important;
+    /* ── Tasks card ── */
+    .tasks-card > .k-card-header.tasks-card-header {
+        flex-wrap: wrap;
+        padding: 16px 16px 10px;
         gap: 12px;
-        padding: 8px 8px 16px;
-    }
-    .appointments-card,
-    .patients-grid-card {
-        overflow: hidden;
-    }
-    .shortcut-grid {
-        grid-template-columns: 1fr !important;
-        gap: 10px;
-    }
-    .shortcut-card { overflow: visible; min-width: 0; }
-    .shortcut-card .k-card-body,
-    .shortcut-card .k-actions.k-card-actions {
-        overflow: visible;
-        min-width: 0;
-    }
-    .next-patient-card {
-        min-height: auto;
-        flex: none;
-    }
-    .np-alerts-body.k-card-body {
-        flex: none;
-        min-height: auto;
-        max-height: 300px;
-        overflow-y: auto;
-    }
-    .next-patient-header { flex-wrap: wrap; gap: 12px; }
-    .appt-time { width: 100%; }
-    .next-patient-actions { flex-wrap: wrap; gap: 8px; }
-    .next-patient-actions .k-button { flex: 1 1 auto; min-width: 0; }
-
-    /* Schedule page */
-    .schedule-body {
-        flex-direction: column !important;
-        gap: 12px;
-        padding: 8px 8px 16px;
-    }
-    .schedule-main { flex: 1 1 auto; }
-    .schedule-side { flex: 1 1 auto !important; width: 100% !important; }
-    .tasks-header-actions { flex-wrap: wrap; gap: 8px; }
-    .tasks-search-wrap { width: 100%; }
-
-    /* Patients page */
-    .patients-page-header,
-    .patients-list-body,
-    .patients-breadcrumb,
-    .detail-main-wrap {
-        padding-left: 8px !important;
-        padding-right: 8px !important;
-    }
-    .patients-header-actions { width: 100%; gap: 8px; }
-
-    /* Patients — AI/preview panels full width */
-    .patients-list-body.ai-panel-open,
-    .patients-list-body.preview-panel-open {
-        grid-template-columns: 1fr;
-    }
-    .patients-list-body.ai-panel-open > .patients-ai-panel,
-    .patients-list-body.preview-panel-open > .patient-preview-panel {
-        max-height: none;
-        position: static;
     }
 
-    /* Analytics page */
-    #analytics-body { padding: 0 8px 16px; }
-    .analytics-kpi-row {
-        grid-template-columns: 1fr !important;
-        gap: 10px;
-    }
-    .analytics-row-2col,
-    .analytics-row-2col-equal {
-        grid-template-columns: 1fr !important;
-    }
-    .analytics-wrapper { padding: 0 8px 16px; }
-
-    /* Dialogs — full-width on phone */
-    .k-dialog-wrapper .k-window {
-        max-width: calc(100vw - 16px) !important;
-        min-width: 0 !important;
+    .tasks-card > .k-card-header.tasks-card-header .tasks-card-title {
+        flex: 1 1 100%;
     }
 
-    /* General typography scale-down */
-    .patient-name { font-size: 16px; }
-    .detail-label,
-    .detail-value { font-size: 13px; }
+    .tasks-card .tasks-header-actions {
+        width: 100%;
+    }
+
+    .k-card-title { font-size: 16px; }
+
+    .task-text {
+        font-size: 14px;
+    }
+
+    /* ── Analytics — smaller donut chart ── */
+    #alerts-donut-chart {
+        min-height: 240px;
+    }
+
+    /* ── AI Dialog ── */
+    .ai-dialog-wrapper {
+        right: 8px !important;
+        left: 8px !important;
+        width: auto !important;
+    }
 }
