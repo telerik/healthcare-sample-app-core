@@ -40,8 +40,13 @@
     <div id="appbar" class="app-appbar">
         <!-- Logo -->
         <span class="k-appbar-section appbar-logo">
-            <img src="~/content/logo.png" alt="Logo" class="appbar-logo-img" />
+            <img src="~/content/logo.png" alt="Logo" class="appbar-logo-img logo-full" />
+            <img src="~/content/logo-no-text.png" alt="Logo" class="appbar-logo-img logo-compact" />
         </span>
+
+        <!-- Separator + Hamburger (mobile only) -->
+        <span class="appbar-sep hamburger-sep" aria-hidden="true"></span>
+        <button class="hamburger-btn" id="hamburger-btn" title="Menu" aria-label="Open navigation"></button>
 
         <!-- Nav -->
         <span class="k-appbar-section k-appbar-spacer-center appbar-nav">
@@ -63,18 +68,25 @@
         <span class="k-appbar-section appbar-right">
             @(Html.Kendo().AutoComplete()
                 .Name("appbar-search")
+                .ClearButton(true)
                 .DataTextField("text")
                 .Filter(FilterType.Contains)
                 .MinLength(1)
+                .AdaptiveMode(AdaptiveMode.Auto)
                 .Rounded(Rounded.Full)
                 .Placeholder("Search patients by name, ID or phone\u2026")
                 .PrefixOptions(p => p.Icon("search").Separator(false))
                 .TemplateHandler("appbarSearchTemplate")
                 .Events(e => e.Filtering("onAppbarSearchFiltering").Select("onAppbarSearchSelect"))
             )
+            <button class="icon-btn search-icon-btn" id="btn-search-toggle" title="Search">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M7.333 12.667A5.333 5.333 0 1 0 7.333 2a5.333 5.333 0 0 0 0 10.667ZM14 14l-2.9-2.9" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
             @(Html.Kendo().Button()
                 .Name("btn-settings")
-                .HtmlAttributes(new { @class = "icon-btn" })
+                .HtmlAttributes(new { @class = "icon-btn", title="Toggle contrast" })
                 .Content("<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><g clip-path=\"url(#clip0_settings)\"><path d=\"M5.99992 10.6667C8.57725 10.6667 10.6666 8.57734 10.6666 6.00001C10.6666 3.42268 8.57725 1.33334 5.99992 1.33334C3.42259 1.33334 1.33325 3.42268 1.33325 6.00001C1.33325 8.57734 3.42259 10.6667 5.99992 10.6667Z\" stroke=\"currentColor\" stroke-width=\"1.33\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M9.99992 14.6667C12.5772 14.6667 14.6666 12.5773 14.6666 10C14.6666 7.42268 12.5772 5.33334 9.99992 5.33334C7.42259 5.33334 5.33325 7.42268 5.33325 10C5.33325 12.5773 7.42259 14.6667 9.99992 14.6667Z\" stroke=\"currentColor\" stroke-width=\"1.33\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></g><defs><clipPath id=\"clip0_settings\"><rect width=\"16\" height=\"16\" fill=\"white\"/></clipPath></defs></svg>")
                 .Events(e => e.Click("onSettingsClick"))
             )
@@ -83,10 +95,10 @@
                         .HtmlAttributes(new { @class = "icon-btn notif-wrap", title = "Notifications" })
                         .Content("<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><path d=\"M8 2C5.8 2 4 3.8 4 6v3.5L2.5 11h11L12 9.5V6c0-2.2-1.8-4-4-4z\" stroke=\"currentColor\" stroke-width=\"1.33\" stroke-linecap=\"round\" stroke-linejoin=\"round\" fill=\"none\"/><path d=\"M6.5 13c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5\" stroke=\"currentColor\" stroke-width=\"1.33\" stroke-linecap=\"round\" fill=\"none\"/></svg>")
                         .Badge(b => b
-                            .Text("4")
-                            .ThemeColor(BadgeColor.Error)
-                            .Shape(BadgeShape.Pill)
-                            .Size(BadgeSize.Small)
+                            .Text("")
+                            .ThemeColor(BadgeColor.Dark)
+                            .Shape(BadgeShape.Circle)
+                            .Size(BadgeSize.Large)
                             .Visible(true)
                         )
                         )
@@ -98,13 +110,13 @@
                         .ToggleOnClick(true)
                         .Width(380)
                         .Body("<div id='np-dropdown'></div>")
-                        .Events(e => e.Show("onNotifPopoverShow"))
+                        .Events(e => e.Show("onNotifPopoverShow").Hide("onNotifPopoverHide"))
             )
-            <span class="appbar-sep" aria-hidden="true"></span>
+            <span class="appbar-sep"></span>
             @(Html.Kendo().Avatar()
                         .Name("profile-trigger")
                         .Type(AvatarType.Image)
-                        .Image("/content/patient-images/women/michael-dam-mEZ3PoFGs_k-unsplash.jpg")
+                        .Image("/content/profile.jpg")
                         .Rounded(Rounded.Full)
                         .HtmlAttributes(new { @class = "avatar", title = "Profile & Settings" })
                         )
@@ -195,7 +207,7 @@
                 <label class="pm-label">Profile Image</label>
                 <div class="pm-photo-wrap">
                     <img id="pm-avatar" class="pm-photo"
-                         src="/content/patient-images/women/michael-dam-mEZ3PoFGs_k-unsplash.jpg" alt="Profile" />
+                         src="/content/profile.jpg" alt="Profile" />
                 </div>
                 @(Html.Kendo().Upload()
                     .Name("pm-file-input")

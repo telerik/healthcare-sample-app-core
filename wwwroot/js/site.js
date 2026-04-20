@@ -1,6 +1,17 @@
 ﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
 
+/* Measure the native scrollbar width and expose it as a CSS custom property
+   so non-scrolling elements (appbar, headers) can align with #page-content. */
+(function () {
+    var outer = document.createElement('div');
+    outer.style.cssText = 'position:absolute;top:-9999px;width:100px;height:100px;overflow:scroll';
+    document.documentElement.appendChild(outer);
+    var w = outer.offsetWidth - outer.clientWidth;
+    document.documentElement.removeChild(outer);
+    document.documentElement.style.setProperty('--scrollbar-width', w + 'px');
+})();
+
 /* Declared before the eager call so the in-flight XHR reference is
    not overwritten when the var declaration is executed later in the file. */
 var patientSearchRequest = null;
@@ -85,6 +96,10 @@ function pjaxNavigate(url, pushState) {
         $("#notes-ai-prompt-container").hide();
         var aiDlg = $("#dialog-ai-assistant").data("kendoDialog");
         if (aiDlg && aiDlg.wrapper && aiDlg.wrapper.is(":visible")) { aiDlg.close(); }
+        /* Close the patients-page AI chat dialog */
+        if (typeof listAiDialog !== "undefined" && listAiDialog && listAiDialog.wrapper && listAiDialog.wrapper.is(":visible")) {
+            listAiDialog.close();
+        }
 
         /* Destroy all Kendo widgets in the old content to free memory. */
         kendo.destroy($content);
@@ -216,6 +231,64 @@ $(document).ready(function () {
 
     /* Record the initial page in history so back-button works */
     history.replaceState({ pjax: true, url: window.location.href }, "", window.location.href);
+
+    /* ═══════════════════════════════════════════════
+       MOBILE NAV MENU (< 576px) — Kendo DropDownButton
+    ═══════════════════════════════════════════════ */
+    var navItems = [
+        { text: "Home", value: "Home", icon: "home" },
+        { text: "Schedule", value: "Schedule", icon: "calendar" },
+        { text: "Patients", value: "Patients", icon: "user-outline" },
+        { text: "Clinical Analytics", value: "Analytics", icon: "chart-bar-stacked" }
+    ];
+
+    $("#hamburger-btn").kendoDropDownButton({
+        icon: "menu",
+        fillMode: "flat",
+        popup: {
+            appendTo: "#appbar"
+        },
+        items: navItems.map(function (item) {
+            return {
+                text: item.text,
+                icon: item.icon,
+                attributes: {
+                    "data-page": item.value
+                },
+                click: function () {
+                    var url = navRoutes[item.value];
+                    if (url) {
+                        showPageHeader(item.value);
+                        pjaxNavigate(url, true);
+                    }
+                }
+            };
+        }),
+        open: function () {
+            var items = this.items();
+            items.removeClass("k-selected");
+            items.filter("[data-page='" + activePage + "']").addClass("k-selected");
+        }
+    });
+
+    /* ═══════════════════════════════════════════════
+       MOBILE SEARCH ICON — toggle autocomplete
+    ═══════════════════════════════════════════════ */
+    $("#btn-search-toggle").on("click", function () {
+        var $appbar = $("#appbar");
+        var isOpen = $appbar.toggleClass("search-open").hasClass("search-open");
+        if (isOpen) {
+            var ac = $("#appbar-search").data("kendoAutoComplete");
+            if (ac) { ac.focus(); }
+        }
+    });
+
+    /* Close mobile search on click outside */
+    $(document).on("click", function (e) {
+        if (!$(e.target).closest("#appbar, .k-autocomplete-popup").length) {
+            $("#appbar").removeClass("search-open");
+        }
+    });
 });
 
 /* ═══════════════════════════════════════════════════════
@@ -271,7 +344,7 @@ function onAppbarSearchSelect(e) {
     e.preventDefault();
     var item = e.dataItem;
     var patient = getPatientById(item.patientId) || findPatient(item.patientId) || { Id: item.patientId };
-    this.value("");
+    this.value(item.name);
     this.close();
     $("#appbar-search").removeClass("search-no-match");
     navigateToPatientProfile(patient);
@@ -287,10 +360,7 @@ function navigateToPatientProfile(patient) {
         return;
     }
 
-    /* Use PJAX to stay on the same page shell */
-    var seg = $("#appbar-nav").data("kendoSegmentedControl");
-    if (seg) { seg.select("Patients"); }
-    pjaxNavigate("/patients", true);
+    window.location.href = navRoutes.Patients;
 }
 
 function ensurePatientSearchData(forceRefresh) {
@@ -345,6 +415,8 @@ function initContextualSearch() {
         filter:        "contains",
         minLength:     1,
         rounded:       "full",
+        clearButton:   true,
+        adaptiveMode:  "auto",
         placeholder:   "Search patients by name, ID or phone\u2026",
         prefixOptions: { icon: "search", separator: false },
         template:      appbarSearchTemplate,

@@ -10,8 +10,28 @@ var doctorProfile = {
     fullName: "Emily Carter",
     email:    "drcarter@email.com",
     phone:    "+(555) 776-90-84",
-    avatar:   "/content/patient-images/women/michael-dam-mEZ3PoFGs_k-unsplash.jpg"
+    avatar:   "/content/profile.jpg"
 };
+
+function syncDoctorAvatar() {
+    var $trigger = $("#profile-trigger");
+    var $triggerImage = $trigger.find(".k-avatar-image img");
+
+    if ($triggerImage.length) {
+        $triggerImage.attr("src", doctorProfile.avatar);
+    } else if ($trigger.find(".k-avatar-image").length) {
+        $trigger.find(".k-avatar-image").empty().append(
+            $("<img>", {
+                src: doctorProfile.avatar,
+                alt: doctorProfile.fullName || "Profile & Settings"
+            })
+        );
+    }
+
+    $trigger.attr("src", doctorProfile.avatar);
+    $(".avatar").attr("src", doctorProfile.avatar);
+    $("#pm-avatar").attr("src", doctorProfile.avatar);
+}
 
 function applyDoctorProfile(profile) {
     if (!profile) {
@@ -23,8 +43,7 @@ function applyDoctorProfile(profile) {
     doctorProfile.phone    = profile.phone || profile.Phone || doctorProfile.phone;
     doctorProfile.avatar   = profile.avatar || profile.Avatar || doctorProfile.avatar;
 
-    $(".avatar, #profile-trigger").attr("src", doctorProfile.avatar);
-    $("#pm-avatar").attr("src", doctorProfile.avatar);
+    syncDoctorAvatar();
 }
 
 function loadDoctorProfile() {
@@ -102,7 +121,7 @@ function populateProfileForm() {
         form.editable.options.model.set("Phone", doctorProfile.phone);
     }
 
-    $("#pm-avatar").attr("src", doctorProfile.avatar);
+    syncDoctorAvatar();
 }
 
 /* ── Show notification ───────────────────────────── */
@@ -155,8 +174,7 @@ function updateBadge() {
     var count = getUnreadCount();
     var badge = $("#notif-btn").find(".k-badge").data("kendoBadge");
     if (badge) {
-        badge.text(count > 0 ? String(count) : "");
-        badge.themeColor(count > 0 ? "error" : "info");
+        badge.text("");
         if (count === 0) {
             badge.hide();
         } else {
@@ -183,6 +201,26 @@ function renderNotifPanel(callback) {
     });
 }
 
+function onNotifPopoverHide() {
+    $(document).off("click.npoutside");
+}
+
+function closeNotifPopover() {
+    var popover = $("#notif-btn").data("kendoPopover");
+    if (popover) {
+        popover._shown = false;
+        if (popover.popup) popover.popup.close();
+        return;
+    }
+    /* Fallback — close via the internal popup directly */
+    var popup = $("#np-dropdown").closest(".k-popup").data("kendoPopup");
+    if (popup) popup.close();
+}
+
+function getNotifPopover() {
+    return $("#notif-btn").data("kendoPopover");
+}
+
 function onNotifPopoverShow(e) {
     renderNotifPanel(function () {
         var $panel = $("#np-dropdown");
@@ -193,8 +231,17 @@ function onNotifPopoverShow(e) {
         /* Mark all read — do NOT close the popover */
         $panel.on("click.np", "#np-mark-all", function (ev) {
             ev.stopPropagation();
+            ev.stopImmediatePropagation();
+            ev.preventDefault();
             $.each(notificationsData, function (_, n) { n.read = true; });
-            renderNotifPanel();
+            renderNotifPanel(function () {
+                /* Re-ensure the popover stays open after content refresh */
+                var popover = getNotifPopover();
+                if (popover && (!popover.popup || !popover.popup.visible())) {
+                    popover._shown = true;
+                    popover.show($("#notif-btn"));
+                }
+            });
             updateBadge();
         });
 
@@ -217,8 +264,7 @@ function onNotifPopoverShow(e) {
 
             var notif = notificationsData.filter(function (n) { return n.id === id; })[0];
             if (notif && notif.severity !== "system") {
-                var popover = $("#notif-popover").data("kendoPopover");
-                if (popover) popover.hide();
+                closeNotifPopover();
                 if (patientId) {
                     window.location.href = navRoutes.Patients;
                 } else if (notif.title.indexOf("Schedule") >= 0 || notif.title.indexOf("Appointment") >= 0) {
@@ -226,6 +272,15 @@ function onNotifPopoverShow(e) {
                 }
             }
         });
+
+        /* Close on outside click — defer so the opening click doesn't immediately close */
+        setTimeout(function () {
+            $(document).on("click.npoutside", function (e) {
+                if (!$(e.target).closest("#np-dropdown, #notif-btn").length) {
+                    closeNotifPopover();
+                }
+            });
+        }, 0);
     });
 }
 
@@ -234,14 +289,4 @@ $(document).ready(function () {
     initProfileTrigger();
     loadDoctorProfile();
     initNotifDropdown();
-
-    /* Close popover on outside click */
-    $(document).on("click", function (ev) {
-        var popover = $("#notif-popover").data("kendoPopover");
-        if (popover && popover.popup && popover.popup.visible()) {
-            if (!$(ev.target).closest(".k-popover, #notif-btn").length) {
-                popover.hide();
-            }
-        }
-    });
 });

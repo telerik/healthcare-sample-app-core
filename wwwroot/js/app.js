@@ -104,7 +104,7 @@ function renderAlertsList() {
             '<div class="alert-card-meta">' +
             '<span class="alert-card-time">' + kendo.htmlEncode(a.Time) + '</span>' +
             '<span class="alert-review" data-alert-idx="' + idx + '">Review ' +
-            '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+            kendo.ui.icon({ type: "svg", icon: "chevron-right" }) +
             '</span></div></div></div>';
     });
     $list.html(html);
@@ -206,6 +206,7 @@ function onNewNoteSave() {
 function onNewNoteOpen() {
     var dlg = $("#dialog-new-note").data("kendoDialog");
     if (dlg) applySharedDialogShell(dlg);
+    if (dlg) dlg.center();
     var ddl = $("#note-patient-ddl").data("kendoDropDownList");
     if (ddl && patientsData.length && ddl.dataSource.total() === 0) {
         ddl.setDataSource(new kendo.data.DataSource({
@@ -249,6 +250,7 @@ function onLabTestSend() {
 function onLabTestOpen() {
     var dlg = $("#dialog-lab-test").data("kendoDialog");
     if (dlg) applySharedDialogShell(dlg);
+    if (dlg) dlg.center();
     var ddl = $("#lab-patient-ddl").data("kendoDropDownList");
     if (ddl && patientsData.length && ddl.dataSource.total() === 0) {
         ddl.setDataSource(new kendo.data.DataSource({
@@ -300,11 +302,17 @@ function onNurseChatSend() {
 function onNurseChatOpen() {
     var dlg = $("#dialog-nurse-chat").data("kendoDialog");
     if (dlg) applySharedDialogShell(dlg);
+    if (dlg) dlg.center();
 }
 
 function onAiAssistantDialogOpen() {
     var self = this;
     self.wrapper.addClass("ai-dialog-wrapper");
+    if (window.innerWidth < 900) {
+        self.wrapper.addClass("chat-fullscreen");
+    } else {
+        self.wrapper.removeClass("chat-fullscreen");
+    }
     if (!self._resizableApplied) {
         self.options.resizable = true;
         self._resizableApplied = true;
@@ -328,6 +336,8 @@ $(document).ready(function () {
     if ($(".appt-time-icon").length) { kendo.ui.icon($(".appt-time-icon"), { icon: 'clock' }); }
     if ($(".ai-chat-header-close").length) { kendo.ui.icon($(".ai-chat-header-close"), { icon: 'x' }); }
     if ($(".sparkles").length) { kendo.ui.icon($(".sparkles"), { icon: 'sparkles' }); }
+    $("#link-reason-details .detail-link-icon").html(kendo.ui.icon({ type: "svg", icon: "chevron-right" }));
+    $("#link-allergy-details .detail-link-icon").html(kendo.ui.icon({ type: "svg", icon: "chevron-right" }));
 
 
     /* Notification badge is managed by profile.js initNotifDropdown() */
@@ -424,6 +434,7 @@ $(document).ready(function () {
     function _initAiPanel() {
         if (_aiInitialised || !patientsData.length || !appointmentsData.length) return;
         _aiInitialised = true;
+        if (!_fab) { _fab = $("#ai-float-btn").data("kendoFloatingActionButton"); }
         if (_fab) { $("#ai-float-btn").show(); }
         if ($(".sparkles").length) { kendo.ui.icon($(".sparkles"), { icon: 'sparkles' }); }
 
@@ -558,5 +569,21 @@ $(document).ready(function () {
     };
 
     // Initialize AI Float Button click — FAB created by Html Helper
-    _fab = $("#ai-float-btn").data("kendoFloatingActionButton");
+    // Defer lookup: the FAB's inline init script (rendered by the Html Helper)
+    // may run after this $(document).ready() callback since app.js is loaded
+    // in <head> and queued earlier.
+    function updateFabOffset() {
+        if (!_fab) {
+            _fab = $("#ai-float-btn").data("kendoFloatingActionButton");
+        }
+        if (!_fab) return;
+        var isSmall = window.innerWidth < 1440;
+        _fab.setOptions({
+            positionMode: isSmall ? "fixed" : "absolute",
+            alignOffset: isSmall ? { x: 10, y: 10 } : { x: -28, y: 10 }
+        });
+    }
+
+    setTimeout(updateFabOffset, 0);
+    $(window).on("resize", updateFabOffset);
 });

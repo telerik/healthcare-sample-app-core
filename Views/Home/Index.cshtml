@@ -198,7 +198,7 @@
                         </div>
                         @(Html.Kendo().Button()
                             .Name("link-reason-details")
-                            .Content("Details &rsaquo;")
+                            .Content("Details <span class='detail-link-icon'></span>")
                             .FillMode(ButtonFillMode.Link)
                             .HtmlAttributes(new { @class = "detail-link" })
                             .Events(e => e.Click("onReasonDetailsClick"))
@@ -213,7 +213,7 @@
                         </div>
                         @(Html.Kendo().Button()
                             .Name("link-allergy-details")
-                            .Content("Details &rsaquo;")
+                            .Content("Details <span class='detail-link-icon'></span>")
                             .FillMode(ButtonFillMode.Link)
                             .HtmlAttributes(new { @class = "detail-link" })
                             .Events(e => e.Click("onAllergyDetailsClick"))
@@ -500,6 +500,7 @@
                     items.Add().Type(AppBarItemType.ContentItem).Template("<span class='sparkles'></span>");
                     items.Add().Type(AppBarItemType.ContentItem).Template("<strong class='ai-chat-header-title'>AI Assistant</strong>");
                     items.Add().Type(AppBarItemType.Spacer);
+                    items.Add().Type(AppBarItemType.ContentItem).Template("<button class='ai-chat-header-close k-button k-button-md k-rounded-full k-button-flat k-button-flat-base k-icon-button' title='Close' aria-label='Close'><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' width='16' height='16' fill='currentColor'><path d='M2.293 2.293a1 1 0 011.414 0L8 6.586l4.293-4.293a1 1 0 111.414 1.414L9.414 8l4.293 4.293a1 1 0 01-1.414 1.414L8 9.414l-4.293 4.293a1 1 0 01-1.414-1.414L6.586 8 2.293 3.707a1 1 0 010-1.414z'/></svg></button>");
                 })
                 .Suggestions(suggestions =>
                 {
