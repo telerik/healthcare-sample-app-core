@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
 
+    <base href="~/" />
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -15,7 +17,7 @@
     <link rel="stylesheet" href="~/css/kendo-theme-overrides.css" asp-append-version="true" />
     <!-- Custom styles -->
     <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true" />
-     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://kendo.cdn.telerik.com/2026.1.325/js/kendo.all.min.js"></script>
     <script src="https://kendo.cdn.telerik.com/2026.1.325/js/kendo.aspnetmvc.min.js"></script>
     <script src="~/js/data.js" asp-append-version="true"></script>
@@ -116,7 +118,7 @@
             @(Html.Kendo().Avatar()
                         .Name("profile-trigger")
                         .Type(AvatarType.Image)
-                        .Image("/content/profile.jpg")
+                        .Image(Url.Content("~/content/profile.jpg"))
                         .Rounded(Rounded.Full)
                         .HtmlAttributes(new { @class = "avatar", title = "Profile & Settings" })
                         )
@@ -207,7 +209,7 @@
                 <label class="pm-label">Profile Image</label>
                 <div class="pm-photo-wrap">
                     <img id="pm-avatar" class="pm-photo"
-                         src="/content/profile.jpg" alt="Profile" />
+                         src="@Url.Content("~/content/profile.jpg")" alt="Profile" />
                 </div>
                 @(Html.Kendo().Upload()
                     .Name("pm-file-input")
@@ -215,8 +217,8 @@
                     .HtmlAttributes(new { accept = "image/*" })
                     .Messages(m => m.Select("Upload Image"))
                     .Async(a => a
-                        .SaveUrl("/api/profile/avatar-upload")
-                        .RemoveUrl("/api/profile/avatar-remove")
+                        .SaveUrl(Url.Content("~/api/profile/avatar-upload"))
+                        .RemoveUrl(Url.Content("~/api/profile/avatar-remove"))
                         .SaveField("file")
                         .AutoUpload(true)
                     )

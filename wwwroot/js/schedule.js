@@ -257,7 +257,7 @@ function onTaskCheckboxChange(e) {
     if (!item) return;
     item.set("Done", checked);
     $.ajax({
-        url:         "/api/tasks/update",
+        url:         "./api/tasks/update",
         type:        "POST",
         contentType: "application/json",
         data:        JSON.stringify({ id: id, task: item.Task, priority: item.Priority, description: item.Description || "", done: checked }),
@@ -318,7 +318,7 @@ function onAddTaskSave() {
     var description = (ta ? ta.value() : $("#atf-description").val() || "").trim();
     var listView = $("#tasks-list").data("kendoListView");
     $.ajax({
-        url:         "/api/tasks/create",
+        url:         "./api/tasks/create",
         type:        "POST",
         contentType: "application/json",
         data:        JSON.stringify({ task: name, priority: priority, description: description, done: false }),

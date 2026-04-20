@@ -10,7 +10,7 @@ var doctorProfile = {
     fullName: "Emily Carter",
     email:    "drcarter@email.com",
     phone:    "+(555) 776-90-84",
-    avatar:   "/content/profile.jpg"
+    avatar:   "./content/profile.jpg"
 };
 
 function syncDoctorAvatar() {
@@ -47,7 +47,7 @@ function applyDoctorProfile(profile) {
 }
 
 function loadDoctorProfile() {
-    return $.getJSON("/api/profile")
+    return $.getJSON("./api/profile")
         .done(function (profile) {
             applyDoctorProfile(profile);
             populateProfileForm();
@@ -88,7 +88,7 @@ function onProfileFormSubmit(e) {
     var model = e.model;
 
     $.ajax({
-        url:         "/api/profile/update",
+        url:         "./api/profile/update",
         type:        "POST",
         contentType: "application/json",
         data:        JSON.stringify({ fullName: model.FullName, email: model.Email, phone: model.Phone }),

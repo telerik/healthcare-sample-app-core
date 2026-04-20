@@ -192,12 +192,12 @@ function updateAllCharts(id) {
     if (donutChart) { donutChart.dataSource.read(); }
 
     // Labs bullet charts — per metric, fetched from remote endpoint
-    $.getJSON("/Analytics/LabResults", { patientId: id }, function (data) {
+    $.getJSON("./Analytics/LabResults", { patientId: id }, function (data) {
         buildLabCharts(data || []);
     });
 
     // Risk gauge — fetch from endpoint
-    $.getJSON("/Analytics/RiskScore", { patientId: id }, function (data) {
+    $.getJSON("./Analytics/RiskScore", { patientId: id }, function (data) {
         var gauge = $("#risk-gauge").data("kendoArcGauge");
         if (gauge && data) {
             var score = parseFloat(data.riskScore != null ? data.riskScore : data.RiskScore);
@@ -217,7 +217,7 @@ $(document).ready(function () {
     // ── Patient Selection — populate the Html Helper–created DropDownList ──
     $.when(
         ensurePatientSearchData(),
-        $.getJSON("/api/analytics")
+        $.getJSON("./api/analytics")
     ).done(function (patientsResp, analyticsResp) {
         patientsData = Array.isArray(patientsResp[0]) ? patientsResp[0] : (Array.isArray(patientsResp) ? patientsResp : []);
 

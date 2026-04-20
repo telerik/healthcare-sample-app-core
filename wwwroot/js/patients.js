@@ -16,7 +16,7 @@ function onSavePatientNote() {
     currentPatient.Notes = noteVal;
     var $btn = $("#btn-save-patient-note");
     $.ajax({
-        url:         "/api/patients/" + currentPatient.Id + "/notes",
+        url:         "./api/patients/" + currentPatient.Id + "/notes",
         type:        "POST",
         contentType: "application/json",
         data:        JSON.stringify({ notes: noteVal }),
@@ -128,7 +128,7 @@ var _aiAssistant    = {
  var _aiUser         = {
         id: "dr-carter",
         name: "Dr. Carter",
-     iconUrl: "/content/profile.jpg"
+        iconUrl: "./content/profile.jpg"
     };
 
 /* ═══════════════════════════════════════════════════════
@@ -421,7 +421,7 @@ function onChangeStatusSave() {
     if (!ddl) return false;
     var val = ddl.value();
     $.ajax({
-        url:         "/api/patients/" + encodeURIComponent(_statusPatient.Id) + "/status",
+        url:         "./api/patients/" + encodeURIComponent(_statusPatient.Id) + "/status",
         type:        "POST",
         contentType: "application/json",
         data:        JSON.stringify({ status: val }),
