@@ -9,5 +9,9 @@ export default defineConfig({
         maxWorkers: 2,
         include: ['src/**/*.test.ts'],
         globalSetup: ['src/global-teardown.ts'],
+        env: {
+            BROWSER_WIDTH: '1920',
+            BROWSER_HEIGHT: '1080',
+        },
     },
 });

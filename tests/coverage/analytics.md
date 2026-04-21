@@ -2,6 +2,8 @@
 
 **Tests: 61 | Files: analytics.test.ts, analytics-interactions.test.ts**
 
+> **Note:** Test 8 uses the Browser API (`click` + `type` with `{ clear: false }`) instead of `executeScript` for DDL filter interaction.
+
 | # | Requirement | Test Name | File |
 |---|---|---|---|
 | 1 | Analytics tab active | should have Analytics & Reporting tab active | analytics.test.ts |

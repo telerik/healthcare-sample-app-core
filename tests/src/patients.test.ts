@@ -238,7 +238,7 @@ describe('Patients Page', () => {
     describe('AI Assistance Panel', () => {
         it('should open AI Assistance panel when button is clicked', async () => {
             await browser.click('#btn-ai-assistance');
-            await browser.expect('#list-ai-panel').toBeVisible();
+            await browser.expect('#list-ai-dialog').toBeVisible();
         });
 
         it('should display the AI chat widget', async () => {
@@ -278,7 +278,7 @@ describe('Patients Page', () => {
 
         it('should close AI Assistance panel when button is clicked again', async () => {
             await browser.click('#btn-ai-assistance');
-            await browser.expect('#list-ai-panel').not.toBeVisible();
+            await browser.expect('#list-ai-dialog').not.toBeVisible();
         });
     });
 });
