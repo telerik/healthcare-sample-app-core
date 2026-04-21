@@ -51,12 +51,10 @@ describe('Analytics Page — Interactions', () => {
         it('should filter and select a patient from the dropdown', async () => {
             await dropdown.expand();
             await dropdown.waitToExpand();
-            await browser.executeScript("kendo.jQuery('#patient-select').data('kendoDropDownList').search('Olivia Davis');");
-            await browser.wait(async () => {
-                const count = await browser.executeScript("return kendo.jQuery('#patient-select').data('kendoDropDownList').dataSource.view().length;") as number;
-                return count === 1;
-            });
-            await browser.click('#patient-select_listbox .k-list-item:first-child');
+            await browser.expect('.k-dropdownlist-popup .k-list-filter .k-input-inner').toBeVisible();
+            await browser.type('.k-dropdownlist-popup .k-list-filter .k-input-inner', 'Olivia Davis', { clear: false });
+            await browser.expect('.k-dropdownlist-popup .k-list-item').toHaveCount(1);
+            await browser.click('.k-dropdownlist-popup .k-list-item:first-child');
             await dropdown.waitToCollapse();
             await browser.expect('.analytics-header-controls .k-input-value-text').toContainText('Olivia Davis');
         });

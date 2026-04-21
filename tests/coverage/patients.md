@@ -2,6 +2,8 @@
 
 **Tests: 43 | Files: patients.test.ts**
 
+> **Note:** Tests 24 and 33 use `#list-ai-dialog` (the actual Kendo Dialog element ID) rather than `#list-ai-panel`.
+
 | # | Requirement | Test Name | File |
 |---|---|---|---|
 | 1 | Patients tab active | should have Patients tab active | patients.test.ts |

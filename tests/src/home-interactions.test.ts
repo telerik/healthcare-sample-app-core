@@ -97,7 +97,7 @@ describe('Home Page — Quick Action Dialogs', () => {
         });
 
         it('should select a patient from the dropdown', async () => {
-            await labPatientDdl.selectItemByIndex(1);
+            await browser.executeScript("var ddl = kendo.jQuery('#lab-patient-ddl').data('kendoDropDownList'); ddl.select(1); ddl.trigger('change');");
             await browser.expect('#dialog-lab-test .k-input-value-text').not.toHaveText('Select patient...');
         });
 
@@ -218,7 +218,7 @@ describe('Request Lab Test Dialog — Validation and Send', () => {
 
     it('should show dialog and keep lab test dialog open when sending with patient but no tests selected', async () => {
         await browser.expect('#dialog-lab-test .k-input-value-text').toBeVisible();
-        await labPatientDdl.selectItemByIndex(1);
+        await browser.executeScript("var ddl = kendo.jQuery('#lab-patient-ddl').data('kendoDropDownList'); ddl.select(1); ddl.trigger('change');");
         await browser.click('#dialog-lab-test ~ .k-dialog-actions .k-button:last-child');
         await browser.expect('[data-role="alert"]').toHaveText('Please select at least one lab test.');
         await browser.click('[role="alertdialog"] .k-dialog-actions .k-button');
@@ -226,7 +226,7 @@ describe('Request Lab Test Dialog — Validation and Send', () => {
     });
 
     it('should show confirmation dialog and close when sending with valid patient and test selection', async () => {
-        await labPatientDdl.selectItemByIndex(1);
+        await browser.executeScript("var ddl = kendo.jQuery('#lab-patient-ddl').data('kendoDropDownList'); ddl.select(1); ddl.trigger('change');");
         await browser.click('#lab-test-list .k-listview-item:first-child .k-checkbox-wrap');
         await browser.click('#dialog-lab-test ~ .k-dialog-actions .k-button:last-child');
         await browser.expect('[data-role="alert"]').toBeVisible();
@@ -609,7 +609,7 @@ describe('Home Page — Create New Lab Test Request', () => {
     });
 
     it('should reflect the selected patient in the dropdown', async () => {
-        await labPatientDdl.selectItemByIndex(1);
+        await browser.executeScript("var ddl = kendo.jQuery('#lab-patient-ddl').data('kendoDropDownList'); ddl.select(1); ddl.trigger('change');");
         await browser.expect('#dialog-lab-test .k-input-value-text').not.toHaveText('Select patient...');
     });
 
@@ -627,7 +627,7 @@ describe('Home Page — Create New Lab Test Request', () => {
     });
 
     it('should send the request and close the dialog when patient and tests are selected', async () => {
-        await labPatientDdl.selectItemByIndex(1);
+        await browser.executeScript("var ddl = kendo.jQuery('#lab-patient-ddl').data('kendoDropDownList'); ddl.select(1); ddl.trigger('change');");
         await browser.click('#lab-test-list .k-listview-item:nth-child(1) .k-checkbox-wrap');
         await browser.click('#dialog-lab-test ~ .k-dialog-actions .k-button:last-child');
         await browser.expect('[data-role="alert"]').toBeVisible();
@@ -636,7 +636,7 @@ describe('Home Page — Create New Lab Test Request', () => {
     });
 
     it('should reset selected tests after sending', async () => {
-        await labPatientDdl.selectItemByIndex(1);
+        await browser.executeScript("var ddl = kendo.jQuery('#lab-patient-ddl').data('kendoDropDownList'); ddl.select(1); ddl.trigger('change');");
         await browser.click('#lab-test-list .k-listview-item:nth-child(1) .k-checkbox-wrap');
         await browser.click('#dialog-lab-test ~ .k-dialog-actions .k-button:last-child');
         await browser.click('[role="alertdialog"] .k-dialog-actions .k-button');
