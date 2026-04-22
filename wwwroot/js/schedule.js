@@ -123,7 +123,7 @@ function appointmentDialogIcon(kind) {
 }
 
 function renderAppointmentDialogContent(evt, callback) {
-    $.get("/Schedule/AppointmentDialogPartial", {
+    $.get(appBasePath + "Schedule/AppointmentDialogPartial", {
         patientName: evt.PatientName || evt.title || "",
         room:        evt.Room   || "",
         reason:      evt.Reason || "",
