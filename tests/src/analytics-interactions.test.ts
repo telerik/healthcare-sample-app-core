@@ -36,7 +36,7 @@ describe('Analytics Page — Interactions', () => {
             await dropdown.expand();
             await dropdown.waitToExpand();
             await browser.expect('.k-dropdownlist-popup .k-list-item').toHaveCount(30);
-            await browser.sendKey(Key.ESCAPE);
+            await browser.click('.analytics-page-header');
             await dropdown.waitToCollapse();
         });
 
@@ -44,7 +44,7 @@ describe('Analytics Page — Interactions', () => {
             await dropdown.expand();
             await dropdown.waitToExpand();
             await browser.expect('.k-dropdownlist-popup .k-list-filter .k-input-inner').toBeVisible();
-            await browser.sendKey(Key.ESCAPE);
+            await browser.click('.analytics-page-header');
             await dropdown.waitToCollapse();
         });
 
