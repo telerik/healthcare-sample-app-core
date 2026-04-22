@@ -42,11 +42,11 @@
                             columns.Bound(c => c.BloodType).Title("Blood Type").Width(105);
                             columns.Bound(c => c.Ward).Title("Ward").Width(160);
                             columns.Bound(c => c.Diagnosis).Title("Diagnosis").Width(200);
-                            columns.Template("<a class='btn-view-patient grid-view-link' data-id='#= Id #'><svg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' style='vertical-align:-2px;margin-right:4px'><path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/><circle cx='12' cy='12' r='3'/></svg>View Profile</a>")
+                            columns.Template("<a class='btn-view-patient k-button k-button-md k-button-flat k-button-flat-base k-rounded-full' data-id='#= Id #'><span class='k-button-icon'><svg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/><circle cx='12' cy='12' r='3'/></svg></span><span class='k-button-text'>View Profile</span></a>")
                                 .Title("Actions").Width(130);
                         })
                         .Sortable()
-                        .Height(820)
+                        .Height(650)
                         .Filterable(f => f.Mode(GridFilterMode.Row))
                         .Reorderable(r => r.Columns(true))
                         .Resizable(r => r.Columns(true))
@@ -69,34 +69,33 @@
             <!-- Patient Preview panel (shown on patient name double-click) -->
             <div id="patient-preview-panel" class="k-card patient-preview-panel" style="display:none"></div>
 
-        </div>
-    </div>
+            <!-- AI Assistant panel (shown by AI Assistance button, side-by-side with grid) -->
+            <div id="patient-ai-panel" class="k-card patient-ai-panel" style="display:none">
+                @(Html.Kendo().Chat()
+                    .Name("list-ai-chat")
+                    .AuthorId("dr-carter")
+                    .User(u => u.Name("Dr. Carter"))
+                    .Messages(m => m.Placeholder("Ask AI about patients\u2026"))
+                    .HeaderItems(items =>
+                    {
+                        items.Add().Type(AppBarItemType.ContentItem).Template("<span class='sparkles'></span>");
+                        items.Add().Type(AppBarItemType.ContentItem).Template("<strong class='ai-chat-header-title'>AI Assistant</strong>");
+                        items.Add().Type(AppBarItemType.Spacer);
+                        items.Add().Type(AppBarItemType.ContentItem).Template("<span class='close-chat'></span>");
+                    })
+                    .Suggestions(suggestions => {
+                        suggestions.Add().Text("What are today's critical care priorities?");
+                        suggestions.Add().Text("What are common patient risk factors?");
+                        suggestions.Add().Text("What follow-up protocols should I apply?");
+                        suggestions.Add().Text("How do I interpret abnormal lab results?");
+                    })
+                    .Events(e => e
+                        .SendMessage("onListAiChatSendMessage")
+                    )
+                )
+            </div>
 
-    <!-- AI Assistant Dialog (opened by toolbar button) -->
-    <div id="list-ai-dialog" style="display:none">
-        @(Html.Kendo().Chat()
-            .Name("list-ai-chat")
-            .AuthorId("dr-carter")
-            .Height("600")
-            .User(u => u.Name("Dr. Carter"))
-            .Messages(m => m.Placeholder("Ask AI about patients\u2026"))
-            .HeaderItems(items =>
-            {
-                items.Add().Type(AppBarItemType.ContentItem).Template("<span class='sparkles'></span>");
-                items.Add().Type(AppBarItemType.ContentItem).Template("<strong class='ai-chat-header-title'>AI Assistant</strong>");
-                items.Add().Type(AppBarItemType.Spacer);
-                items.Add().Type(AppBarItemType.ContentItem).Template("<span class='close-chat'></span>");
-            })
-            .Suggestions(suggestions => {
-                suggestions.Add().Text("What are today's critical care priorities?");
-                suggestions.Add().Text("What are common patient risk factors?");
-                suggestions.Add().Text("What follow-up protocols should I apply?");
-                suggestions.Add().Text("How do I interpret abnormal lab results?");
-            })
-            .Events(e => e
-                .SendMessage("onListAiChatSendMessage")
-            )
-        )
+        </div>
     </div>
 
     <!-- ═══════════════════════════════════════════
