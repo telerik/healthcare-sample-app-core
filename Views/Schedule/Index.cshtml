@@ -24,7 +24,7 @@
         <div class="schedule-main">
             <div class="k-card sched-card">                
                 @{
-                    var today = new DateTime(2026, 3, 30);
+                    var today = DateTime.Today;
                     var startTime = new DateTime(today.Year, today.Month, today.Day, 7, 0, 0);
                     var endTime = new DateTime(today.Year, today.Month, today.Day, 19, 0, 0);
                 }

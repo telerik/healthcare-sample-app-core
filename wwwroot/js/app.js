@@ -362,7 +362,7 @@ $(document).ready(function () {
         var idx = parseInt($(this).data("alert-idx"), 10);
         _currentAlertIdx = idx;
 
-        $.get("/Home/AlertReviewPartial", { alertIndex: idx }, function (html) {
+        $.get(appBasePath + "Home/AlertReviewPartial", { alertIndex: idx }, function (html) {
             var dlg = $("#dialog-alert-review").data("kendoDialog");
             if (dlg) applySharedDialogShell(dlg);
             dlg.content(html);
@@ -408,7 +408,7 @@ $(document).ready(function () {
     /* ═══════════════════════════════════════════════
        NEXT PATIENT — ACTION BUTTONS
     ═══════════════════════════════════════════════ */
-    $(".view-profile-link").on("click", function (e) {
+    $(document).on("click", ".view-profile-link", function (e) {
         e.preventDefault();
         var pid = $(this).data("patient-id") || (_nextPt && _nextPt.Id);
         if (pid) sessionStorage.setItem("openPatientId", pid);
