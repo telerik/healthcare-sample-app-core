@@ -22,6 +22,7 @@
     <script src="https://kendo.cdn.telerik.com/2026.1.325/js/kendo.aspnetmvc.min.js"></script>
     <script src="~/js/data.js" asp-append-version="true"></script>
     <script>
+        var appBasePath = "@Url.Content("~/")";
         var navRoutes = {
             "Home":      "@Url.Action("Index", "Home")",
             "Schedule":  "@Url.Action("Index", "Schedule")",

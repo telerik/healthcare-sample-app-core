@@ -323,7 +323,7 @@ function closePatientDrilldown() {
    DETAIL VIEW RENDERING — loaded from server partial
 ═══════════════════════════════════════════════════════ */
 function renderPatientDetail(patient) {
-    $.get("/Patients/DetailPartial", { patientId: patient.Id }, function (html) {
+    $.get(appBasePath + "Patients/DetailPartial", { patientId: patient.Id }, function (html) {
         var $main = $("#detail-main");
         // Destroy any existing Kendo widgets in previous detail view
         kendo.destroy($main);
@@ -331,7 +331,7 @@ function renderPatientDetail(patient) {
         initKendoStatusBadges($main);
 
         // Load labs grid partial
-        $.get("/Patients/LabsPartial", { patientId: patient.Id }, function (labsHtml) {
+        $.get(appBasePath + "Patients/LabsPartial", { patientId: patient.Id }, function (labsHtml) {
             var $container = $("#patient-labs-grid-container");
             kendo.destroy($container);
             $container.html(labsHtml);
@@ -361,7 +361,7 @@ function openPatientPreview(patient) {
     }
 
     previewPatient = patient;
-    $.get("/Patients/PreviewPartial", { patientId: patient.Id }, function (html) {
+    $.get(appBasePath + "Patients/PreviewPartial", { patientId: patient.Id }, function (html) {
         $("#patient-preview-panel").html(html).css("display", "flex");
         $("#patients-list-body").addClass("preview-panel-open");
         syncPatientsSidePanelHeights();
@@ -446,7 +446,7 @@ function openChangeStatusDialog(patient) {
     var oldDdl = $("#new-status-ddl").data("kendoDropDownList");
     if (oldDdl) { oldDdl.destroy(); }
 
-    $.get("/Patients/ChangeStatusPartial", { patientId: patient.Id }, function (html) {
+    $.get(appBasePath + "Patients/ChangeStatusPartial", { patientId: patient.Id }, function (html) {
         dlg.content(html);
         dlg.open();
     });

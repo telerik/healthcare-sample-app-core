@@ -1,5 +1,9 @@
 ﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
+if (typeof appBasePath === "undefined") {
+    var baseEl = document.querySelector("base[href]");
+    var appBasePath = baseEl ? baseEl.getAttribute("href") : "/";
+}
 
 /* Measure the native scrollbar width and expose it as a CSS custom property
    so non-scrolling elements (appbar, headers) can align with #page-content. */

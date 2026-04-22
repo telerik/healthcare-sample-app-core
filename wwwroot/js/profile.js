@@ -190,7 +190,7 @@ function renderNotifPanel(callback) {
         unreadCount: unread
     };
     $.ajax({
-        url:         "/Home/NotificationsPartial",
+        url:         appBasePath + "Home/NotificationsPartial",
         type:        "POST",
         contentType: "application/json",
         data:        JSON.stringify(payload),
