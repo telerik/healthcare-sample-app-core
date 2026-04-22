@@ -289,7 +289,7 @@ $(document).ready(function () {
 
     /* Close mobile search on click outside */
     $(document).on("click", function (e) {
-        if (!$(e.target).closest("#appbar, .k-autocomplete-popup").length) {
+        if (!$(e.target).closest("#appbar, .k-autocomplete-popup, .k-actionsheet, .k-actionsheet-item, .k-actionsheet-content, .k-actionsheet-titlebar").length) {
             $("#appbar").removeClass("search-open");
         }
     });
@@ -316,6 +316,11 @@ function buildSearchItems(patients) {
             patientId: p.Id
         };
     });
+}
+
+function populateAppbarSearchDataSource(ac, patients) {
+    if (!ac || !ac.dataSource) return;
+    ac.dataSource.data(buildSearchItems(patients || []));
 }
 
 function appbarSearchTemplate(dataItem) {
@@ -347,6 +352,7 @@ function onAppbarSearchFiltering(e) {
 function onAppbarSearchSelect(e) {
     e.preventDefault();
     var item = e.dataItem;
+    if (!item || typeof item.patientId === "undefined") { return; }
     var patient = getPatientById(item.patientId) || findPatient(item.patientId) || { Id: item.patientId };
     this.value(item.name);
     this.close();
@@ -387,16 +393,16 @@ function ensurePatientSearchData(forceRefresh) {
     return patientSearchRequest;
 }
 
-/* Re-initializes the appbar search AutoComplete only when its popup
-   container was lost during PJAX cleanup. On normal page loads the
-   HTML Helper creates the widget — this function is a no-op. */
-function initContextualSearch() {
+/* Re-initializes the appbar search AutoComplete when its popup
+   container was lost (PJAX) or when the adaptive mode breakpoint
+   is crossed on resize (forceReinit=true). */
+function initContextualSearch(forceReinit) {
     var $input = $("#appbar-search");
     if (!$input.length) return;
 
     var existing = $input.data("kendoAutoComplete");
     if (existing) {
-        if (existing.popup && existing.popup.wrapper && existing.popup.wrapper.closest("body").length) {
+        if (!forceReinit && existing.popup && existing.popup.wrapper && existing.popup.wrapper.closest("body").length) {
             return; /* widget and popup are healthy */
         }
         /* Popup container was lost — destroy and reinitialize below. */
@@ -429,10 +435,13 @@ function initContextualSearch() {
     });
 
     /* Populate the DataSource eagerly */
-    ensurePatientSearchData().done(function (patients) {
-        var ac = $input.data("kendoAutoComplete");
-        if (ac) { ac.dataSource.data(buildSearchItems(patients)); }
-    });
+    if (sharedPatients && sharedPatients.length) {
+        populateAppbarSearchDataSource($input.data("kendoAutoComplete"), sharedPatients);
+    } else {
+        ensurePatientSearchData().done(function (patients) {
+            populateAppbarSearchDataSource($input.data("kendoAutoComplete"), patients);
+        });
+    }
 }
 
 function initPatientSelectIfNeeded() {
@@ -498,10 +507,31 @@ function applySharedDialogShell(dialog) {
     dialog.wrapper.closest(".k-dialog-wrapper").addClass("app-dialog-shell");
 }
 
-/* Populate the HTML Helper–created AutoComplete DataSource eagerly */
+/* Populate the HTML Helper–created AutoComplete DataSource eagerly
+   and watch for adaptive-mode breakpoint crossings on resize. */
 $(document).ready(function () {
-    ensurePatientSearchData().done(function (patients) {
-        var ac = $("#appbar-search").data("kendoAutoComplete");
-        if (ac) { ac.dataSource.data(buildSearchItems(patients)); }
+    if (sharedPatients && sharedPatients.length) {
+        populateAppbarSearchDataSource($("#appbar-search").data("kendoAutoComplete"), sharedPatients);
+    } else {
+        ensurePatientSearchData().done(function (patients) {
+            populateAppbarSearchDataSource($("#appbar-search").data("kendoAutoComplete"), patients);
+        });
+    }
+
+    /* The AutoComplete’s adaptive mode switches between popup and
+       action-sheet rendering at 1024px, but internal list/popup
+       references can become stale after the transition. Detect the
+       breakpoint crossing and force a clean re-init. */
+    var _lastWasAdaptive = window.innerWidth < 1024;
+    var _adaptiveTimer = null;
+    $(window).on("resize.appbarSearch", function () {
+        clearTimeout(_adaptiveTimer);
+        _adaptiveTimer = setTimeout(function () {
+            var isAdaptive = window.innerWidth < 1024;
+            if (isAdaptive !== _lastWasAdaptive) {
+                _lastWasAdaptive = isAdaptive;
+                initContextualSearch(true);
+            }
+        }, 250);
     });
 });
