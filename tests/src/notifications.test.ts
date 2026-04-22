@@ -114,8 +114,7 @@ describe('Notifications Panel', () => {
 
         it('should mark all notifications as read when clicking Mark all read', async () => {
             await browser.click('#np-mark-all');
-            const cards = await browser.findAll('.np-card-read');
-            expect(cards.length).toBe(7);
+            await browser.expect('.np-card-read').toHaveCount(7);
         });
 
         it('should replace Mark all read button with All caught up message', async () => {
