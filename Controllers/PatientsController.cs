@@ -23,7 +23,22 @@ public class PatientsController : Controller
 
     public IActionResult Patients_Read([DataSourceRequest] DataSourceRequest request)
     {
-        return Json(_store.GetPatients().ToDataSourceResult(request));
+        return Json(_store.GetPatients().ToDataSourceResult(request, p => new PatientSummary
+        {
+            Id        = p.Id,
+            Name      = p.Name,
+            Age       = p.Age,
+            Gender    = p.Gender,
+            BloodType = p.BloodType,
+            Ward      = p.Ward,
+            Diagnosis = p.Diagnosis,
+            Status    = p.Status,
+            Doctor    = p.Doctor,
+            Phone     = p.Phone,
+            LastVisit = p.LastVisit,
+            Avatar    = p.Avatar,
+            Allergies = p.Allergies,
+        }));
     }
 
     /// <summary>Returns the _PatientDetail partial for the drilldown view.</summary>
