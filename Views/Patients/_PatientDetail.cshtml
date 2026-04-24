@@ -20,7 +20,7 @@
     <div class="k-card profile-info-card">
         <div class="k-card-body">
         <div class="profile-info-header">
-            <img src="@Model.Avatar.Replace("/thumb/", "/")" alt="@Model.Name" class="patient-avatar-profile" />
+            <img src="@Model.Avatar" alt="@Model.Name" class="patient-avatar-profile" />
             <div class="profile-name-status">
                 <span class="profile-patient-name">@Model.Name</span>
                 @(Html.Kendo().Badge()

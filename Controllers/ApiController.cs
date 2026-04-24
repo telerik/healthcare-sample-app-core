@@ -20,7 +20,24 @@ public class ApiController : ControllerBase
 
     [HttpGet("patients")]
     public IActionResult GetPatients() =>
-        Ok(_store.GetPatients());
+        Ok(_store.GetPatients().Select(p => new
+        {
+            p.Id,
+            p.Name,
+            p.Age,
+            p.Gender,
+            p.BloodType,
+            p.Ward,
+            p.Diagnosis,
+            p.Status,
+            p.Doctor,
+            p.Phone,
+            p.LastVisit,
+            p.Avatar,
+            p.Allergies,
+            p.Labs,
+            p.Vitals,
+        }));
 
     [HttpPost("patients/update")]
     public IActionResult UpdatePatient([FromBody] PatientRecord patient)

@@ -1,5 +1,28 @@
 namespace HealthcareApp.Models;
 
+/// <summary>
+/// Lightweight projection of PatientRecord used by the patients grid and
+/// client-side caching (patientsData). Excludes heavy fields such as Notes,
+/// Labs, Medications, Visits, Vitals, and AdmissionDetails so the Ajax
+/// DataSource payload stays small.
+/// </summary>
+public class PatientSummary
+{
+    public string Id { get; set; } = "";
+    public string Name { get; set; } = "";
+    public int Age { get; set; }
+    public string Gender { get; set; } = "";
+    public string BloodType { get; set; } = "";
+    public string Ward { get; set; } = "";
+    public string Diagnosis { get; set; } = "";
+    public string Status { get; set; } = "";
+    public string Doctor { get; set; } = "";
+    public string Phone { get; set; } = "";
+    public string LastVisit { get; set; } = "";
+    public string Avatar { get; set; } = "";
+    public List<string> Allergies { get; set; } = [];
+}
+
 /// <summary>Alert review dialog: alert metadata + optional patient info.</summary>
 public class AlertReviewViewModel
 {
