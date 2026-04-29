@@ -1,6 +1,4 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-if (typeof appBasePath === "undefined") {
+﻿if (typeof appBasePath === "undefined") {
     var baseEl = document.querySelector("base[href]");
     var appBasePath = baseEl ? baseEl.getAttribute("href") : "/";
 }
@@ -16,15 +14,9 @@ if (typeof appBasePath === "undefined") {
     document.documentElement.style.setProperty('--scrollbar-width', w + 'px');
 })();
 
-/* Declared before the eager call so the in-flight XHR reference is
-   not overwritten when the var declaration is executed later in the file. */
 var patientSearchRequest = null;
-
 /* ═══════════════════════════════════════════════════════
-   PAGE-HEADER WIDGET DISPATCHERS — Layout renders Html Helper
-   buttons/DDLs for every page header; Kendo captures the
-   function reference at init time.  These dispatchers
-   forward to _impl variables that page-specific scripts set.
+   PAGE-HEADER WIDGET DISPATCHERS
 ═══════════════════════════════════════════════════════ */
 var _aiAssistanceClickImpl       = null;
 var _patientsExportClickImpl     = null;
@@ -138,10 +130,7 @@ function pjaxNavigate(url, pushState) {
         if (pushState !== false) {
             history.pushState({ pjax: true, url: url }, "", url);
         }
-
-        /* Inject content and reveal the page. Called only after the page script
-           has loaded so named event-handler functions are defined before Kendo's
-           synchronous widget initialisation runs inside $content.html(). */
+       
         function injectAndReveal() {
             $content.html(newContent.html());
             $content.removeClass("page-loading").addClass("page-ready");
@@ -191,9 +180,7 @@ function _urlToPage(url) {
 }
 
 /* ═══════════════════════════════════════════════════════
-   APPBAR NAV & SETTINGS — event handlers wired by HTML Helpers
-   SegmentedControl HTML Helper requires Telerik.UI.for.AspNet.Core
-   >= 2026.1.325; current version is 2026.1.212, so jQuery init is used.
+   APPBAR NAV & SETTINGS
 ═══════════════════════════════════════════════════════ */
 /* navRoutes is defined in _Layout.cshtml via Url.Action() */
 
@@ -363,8 +350,6 @@ function initGithubPopup() {
    The app bar search is intentionally consistent across pages:
    it searches patient records and navigates to the patient profile.
    Widget is created by the Html Helper in _Layout.cshtml.
-   initContextualSearch() only handles the PJAX re-init case
-   (re-initialization after destroy, which is allowed by jQuery).
 ═══════════════════════════════════════════════════════ */
 
 /* ── Appbar Search — template & event handlers wired by HTML Helper ── */
@@ -580,11 +565,7 @@ $(document).ready(function () {
             populateAppbarSearchDataSource($("#appbar-search").data("kendoAutoComplete"), patients);
         });
     }
-
-    /* The AutoComplete’s adaptive mode switches between popup and
-       action-sheet rendering at 1024px, but internal list/popup
-       references can become stale after the transition. Detect the
-       breakpoint crossing and force a clean re-init. */
+   
     var _lastWasAdaptive = window.innerWidth < 1024;
     var _adaptiveTimer = null;
     $(window).on("resize.appbarSearch", function () {

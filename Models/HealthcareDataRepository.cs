@@ -435,12 +435,12 @@ public static class HealthcareDataRepository
                 history.Add(new VitalDataPoint
                 {
                     Date        = date,
-                    Systolic    = p.Vitals.Systolic  + rng.Next(-8, 9),
-                    Diastolic   = p.Vitals.Diastolic + rng.Next(-5, 6),
-                    HeartRate   = p.Vitals.Hr        + rng.Next(-6, 7),
-                    Spo2        = Math.Min(100, p.Vitals.Spo2 + rng.Next(-2, 3)),
+                    Systolic    = p.Vitals.Systolic  + rng.Next(-18, 29),
+                    Diastolic   = p.Vitals.Diastolic + rng.Next(-15, 26),
+                    HeartRate   = p.Vitals.Hr        + rng.Next(-16, 27),
+                    Spo2        = Math.Min(100, p.Vitals.Spo2 + rng.Next(-12, 23)),
                     Temperature = Math.Round(p.Vitals.Temp + (rng.NextDouble() * 0.8 - 0.4), 1),
-                    Pulse       = Math.Max(50, p.Vitals.Hr + rng.Next(-10, 11))
+                    Pulse       = Math.Max(50, p.Vitals.Hr + rng.Next(-20, 31))
                 });
             }
 

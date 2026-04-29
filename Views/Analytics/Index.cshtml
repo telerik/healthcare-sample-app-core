@@ -112,7 +112,7 @@
                 @(Html.Kendo().Chart()
                     .Name("alerts-donut-chart")
                     .HtmlAttributes(new { style = "min-height:340px" })
-                    .Legend(l => l.Position(ChartLegendPosition.Bottom).Item(i => i.Visual("legendItemVisual")))
+                    .Legend(l => l.Position(ChartLegendPosition.Bottom).Item(i => i.Visual("donutLegendItemVisual")))
                     .SeriesColors(new[] { "#f0c040", "#27ae60", "#2c3e8a", "#e91e8c", "#e8735a", "#9b59b6" })
                     .Series(s =>
                     {
@@ -139,10 +139,9 @@
                         .Value(0)
                         .CenterTemplateHandler("riskGaugeCenterTemplate")
                         .Colors(colors => {
-                            colors.Add().To(25).Color("#0058e9");
-                            colors.Add().From(25).To(50).Color("#37b400");
-                            colors.Add().From(50).To(75).Color("#ffc000");
-                            colors.Add().From(75).Color("#f31700");
+                            colors.Add().From(0).To(39).Color("#37b400");
+                            colors.Add().From(40).To(69).Color("#b8860b");
+                            colors.Add().From(70).Color("#f31700");
                         })
                         .Scale(s => s
                             .Min(0).Max(100)
@@ -159,7 +158,7 @@
                     <div class="risk-legend-item">
                         <span class="rsl-dot rsl-high"></span>
                         <span class="rsl-label">High Risk</span>
-                        <span class="rsl-range">0–39</span>
+                        <span class="rsl-range">70-100</span>
                     </div>
                     <div class="risk-legend-item">
                         <span class="rsl-dot rsl-medium"></span>
@@ -169,7 +168,7 @@
                     <div class="risk-legend-item">
                         <span class="rsl-dot rsl-low"></span>
                         <span class="rsl-label">Low Risk</span>
-                        <span class="rsl-range">70–100</span>
+                        <span class="rsl-range">0-39</span>
                     </div>
                 </div>
             </div>

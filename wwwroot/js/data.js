@@ -47,28 +47,6 @@ var sharedLabCatalogue = [
     "Uric Acid", "Troponin I", "D-Dimer", "Brain Natriuretic Peptide (BNP)", "Arterial Blood Gas (ABG)"
 ];
 
-function getStatusChipOptions(status) {
-    switch (status) {
-        case "Complete":
-            return { themeColor: "success", fillMode: "solid" };
-        case "Stable":
-            return { themeColor: "success", fillMode: "solid" };
-        case "In Progress":
-            return { themeColor: "secondary", fillMode: "solid" };
-        case "Monitoring":
-        case "Warning":
-            return { themeColor: "warning", fillMode: "solid" };
-        case "Upcoming":
-            return { themeColor: "tertiary", fillMode: "outline" };
-        case "Cancelled":
-            return { themeColor: "info", fillMode: "outline" };
-        case "Critical":
-            return { themeColor: "error", fillMode: "solid" };
-        default:
-            return { themeColor: "base", fillMode: "solid" };
-    }
-}
-
 function getStatusBadgeOptions(status) {
     switch (status) {
         case "Complete":
@@ -102,37 +80,6 @@ function initKendoStatusBadges($container) {
             fillMode:   options.fillMode,
             rounded:    "full",
             size:       "large"
-        });
-    });
-}
-
-/**
- * Initialise all un-initialised Kendo Chip placeholders inside a container.
- * Status chips:  <span class="k-chip-status" data-status="Complete"></span>
- * Allergy chips: <span class="k-chip-allergy" data-label="Penicillin"></span>
- */
-function initKendoChips($container) {
-    $container.find(".k-chip-status:not(.k-chip)").each(function () {
-        var $el     = $(this);
-        var status  = $el.attr("data-status");
-        var options = getStatusChipOptions(status);
-        $el.kendoChip({
-            label:     status,
-            themeColor: options.themeColor,
-            fillMode:  options.fillMode,
-            rounded:   "full",
-            size:      "large"
-        });
-    });
-    $container.find(".k-chip-allergy:not(.k-chip)").each(function () {
-        var $el   = $(this);
-        var label = $el.attr("data-label");
-        $el.kendoChip({
-            label:     "\u26A0 " + label,
-            themeColor: "error",
-            fillMode:  "solid",
-            rounded:   "full",
-            size:      "large"
         });
     });
 }

@@ -1067,7 +1067,6 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 .k-dialog-wrapper:has(#dialog-nurse-chat) .k-window-titlebar-action {
     width: 30px;
     height: 30px;
-    border-radius: 9999px;
 }
 
 /* ── Content area ──────────────────────────────────── */
@@ -1935,33 +1934,32 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     flex-shrink: 0;
 }
 
-.tasks-search-wrap {
-    display: flex;
-    align-items: center;
-    gap: 0;
+.tasks-header-actions .k-input,
+.tasks-header-actions .k-textbox {
+    width: 210px;
     height: 40px;
     border: 1px solid rgba(23, 56, 99, 0.08);
     border-radius: 9999px;
-    padding: 2px 8px;
     background: #fff;
 }
 
-.tasks-search-icon {
-    flex-shrink: 0;
-    width: 16px;
-    height: 16px;
-    margin-right: 4px;
-}
-
-.tasks-search-input {
-    border: none;
-    outline: none;
+.tasks-header-actions .k-input .k-input-inner,
+.tasks-header-actions .k-textbox .k-input-inner {
     font-family: 'Poppins', 'Inter', sans-serif;
     font-size: 14px;
     color: #4A5666;
-    background: transparent;
-    width: 148px;
     padding: 4px 8px;
+}
+
+.tasks-header-actions .k-input .k-input-inner::placeholder,
+.tasks-header-actions .k-textbox .k-input-inner::placeholder {
+    color: #4A5666;
+}
+
+.tasks-header-actions .k-input-prefix .k-icon,
+.tasks-header-actions .k-input-suffix .k-icon,
+.tasks-header-actions .k-clear-value {
+    color: #4A5666;
 }
 
 .tasks-search-input::placeholder { color: #4A5666; }
@@ -2412,19 +2410,12 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 }
 
 .k-dialog-wrapper:has(#appointment-dialog) .k-actions {
-    justify-content: space-between;
     padding: 16px 20px 20px;
     border-top: 1px solid rgba(23, 56, 99, 0.08);
     background: #FFFFFF;
 }
 
-.k-dialog-wrapper:has(#appointment-dialog) .k-actions .k-button {
-    min-width: 76px;
-    height: 34px;
-    border-radius: 9999px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 14px;
-}
+
 .appt-review {
     display: flex;
     flex-direction: column;
@@ -3426,7 +3417,7 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 }
 
 .patients-grid-card .k-table-td {
-    height: 48px;
+    height: 42px;
     font-size: 14px;
     color: #232a36;
     padding: 8px 16px;
@@ -3739,21 +3730,6 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     min-width: 0;
 }
 
-/* Status chip in patient profile card — smaller, right-aligned (match grid badge size) */
-.profile-name-status .k-chip {
-    align-self: flex-end;
-    height: 22px !important;
-    min-height: 22px !important;
-    font-size: 12px !important;
-    padding: 0 !important;
-}
-.profile-name-status .k-chip .k-chip-content {
-    font-size: 12px !important;
-    padding: 0 8px !important;
-    line-height: 20px !important;
-}
-.profile-name-status .k-chip .k-chip-action { display: none; }
-
 .profile-patient-name {
     font-size: 15px;
     font-weight: 700;
@@ -3969,12 +3945,6 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 }
 .allergy-card-ok .detail-card-header,
 .allergy-header-ok { color: #1a874a; border-bottom-color: #b8e8c4; }
-.allergy-chips-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-}
-
 /* Detail medications list */
 .detail-meds-list {
     list-style: none;
@@ -4055,20 +4025,14 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 .profile-note-card .k-editor iframe {
     font-weight: 400;
 }
-.ai-note-chips-row {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid #f0eeff;
-}
-.ai-note-chip-label {
-    font-size: 11px;
-    color: #888;
-    font-weight: 600;
-    white-space: nowrap;
+
+#patient-notes-editor {
+    font-family: Poppins, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+    padding: 10px;
 }
 
 /* ═══════════════════════════════════════════════════════

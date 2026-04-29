@@ -97,38 +97,13 @@ public class ApiController : ControllerBase
     public IActionResult GetTodayAppointments() =>
         Ok(_store.GetTodayAppointments());
 
-    // ── Schedule Appointments (Kendo Scheduler CRUD) ─────────────────────
+    // ── Schedule Appointments ─────────────────────────────────────────────
 
     [HttpGet("appointments")]
     public IActionResult GetAppointments()
     {
         var list = _store.GetScheduleAppointments();
         return Ok(list);
-    }
-
-    [HttpPost("appointments/create")]
-    public IActionResult CreateAppointment([FromBody] ScheduleAppointmentDto dto)
-    {
-        var appt = MapDto(dto);
-        var created = _store.CreateScheduleAppointment(appt);
-        return Ok(created);
-    }
-
-    [HttpPost("appointments/update")]
-    public IActionResult UpdateAppointment([FromBody] ScheduleAppointmentDto dto)
-    {
-        var appt = MapDto(dto);
-        if (!_store.UpdateScheduleAppointment(appt))
-            return NotFound();
-        return Ok(appt);
-    }
-
-    [HttpPost("appointments/destroy")]
-    public IActionResult DeleteAppointment([FromBody] ScheduleAppointmentDto dto)
-    {
-        if (!_store.DeleteScheduleAppointment(dto.Id))
-            return NotFound();
-        return Ok(new { success = true });
     }
 
     // ── Analytics ─────────────────────────────────────────────────────────
@@ -231,20 +206,6 @@ public class ApiController : ControllerBase
     {
         return Ok(new { success = true });
     }
-
-    // ── Mapping helpers ───────────────────────────────────────────────────
-
-    private static ScheduleAppointment MapDto(ScheduleAppointmentDto d) => new()
-    {
-        Id          = d.Id,
-        Title       = d.Title       ?? "",
-        PatientName = d.PatientName ?? d.Title ?? "",
-        Reason      = d.Reason      ?? "",
-        Room        = d.Room        ?? "",
-        EventType   = d.EventType   ?? "",
-        Start       = d.Start,
-        End         = d.End,
-    };
 }
 
 // ── DTOs ──────────────────────────────────────────────────────────────────
@@ -254,15 +215,3 @@ public record AddNotePayload(string? Text);
 public record StatusPayload(string? Status);
 public record DoctorProfilePayload(string? FullName, string? Email, string? Phone);
 public record AvatarPayload(string? Avatar);
-
-public class ScheduleAppointmentDto
-{
-    public int      Id          { get; set; }
-    public string?  Title       { get; set; }
-    public string?  PatientName { get; set; }
-    public string?  Reason      { get; set; }
-    public string?  Room        { get; set; }
-    public string?  EventType   { get; set; }
-    public DateTime Start       { get; set; }
-    public DateTime End         { get; set; }
-}

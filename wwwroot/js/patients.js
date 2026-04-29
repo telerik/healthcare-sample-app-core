@@ -5,8 +5,13 @@
 window._patientsSearchInit = false;
 
 _patientsExportClickImpl = function() {
-    var g = $("#patients-grid").data("kendoGrid");
-    if (g) g.saveAsExcel();
+    if ($("#patients-detail-view").is(":visible")) {
+        var labsGrid = $("#patient-labs-grid").data("kendoGrid");
+        if (labsGrid) labsGrid.saveAsExcel();
+    } else {
+        var g = $("#patients-grid").data("kendoGrid");
+        if (g) g.saveAsExcel();
+    }
 };
 
 /* Save Patient Note — wired by Html Helper .Events(e => e.Click("onSavePatientNote")) */
@@ -32,12 +37,7 @@ function onSavePatientNote() {
 
 var _aiPanelOpen = false;
 _aiAssistanceClickImpl = function() {
-    if ($(".sparkles").length) { kendo.ui.icon($(".sparkles"), { icon: 'sparkles' }); }
-
-    // If the user is on the patient detail view, navigate back to the grid first
-    if ($("#patients-detail-view").is(":visible")) {
-        closePatientDrilldown();
-    }
+    if ($(".sparkles").length) { kendo.ui.icon($(".sparkles"), { icon: 'sparkles' }); }    
 
     if (listAiOpen) {
         closeListAiPanel();
@@ -63,8 +63,8 @@ function onPatientsGridDataBound() {
     openPendingPatientProfile();
 
     // Row click handlers
-    widget.tbody.find("tr[role='row']").off("dblclick.drill");
-    widget.tbody.find(".patient-name-cell").off("dblclick.preview").on("dblclick.preview", function (e) {
+    widget.tbody.find("tr[role='row']").off("click.drill");
+    widget.tbody.find(".patient-name-cell").off("click.preview").on("click.preview", function (e) {
         e.stopPropagation();
         var row     = $(this).closest("tr");
         var dataItem = widget.dataItem(row);
@@ -88,16 +88,10 @@ var previewPatient   = null;
 var listAiChat       = null;
 var listAiOpen       = false;
 var notesEditor      = null;
-var listAiReady      = false;
 var _aiAssistant    = {
         id: "ai-assistant",
         name: "AI Assistant"
 };
- var _aiUser         = {
-        id: "dr-carter",
-        name: "Dr. Carter",
-        iconUrl: "./content/profile.jpg"
-    };
 
 /* ═══════════════════════════════════════════════════════
    HELPERS
@@ -107,61 +101,6 @@ function getFullPatient(id) {
     var cached = patientsData.find(function (p) { return p.Id === id; });
     return cached || null;
 }
-
-function formatVital(key, val) {
-    switch (key) {
-        case "bp":     return val;                       // already "148/92 mmHg"
-        case "hr":     return val + " bpm";
-        case "temp":   return val + "°F";
-        case "spo2":   return val + "%";
-        case "weight": return val + " lbs";
-        default:       return String(val);
-    }
-}
-
-function formatMed(m) {
-    if (typeof m === "string") return m;
-    return m.Drug + " " + m.Dose + (m.Frequency !== "PRN" ? " " + m.Frequency : " PRN");
-}
-
-function isVitalCritical(field, value) {
-    var num = parseFloat(value);
-    if (isNaN(num)) return false;
-    switch (field) {
-        case "bp":   return parseInt(value, 10) > 140;
-        case "hr":   return num > 100 || num < 60;
-        case "temp": return num > 99.5;
-        case "spo2": return num < 94;
-        default:     return false;
-    }
-}
-
-function flagClass(flag) {
-    var map = { "High": "flag-high", "Low": "flag-low", "Abnormal": "flag-abnormal", "Normal": "flag-normal" };
-    return map[flag] || "flag-normal";
-}
-
-function buildSnippet(key, p) {
-    var lastReason = p.Visits.length ? p.Visits[0].Reason : "N/A";
-    var allergiesStr = p.Allergies.length ? p.Allergies.join(", ") : "none known";
-    var medsStr = p.Medications.map(formatMed).join(", ");
-    switch (key) {
-        case "summarize":
-            return "Patient shows a pattern of " + p.Diagnosis + " managed with " + medsStr +
-                   ". History of " + p.LastVisit + " visit regarding " + lastReason + ".";
-        case "flag":
-            return "\u26a0 FLAGGED FOR REVIEW: Abnormal lab results require immediate attention.";
-        case "followup":
-            return "Recommend follow-up in 2 weeks. Monitor " + p.Diagnosis +
-                   " progression and adjust medications as needed.";
-        case "risk":
-            return "Risk factors identified: " + allergiesStr +
-                   ", complex medication regimen. Caution advised.";
-        default:
-            return "";
-    }
-}
-
 
 var _listAiResponses = {
     "What are common patient risk factors?":
@@ -174,10 +113,25 @@ var _listAiResponses = {
         "Critical priorities include: monitoring patients with oxygen saturation below 92%, reviewing all flagged lab results before the next round, confirming allergy documentation for any new prescriptions, and ensuring high-risk patients have an updated care plan."
 };
 
+function renderListAiChatMessage(message) {
+    var text = (message && message.text) || "";
+    if (typeof isAiMarkupMessage === "function" && isAiMarkupMessage(text)) {
+        return text;
+    }
+
+    var encodedText = kendo.htmlEncode(text).replace(/\n/g, "<br>");
+    return '<div class="ai-msg-content">' + encodedText + '</div>';
+}
+
 function _replyToListAiMsg(text) {
     if (!listAiChat) listAiChat = $("#list-ai-chat").data("kendoChat");
     if (!listAiChat) return;  
-    var reply = _listAiResponses[text] || "I\u2019m sorry, I don\u2019t have information on that right now.";
+    var reply = _listAiResponses[text] ||
+        '<div class="ai-msg-content ai-demo-disclaimer">' +
+        '<p>\u24D8 <strong>This is a demo assistant.</strong></p>' +
+        '<p>Free-text queries are not supported in this preview. In your production app, connect a <strong>real AI service</strong> (e.g. OpenAI, Azure OpenAI, or your own clinical LLM) to handle any message.</p>' +
+        '<p><strong>In this demo, you can use the suggestion chips</strong> to see pre-built responses.</p>' +
+        '</div>';
     setTimeout(function () {
         listAiChat.postMessage({
             authorId:   _aiAssistant.id,
@@ -195,10 +149,6 @@ function onListAiChatSendMessage(e) {
     }
     // Scroll to show the user's sent message; bot reply scrolls inside _replyToListAiMsg
     setTimeout(function () { if (listAiChat) listAiChat.scrollToBottom(); }, 0);
-}
-
-function initListAiChat() {
-    // no-op — dialog is now created lazily in the button click handler
 }
 
 function _initListAiChatIfNeeded() {
@@ -252,6 +202,7 @@ function openPatientDrilldown(patient) {
     $("#patients-list-view").hide();
     $("#patients-breadcrumb").show();
     $("#patients-detail-view").show();
+    $("#btn-ai-assistance").hide();
     window.scrollTo(0, 0);
 }
 
@@ -283,6 +234,7 @@ function closePatientDrilldown() {
     $("#patients-detail-view").hide();
     $("#patients-breadcrumb").hide();
     $("#patients-list-view").show();
+    $("#btn-ai-assistance").show();
     // Refresh grid to reflect any status changes
     if (grid) { grid.dataSource.read(); }
 }
@@ -355,11 +307,12 @@ function openAllergyDetailsDialog(patient) {
     if (existing) { existing.destroy(); }
 
     $dlg.kendoDialog({
-        title:   "Allergy Alert \u2014 Details",
-        width:   420,
-        modal:   true,
-        visible: false,
-        open:    function () { initAllergyBadges(this.element); },
+        title:        "Allergy Alert \u2014 Details",
+        width:        420,
+        modal:        true,
+        visible:      false,
+        buttonLayout: "normal",
+        open:         function () { initAllergyBadges(this.element); },
         content: '<div class="info-dialog">' +
                  '  <div class="info-dialog-section">' +
                  '    <div class="info-dialog-row"><span class="info-dialog-label">Patient</span><span>' + kendo.htmlEncode(patient.Name) + '</span></div>' +
@@ -395,26 +348,6 @@ function onChangeStatusSave() {
             _statusPatient.Status = r.status;
             if (grid) { grid.dataSource.read(); }
         }
-    });
-}
-
-function onChangeStatusOpen() {
-    /* DropDownList is now created by the HTML Helper in _ChangeStatusContent partial */
-}
-
-function openChangeStatusDialog(patient) {
-    _statusPatient = patient;
-
-    var dlg = $("#change-status-dialog").data("kendoDialog");
-    dlg.title("Change Status \u2014 " + kendo.htmlEncode(patient.Name));
-
-    // Destroy any existing DDL from a previous open to avoid re-init errors
-    var oldDdl = $("#new-status-ddl").data("kendoDropDownList");
-    if (oldDdl) { oldDdl.destroy(); }
-
-    $.get(appBasePath + "Patients/ChangeStatusPartial", { patientId: patient.Id }, function (html) {
-        dlg.content(html);
-        dlg.open();
     });
 }
 
@@ -535,16 +468,7 @@ $(document).ready(function () {
         var id      = $(this).data("id");
         var patient = getFullPatient(id);
         if (patient) { openPatientDrilldown(patient); }
-    });
-
-    // AI note chips — notes editor (delegated)
-    //$(document).on("click", ".ai-note-chip", function () {
-    //    if (!notesEditor || !currentPatient) return;
-    //    var key     = $(this).data("snippet-key");
-    //    var snippet = buildSnippet(key, currentPatient);
-    //    var current = notesEditor.value();
-    //    notesEditor.value(current + (current.length ? "<br/>" : "") + snippet);
-    //});
+    });  
 
     // AppBar search → filter grid via Kendo AutoComplete events
     var ac = $("#appbar-search").data("kendoAutoComplete");

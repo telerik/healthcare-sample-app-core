@@ -20,10 +20,6 @@ function onAppointmentsRequestEnd(e) {
     if (_onAppointmentsLoaded) { _onAppointmentsLoaded(); }
 }
 
-function onNotifBtnClick(e) {
-    /* Popover handles show/hide via its own API — no manual toggle needed */
-}
-
 function onViewScheduleClick() {
     window.location.href = navRoutes.Schedule;
 }
@@ -43,8 +39,17 @@ function onAllergyDetailsClick() {
 
 var _initAiChatIfNeeded = function () {};
 var _homeAiChatSendMessage = function () {};
+function isAiMarkupMessage(text) {
+    return typeof text === "string" && text.indexOf('<div class="ai-msg-content') === 0;
+}
+
 var _homeAiChatMessageTemplate = function (message) {
-    var encodedText = kendo.htmlEncode((message && message.text) || "").replace(/\n/g, "<br>");
+    var text = (message && message.text) || "";
+    if (isAiMarkupMessage(text)) {
+        return text;
+    }
+
+    var encodedText = kendo.htmlEncode(text).replace(/\n/g, "<br>");
     return '<div class="ai-msg-content">' + encodedText + '</div>';
 };
 
@@ -476,7 +481,12 @@ $(document).ready(function () {
             return;
         }
 
-        var reply = _aiResponses[text] || "I\u2019m sorry, I don\u2019t have information on that right now.";
+        var reply = _aiResponses[text] ||
+            '<div class="ai-msg-content ai-demo-disclaimer">' +
+            '<p>\u24D8 <strong>This is a demo assistant.</strong></p>' +
+            '<p>Free-text queries are not supported in this preview. In your production app, connect a <strong>real AI service</strong> (e.g. OpenAI, Azure OpenAI, or your own clinical LLM) to handle any message.</p>' +
+            '<p><strong>In this demo, you can use the suggestion chips</strong> to see pre-built responses.</p>' +
+            '</div>';
         setTimeout(function () {
             chat.loading(false);
             chat.postMessage({
@@ -546,6 +556,10 @@ $(document).ready(function () {
                 return html;
             }
 
+            if (isAiMarkupMessage(message.text || "")) {
+                return message.text;
+            }
+
             var encodedText = kendo.htmlEncode(message.text || "").replace(/\n/g, "<br>");
             return '<div class="ai-msg-content">' + encodedText + '</div>';
         };
@@ -569,9 +583,6 @@ $(document).ready(function () {
     };
 
     // Initialize AI Float Button click — FAB created by Html Helper
-    // Defer lookup: the FAB's inline init script (rendered by the Html Helper)
-    // may run after this $(document).ready() callback since app.js is loaded
-    // in <head> and queued earlier.
     function updateFabOffset() {
         if (!_fab) {
             _fab = $("#ai-float-btn").data("kendoFloatingActionButton");

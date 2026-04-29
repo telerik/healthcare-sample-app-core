@@ -399,6 +399,7 @@
         .Modal(true)
         .Visible(false)
         .Closable(true)
+        .ButtonLayout("normal")
         .Actions(actions =>
         {
             actions.Add().Text("Close");
@@ -413,6 +414,7 @@
         .Width(460)
         .Modal(true)
         .Visible(false)
+        .ButtonLayout("normal")
         .Events(e => e.Open("onReasonVisitOpen"))
         .Actions(actions =>
         {
@@ -445,6 +447,7 @@
         .Width(420)
         .Modal(true)
         .Visible(false)
+        .ButtonLayout("normal")
         .Actions(actions =>
         {
             actions.Add().Text("Close");
@@ -458,21 +461,21 @@
                 </div>
                 <div class="info-dialog-section">
                     <div class="info-dialog-section-title">Known Allergens</div>
-                    @(Html.Kendo().Badge()
+                    @(Html.Kendo().Chip()
                         .Name("allergy-badge-penicillin")
-                        .Text("\u26A0 Penicillin")
-                        .ThemeColor(BadgeColor.Error)
-                        .FillMode(BadgeFill.Solid)
+                        .Label("\u26A0 Penicillin")
+                        .ThemeColor(ChipThemeColor.Error)
+                        .FillMode(ChipFillMode.Solid)
                         .Rounded(Rounded.Full)
-                        .Size(BadgeSize.Large)
+                        .Size(ComponentSize.Large)
                     )
-                    @(Html.Kendo().Badge()
+                    @(Html.Kendo().Chip()
                         .Name("allergy-badge-nsaids")
-                        .Text("\u26A0 NSAIDs")
-                        .ThemeColor(BadgeColor.Error)
-                        .FillMode(BadgeFill.Solid)
+                        .Label("\u26A0 NSAIDs")
+                        .ThemeColor(ChipThemeColor.Error)
+                        .FillMode(ChipFillMode.Solid)
                         .Rounded(Rounded.Full)
-                        .Size(BadgeSize.Large)
+                        .Size(ComponentSize.Large)
                     )
                     <div class="info-dialog-note">Please review before prescribing any medication.</div>
                 </div>
