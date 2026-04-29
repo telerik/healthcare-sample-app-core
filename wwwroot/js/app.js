@@ -363,7 +363,8 @@ $(document).ready(function () {
     /* ═══════════════════════════════════════════════
        ALERT REVIEW — loaded from server partial
     ═══════════════════════════════════════════════ */
-    $(document).on("click", ".alert-review", function () {
+    $(document).off(".homeApp");
+    $(document).on("click.homeApp", ".alert-review", function () {
         var idx = parseInt($(this).data("alert-idx"), 10);
         _currentAlertIdx = idx;
 
@@ -375,7 +376,7 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on("click", ".ar-profile-link", function (e) {
+    $(document).on("click.homeApp", ".ar-profile-link", function (e) {
         e.preventDefault();
         var patientId = $(this).data("patient-id");
         if (patientId) {
@@ -389,7 +390,7 @@ $(document).ready(function () {
        Button click events wired via Html Helper .Events()
     ═══════════════════════════════════════════════ */
 
-    $(document).on("click", "#lab-test-list .lab-test-item", function (e) {
+    $(document).on("click.homeApp", "#lab-test-list .lab-test-item", function (e) {
         var $item = $(this);
         var t = $item.data("test");
         var idx = selectedLabTests.indexOf(t);
@@ -413,7 +414,7 @@ $(document).ready(function () {
     /* ═══════════════════════════════════════════════
        NEXT PATIENT — ACTION BUTTONS
     ═══════════════════════════════════════════════ */
-    $(document).on("click", ".view-profile-link", function (e) {
+    $(document).on("click.homeApp", ".view-profile-link", function (e) {
         e.preventDefault();
         var pid = $(this).data("patient-id") || (_nextPt && _nextPt.Id);
         if (pid) sessionStorage.setItem("openPatientId", pid);
