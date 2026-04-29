@@ -173,6 +173,34 @@ function legendItemVisual(e) {
         return layout;
 }
 
+
+function donutLegendItemVisual(e) {
+    var chart = $("#alerts-donut-chart").data("kendoChart");
+    var dataItem = chart && chart.dataSource.view()[e.pointIndex];
+    var value = dataItem && dataItem.Value !== undefined ? dataItem.Value : "";
+    var color = (e.options.markers && e.options.markers.background) ||
+        e.series.color ||
+        "#94a3b8";
+    var labelText = e.pointIndex + ": " + value;
+    var rect = new kendo.geometry.Rect([0, 0], [160, 18]);
+    var layout = new kendo.drawing.Layout(rect, {
+        spacing: 8,
+        alignItems: "center",
+        justifyContent: "center"
+    });
+    var circle = new kendo.drawing.Circle(new kendo.geometry.Circle([0, 0], 4.5), {
+        fill:   { color: color },
+        stroke: { color: color }
+    });
+    var label = new kendo.drawing.Text(labelText, [0, 0], {
+        fill: { color: "#232A36" },
+        font: "16px Poppins, sans-serif"
+    });
+    layout.append(circle, label);
+    layout.reflow();
+    return layout;
+}
+
 /* ═══════════════════════════════════════════════════════
    CHART DATA REFRESH
 ═══════════════════════════════════════════════════════ */

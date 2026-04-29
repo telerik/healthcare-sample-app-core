@@ -26,24 +26,6 @@ public class ScheduleController : Controller
         return Json(_store.GetScheduleAppointments().ToDataSourceResult(request));
     }
 
-    public IActionResult Appointments_Create([DataSourceRequest] DataSourceRequest request, ScheduleAppointment appointment)
-    {
-        var created = _store.CreateScheduleAppointment(appointment);
-        return Json(new[] { created }.ToDataSourceResult(request, ModelState));
-    }
-
-    public IActionResult Appointments_Update([DataSourceRequest] DataSourceRequest request, ScheduleAppointment appointment)
-    {
-        _store.UpdateScheduleAppointment(appointment);
-        return Json(new[] { appointment }.ToDataSourceResult(request, ModelState));
-    }
-
-    public IActionResult Appointments_Destroy([DataSourceRequest] DataSourceRequest request, ScheduleAppointment appointment)
-    {
-        _store.DeleteScheduleAppointment(appointment.Id);
-        return Json(new[] { appointment }.ToDataSourceResult(request, ModelState));
-    }
-
     public IActionResult Tasks_Read([DataSourceRequest] DataSourceRequest request)
     {
         return Json(_store.GetTasks().ToDataSourceResult(request));

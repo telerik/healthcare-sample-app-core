@@ -149,8 +149,20 @@
     color: #1a1a2e;
 }
 
+/* ── Dialog ──────────────────────────────────────────────────── */
 .k-dialog .k-dialog-content {
     padding: 20px 24px;
+}
+
+/* Alert dialog — match the 12px rounded corners used by app dialogs */
+.k-dialog-wrapper:has([role="alertdialog"]) .k-dialog {
+    border-radius: 12px;
+}
+.k-dialog-wrapper:has([role="alertdialog"]) .k-dialog-titlebar {
+    border-radius: 12px 12px 0 0;
+}
+.k-dialog-wrapper:has([role="alertdialog"]) .k-dialog-actions {
+    border-radius: 0 0 12px 12px;
 }
 
 /* ── DropDownList / input widgets ────────────────────────────── */
@@ -203,3 +215,23 @@
     .k-chat .k-send-button:hover {
         background-color: #6366c1;
     }
+
+/* ── kendo.alert() — match Dialog / Window rounding ─────────── */
+.k-dialog-wrapper .k-dialog.k-alert,
+.k-dialog.k-alert {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.k-dialog-wrapper .k-dialog.k-alert .k-dialog-titlebar,
+.k-dialog.k-alert .k-dialog-titlebar {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.k-dialog-wrapper .k-dialog.k-alert .k-dialog-content,
+.k-dialog-wrapper .k-dialog.k-alert .k-actions,
+.k-dialog.k-alert .k-dialog-content,
+.k-dialog.k-alert .k-actions {
+    background: #fff;
+}

@@ -89,6 +89,7 @@
                         suggestions.Add().Text("What follow-up protocols should I apply?");
                         suggestions.Add().Text("How do I interpret abnormal lab results?");
                     })
+                        .MessageTemplateHandler("renderListAiChatMessage")
                     .Events(e => e
                         .SendMessage("onListAiChatSendMessage")
                     )
@@ -116,12 +117,12 @@
         .Width(360)
         .Modal(true)
         .Visible(false)
+        .ButtonLayout("normal")
         .Actions(actions =>
         {
             actions.Add().Text("Save").Primary(true).Action("onChangeStatusSave");
             actions.Add().Text("Cancel");
         })
-        .Events(e => e.Open("onChangeStatusOpen"))
     )
 
     <!-- Add New Patient dialog -->

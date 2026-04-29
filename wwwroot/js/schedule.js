@@ -195,55 +195,11 @@ function openAppointmentDialog(evt) {
 /* ── Appointment Dialog event handlers — wired by HTML Helper ── */
 function onAppointmentDialogClose() {
     _apptExpanded = false;
-}
-
-function onAppointmentDialogCancel() {
-    _apptExpanded = false;
     return true;
 }
 
 function onAppointmentDialogSave() {
     _apptExpanded = false;
-    return true;
-}
-
-/* ── New Appointment Dialog event handlers — wired by HTML Helper ── */
-function onNewApptDialogOpen() {
-    /* Populate the patient DDL data on first open */
-    var patDDL = $("#new-appt-patient").data("kendoDropDownList");
-    if (patDDL && (!patDDL.dataSource.data().length) && patientsData.length) {
-        patDDL.setDataSource(new kendo.data.DataSource({ data: patientsData }));
-    }
-}
-
-function onNewApptSchedule() {
-    var patDDL  = $("#new-appt-patient").data("kendoDropDownList");
-    var typDDL  = $("#new-appt-type").data("kendoDropDownList");
-    var datePk  = $("#new-appt-date").data("kendoDatePicker");
-    var startTp = $("#new-appt-start").data("kendoTimePicker");
-    var endTp   = $("#new-appt-end").data("kendoTimePicker");
-    var roomDDL = $("#new-appt-room").data("kendoDropDownList");
-    var reason  = $("#new-appt-reason").val();
-    var scheduler = $("#scheduler").data("kendoScheduler");
-
-    if (!patDDL || !typDDL || !datePk || !startTp || !endTp || !scheduler) { return false; }
-    if (!patDDL.value() || !typDDL.value()) { return false; }
-
-    var base = datePk.value();
-    var s    = startTp.value();
-    var en   = endTp.value();
-
-    scheduler.dataSource.add({
-        id:          0,
-        title:       patDDL.text(),
-        PatientName: patDDL.text(),
-        Reason:      reason || "Appointment",
-        Room:        roomDDL.value(),
-        EventType:   typDDL.value(),
-        start:       new Date(base.getFullYear(), base.getMonth(), base.getDate(), s.getHours(), s.getMinutes()),
-        end:         new Date(base.getFullYear(), base.getMonth(), base.getDate(), en.getHours(), en.getMinutes())
-    });
-    scheduler.dataSource.sync();
     return true;
 }
 
@@ -334,12 +290,7 @@ function onAddTaskSave() {
 $(document).ready(function () {
 
     /* ═══════════════════════════════════════════════
-       DATA — static lookups (no patient fetch needed)
-    ═══════════════════════════════════════════════ */
-    var eventTypesData = sharedEventTypes;
-    var roomOptions    = sharedRoomOptions;
 
-    /* ═══════════════════════════════════════════════
        WEEK DATE HELPER
     ═══════════════════════════════════════════════ */
     function thisWeekDay(weekOffset, dayOfWeek, hours, minutes) {
@@ -363,15 +314,6 @@ $(document).ready(function () {
        APPOINTMENT DETAIL DIALOG
        (all functions defined at global scope above)
     ═══════════════════════════════════════════════ */
-
-    /* ═══════════════════════════════════════════════
-       NEW APPOINTMENT — open via btn-add-task is now wired by
-       Html Helper .Events(). Just need to open the dialog.
-    ═══════════════════════════════════════════════ */
-    function openNewAppointmentDialog() {
-        var dlg = $("#new-appointment-dialog").data("kendoDialog");
-        if (dlg) { dlg.open(); }
-    }
 
     /* ═══════════════════════════════════════════════
        DAILY TASKS — created by Html Helper, just hook events

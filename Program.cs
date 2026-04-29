@@ -19,6 +19,13 @@ builder.Services.AddKendo(x =>
 
 // SQLite database via EF Core — used read-only after initial seed
 var dbPath = Path.Combine(builder.Environment.ContentRootPath, "healthcare.db");
+
+// Delete existing DB so it gets recreated fresh on next seed
+if (File.Exists(dbPath))
+{    
+    File.Delete(dbPath);
+}
+
 builder.Services.AddDbContext<HealthcareDbContext>(o =>
     o.UseSqlite($"Data Source={dbPath}"));
 

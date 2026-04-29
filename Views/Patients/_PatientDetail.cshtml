@@ -1,3 +1,4 @@
+@using Kendo.Mvc.UI.Fluent
 @model HealthcareApp.Models.PatientRecord
 @{
     var vi = Model.Vitals;
@@ -123,6 +124,7 @@
             t.JustifyLeft(); t.JustifyCenter(); t.JustifyRight(); t.JustifyFull();
             t.FontName(); t.Formatting(); t.FontSize();
         })
+        .StyleSheets(ss => ss.Add(Url.Content("~/css/custom.css")))
         .Value(Model.Notes)
     )
     </div>

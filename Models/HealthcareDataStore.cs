@@ -41,16 +41,27 @@ public class HealthcareDataStore
         httpCtx.Session.SetString("_init", "1"); // touches the session to assign an ID
         var sessionId = httpCtx.Session.Id;
 
-        return _cache.GetOrCreate(sessionId, () => new UserSessionData
+        return _cache.GetOrCreate(sessionId, () =>
         {
+            // Shift appointment dates so they are always relative to the current week,
+            // regardless of when the DB was originally seeded.
+            var today          = DateTime.Today;
+            var currentMonday  = today.AddDays(today.DayOfWeek == DayOfWeek.Sunday ? -6 : 1 - (int)today.DayOfWeek);
+            var apptOffset     = _seed.Appointments.Count > 0
+                ? currentMonday - _seed.Appointments[0].Start.Date
+                : TimeSpan.Zero;
+
             // Deep-copy from the shared seed so edits are fully isolated
-            Patients          = _seed.Patients.Select(DeepCopyPatient).ToList(),
-            Appointments      = _seed.Appointments.Select(ShallowCopyAppt).ToList(),
-            Tasks             = _seed.Tasks.Select(ShallowCopyTask).ToList(),
-            TodayAppointments = _seed.TodayAppointments.Select(ShallowCopyTodayAppt).ToList(),
-            Alerts            = _seed.Alerts.Select(ShallowCopyAlert).ToList(),
-            Analytics         = _seed.Analytics.ToDictionary(kvp => kvp.Key, kvp => DeepCopyAnalytics(kvp.Value)),
-            Profile           = new DoctorProfile(),
+            return new UserSessionData
+            {
+                Patients          = _seed.Patients.Select(DeepCopyPatient).ToList(),
+                Appointments      = _seed.Appointments.Select(a => ShallowCopyAppt(a, apptOffset)).ToList(),
+                Tasks             = _seed.Tasks.Select(ShallowCopyTask).ToList(),
+                TodayAppointments = _seed.TodayAppointments.Select(ShallowCopyTodayAppt).ToList(),
+                Alerts            = _seed.Alerts.Select(ShallowCopyAlert).ToList(),
+                Analytics         = _seed.Analytics.ToDictionary(kvp => kvp.Key, kvp => DeepCopyAnalytics(kvp.Value)),
+                Profile           = new DoctorProfile(),
+            };
         });
     }
 
@@ -99,39 +110,6 @@ public class HealthcareDataStore
 
     public List<ScheduleAppointment> GetScheduleAppointments() =>
         Session().Appointments.ToList();
-
-    public ScheduleAppointment CreateScheduleAppointment(ScheduleAppointment appt)
-    {
-        var list = Session().Appointments;
-        appt.Id  = list.Count > 0 ? list.Max(a => a.Id) + 1 : 1;
-        list.Add(appt);
-        return appt;
-    }
-
-    public bool UpdateScheduleAppointment(ScheduleAppointment updated)
-    {
-        var list = Session().Appointments;
-        var idx  = list.FindIndex(a => a.Id == updated.Id);
-        if (idx < 0) return false;
-
-        list[idx].Title       = updated.Title;
-        list[idx].PatientName = updated.PatientName;
-        list[idx].Reason      = updated.Reason;
-        list[idx].Room        = updated.Room;
-        list[idx].EventType   = updated.EventType;
-        list[idx].Start       = updated.Start;
-        list[idx].End         = updated.End;
-        return true;
-    }
-
-    public bool DeleteScheduleAppointment(int id)
-    {
-        var list = Session().Appointments;
-        var item = list.FirstOrDefault(a => a.Id == id);
-        if (item == null) return false;
-        list.Remove(item);
-        return true;
-    }
 
     // ── Daily Tasks ───────────────────────────────────────────────────────
 
@@ -193,11 +171,14 @@ public class HealthcareDataStore
         }
     };
 
-    private static ScheduleAppointment ShallowCopyAppt(ScheduleAppointment a) => new()
+    private static ScheduleAppointment ShallowCopyAppt(ScheduleAppointment a) =>
+        ShallowCopyAppt(a, TimeSpan.Zero);
+
+    private static ScheduleAppointment ShallowCopyAppt(ScheduleAppointment a, TimeSpan offset) => new()
     {
         Id = a.Id, Title = a.Title, PatientName = a.PatientName,
         Reason = a.Reason, Room = a.Room, EventType = a.EventType,
-        Start = a.Start, End = a.End
+        Start = a.Start.Add(offset), End = a.End.Add(offset)
     };
 
     private static DailyTask ShallowCopyTask(DailyTask t) => new()
