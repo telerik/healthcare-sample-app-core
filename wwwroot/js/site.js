@@ -96,6 +96,11 @@ function pjaxNavigate(url, pushState) {
         if (typeof listAiDialog !== "undefined" && listAiDialog && listAiDialog.wrapper && listAiDialog.wrapper.is(":visible")) {
             listAiDialog.close();
         }
+       
+        $("body > .k-dialog-wrapper").each(function () {
+            kendo.destroy($(this));
+            $(this).remove();
+        });
 
         /* Destroy all Kendo widgets in the old content to free memory. */
         kendo.destroy($content);
