@@ -342,7 +342,7 @@ describe('Home Page — Allergy Alert Details Dialog', () => {
     });
 
     it('should display allergy badges', async () => {
-        const badges = await browser.findAll('#dialog-allergy-details [data-role="badge"]');
+        const badges = await browser.findAll('#dialog-allergy-details .k-chip');
         expect(badges.length).toBeGreaterThanOrEqual(2);
     });
 

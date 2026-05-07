@@ -238,7 +238,7 @@ describe('Patients Page', () => {
     describe('AI Assistance Panel', () => {
         it('should open AI Assistance panel when button is clicked', async () => {
             await browser.click('#btn-ai-assistance');
-            await browser.expect('#list-ai-dialog').toBeVisible();
+            await browser.expect('#patient-ai-panel').toBeVisible();
         });
 
         it('should display the AI chat widget', async () => {
@@ -250,7 +250,7 @@ describe('Patients Page', () => {
         });
 
         it('should display a welcome message', async () => {
-            await browser.expect('#list-ai-chat .k-chat-bubble-text').toContainText('AI Assistant');
+            await browser.expect('#list-ai-chat .ai-msg-content').toContainText('AI Assistant');
         });
 
         it('should display suggested prompts', async () => {
@@ -263,22 +263,22 @@ describe('Patients Page', () => {
 
         it('should send message when suggestion is clicked', async () => {
             await browser.click('#list-ai-chat .k-suggestion');
-            await browser.expect('#list-ai-chat .k-message-group-sender .k-chat-bubble-text').toContainText('critical care priorities');
+            await browser.expect('#list-ai-chat .k-message-group-sender .ai-msg-content').toContainText('critical care priorities');
         });
 
         it('should send the suggestion and show user message', async () => {
             await browser.click('#list-ai-chat .k-prompt-box-textarea');
             await browser.sendKey(Key.ENTER);
-            await browser.expect('#list-ai-chat .k-message-group-sender .k-chat-bubble-text').toContainText('critical care priorities');
+            await browser.expect('#list-ai-chat .k-message-group-sender .ai-msg-content').toContainText('critical care priorities');
         });
 
         it('should receive an AI response after sending', async () => {
-            await browser.expect('#list-ai-chat .k-message-group-receiver:last-child .k-chat-bubble-text').toContainText('Critical priorities include');
+            await browser.expect('#list-ai-chat .k-message-group-receiver:last-child .ai-msg-content').toContainText('Critical priorities include');
         });
 
         it('should close AI Assistance panel when button is clicked again', async () => {
             await browser.click('#btn-ai-assistance');
-            await browser.expect('#list-ai-dialog').not.toBeVisible();
+            await browser.expect('#patient-ai-panel').not.toBeVisible();
         });
     });
 });
