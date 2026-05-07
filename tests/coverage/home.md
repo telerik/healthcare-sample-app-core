@@ -66,7 +66,7 @@
 | 60 | Allergy dialog patient name | should display patient name | home-interactions.test.ts |
 | 61 | Allergy dialog blood type | should display blood type | home-interactions.test.ts |
 | 62 | Allergy allergens section | should display known allergens section | home-interactions.test.ts |
-| 63 | Allergy chips | should display allergy chips | home-interactions.test.ts |
+| 63 | Allergy badges | should display allergy badges | home-interactions.test.ts |
 | 64 | Allergy warning note | should display warning note | home-interactions.test.ts |
 | 65 | Allergy dialog closes | should close the dialog when clicking Close | home-interactions.test.ts |
 | 66 | Appointments section | should display the Today's Appointments section | home.test.ts |

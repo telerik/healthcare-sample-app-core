@@ -181,9 +181,9 @@ describe('Analytics Page', () => {
             expect(items.length).toBe(3);
         });
 
-        it('should label the first legend zone as "High Risk 0–39"', async () => {
+        it('should label the first legend zone as "High Risk 70-100"', async () => {
             await browser.expect('.risk-legend-item:nth-child(1)').toContainText('High Risk');
-            await browser.expect('.risk-legend-item:nth-child(1)').toContainText('0–39');
+            await browser.expect('.risk-legend-item:nth-child(1)').toContainText('70-100');
         });
 
         it('should label the second legend zone as "Medium Risk 40–69"', async () => {
@@ -191,9 +191,9 @@ describe('Analytics Page', () => {
             await browser.expect('.risk-legend-item:nth-child(2)').toContainText('40–69');
         });
 
-        it('should label the third legend zone as "Low Risk 70–100"', async () => {
+        it('should label the third legend zone as "Low Risk 0-39"', async () => {
             await browser.expect('.risk-legend-item:nth-child(3)').toContainText('Low Risk');
-            await browser.expect('.risk-legend-item:nth-child(3)').toContainText('70–100');
+            await browser.expect('.risk-legend-item:nth-child(3)').toContainText('0-39');
         });
     });
 

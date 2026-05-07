@@ -41,8 +41,11 @@
 | 33 | Arc gauge component | should display the arc gauge component | analytics.test.ts |
 | 34 | Risk score legend | should display the risk score legend | analytics.test.ts |
 | 35 | 3 risk legend zones | should display three risk legend zones | analytics.test.ts |
-| 36 | 4 analytics rows | should have four analytics rows | analytics.test.ts |
-| 37 | 2-column layout | should have the last row as two-column layout | analytics.test.ts |
-| 38 | Alerts column chart (interaction) | should display the alerts column chart | analytics-interactions.test.ts |
-| 39 | Donut chart (interaction) | should display the donut chart | analytics-interactions.test.ts |
-| 40 | Gauge card (interaction) | should display the gauge card | analytics-interactions.test.ts |
+| 36 | High Risk zone label | should label the first legend zone as "High Risk 70-100" | analytics.test.ts |
+| 37 | Medium Risk zone label | should label the second legend zone as "Medium Risk 40–69" | analytics.test.ts |
+| 38 | Low Risk zone label | should label the third legend zone as "Low Risk 0-39" | analytics.test.ts |
+| 39 | 4 analytics rows | should have four analytics rows | analytics.test.ts |
+| 40 | 2-column layout | should have the last row as two-column layout | analytics.test.ts |
+| 41 | Alerts column chart (interaction) | should display the alerts column chart | analytics-interactions.test.ts |
+| 42 | Donut chart (interaction) | should display the donut chart | analytics-interactions.test.ts |
+| 43 | Gauge card (interaction) | should display the gauge card | analytics-interactions.test.ts |
