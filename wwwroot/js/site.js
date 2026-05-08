@@ -192,6 +192,7 @@ function _urlToPage(url) {
 function onSettingsClick() {
     $("#page-content").toggleClass("page-dimmed");
     $("#appbar").toggleClass("page-dimmed");
+    $(".appbar-logo").toggleClass("show-dark");
 }
 
 /* ═══════════════════════════════════════════════════════

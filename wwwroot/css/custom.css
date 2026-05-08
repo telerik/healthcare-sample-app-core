@@ -4720,6 +4720,10 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 .hamburger-sep { display: none; }
 .search-icon-btn { display: none; }
 .logo-compact { display: none; }
+.logo-compact { display: none !important; }
+.logo-dark { display: none !important; }
+.appbar-logo.show-dark .logo-full.logo-light { display: none !important; }
+.appbar-logo.show-dark .logo-full.logo-dark { display: block !important; }
 
 /* Mobile nav menu popup — Kendo DropDownButton */
 #appbar .k-animation-container > .k-menu-popup.k-popup,
@@ -5102,8 +5106,12 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
         padding-right: 24px;
     }
     /* Swap to compact logo (no text) */
-    .logo-full { display: none; }
-    .logo-compact { display: block; }
+    .logo-full,
+    .appbar-logo.show-dark .logo-full.logo-dark { display: none !important; }
+    .logo-compact.logo-light { display: block !important; }
+    .logo-compact.logo-dark { display: none !important; }
+    .appbar-logo.show-dark .logo-compact.logo-light { display: none !important; }
+    .appbar-logo.show-dark .logo-compact.logo-dark { display: block !important; }
 
     /* Collapse to single column */
     .page-body {
