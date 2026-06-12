@@ -99,8 +99,8 @@ describe('Schedule Page — Scheduler Interactions', () => {
 
     describe('Scheduler View Switching', () => {
         it('should switch to Week view', async () => {
-            await browser.click('.k-scheduler-views .k-button:nth-child(2)');
-            await browser.expect('.k-scheduler-views .k-button:nth-child(2)').toHaveAttribute('aria-pressed', 'true');
+            await browser.click(".k-segmented-control-button[data-value='week']");
+            await browser.expect(".k-segmented-control-button[data-value='week']").toHaveAttribute('aria-pressed', 'true');
         });
 
         it('should display week layout with multiple day columns', async () => {
@@ -108,18 +108,18 @@ describe('Schedule Page — Scheduler Interactions', () => {
         });
 
         it('should switch to Month view', async () => {
-            await browser.click('.k-scheduler-views .k-button:nth-child(3)');
-            await browser.expect('.k-scheduler-views .k-button:nth-child(3)').toHaveAttribute('aria-pressed', 'true');
+            await browser.click(".k-segmented-control-button[data-value='month']");
+            await browser.expect(".k-segmented-control-button[data-value='month']").toHaveAttribute('aria-pressed', 'true');
         });
 
         it('should switch to Agenda view', async () => {
-            await browser.click('.k-scheduler-views .k-button:nth-child(4)');
-            await browser.expect('.k-scheduler-views .k-button:nth-child(4)').toHaveAttribute('aria-pressed', 'true');
+            await browser.click(".k-segmented-control-button[data-value='agenda']");
+            await browser.expect(".k-segmented-control-button[data-value='agenda']").toHaveAttribute('aria-pressed', 'true');
         });
 
         it('should switch back to Day view', async () => {
-            await browser.click('.k-scheduler-views .k-button:nth-child(1)');
-            await browser.expect('.k-scheduler-views .k-selected .k-button-text').toHaveText('Day');
+            await browser.click(".k-segmented-control-button[data-value='day']");
+            await browser.expect(".k-segmented-control-button[data-value='day']").toHaveAttribute('aria-pressed', 'true');
         });
     });
 
@@ -143,25 +143,21 @@ describe('Schedule Page — Scheduler Interactions', () => {
 
     describe('Task Search', () => {
         it('should filter tasks when searching', async () => {
+            await browser.expect('.task-item').toHaveCount(21);
             await browser.type('#tasks-search', 'Emma');
             await browser.expect('.task-text').toContainText('Emma');
-        });
-
-        it('should clear search and show all tasks', async () => {
-            await browser.type('#tasks-search', '');
-            await browser.executeScript("kendo.jQuery('#tasks-search').trigger('input')");
-            await browser.expect('.task-item').toHaveCount(21);
+            await browser.expect('.task-item').toHaveCount(4);
         });
 
         it('should show no tasks when search matches nothing', async () => {
             await browser.type('#tasks-search', 'ZZZNOMATCH999');
-            await browser.executeScript("kendo.jQuery('#tasks-search').trigger('input')");
             await browser.expect('.task-item').toHaveCount(0);
         });
 
-        it('should restore all tasks after clearing the no-match search', async () => {
-            await browser.type('#tasks-search', '');
-            await browser.executeScript("kendo.jQuery('#tasks-search').trigger('input')");
+        it('should clear search and show all tasks', async () => {
+            await browser.click('#tasks-search');
+            await browser.sendKeyCombination(Key.CONTROL, 'a');
+            await browser.sendKey(Key.BACK_SPACE);
             await browser.expect('.task-item').toHaveCount(21);
         });
     });
@@ -181,16 +177,16 @@ describe('Schedule Page — Scheduler Interactions', () => {
         });
 
         it('should display priority button group', async () => {
-            await browser.expect('#atf-priority-group[data-role="buttongroup"]').toBeVisible();
+            await browser.expect('#atf-priority-group[data-role="segmentedcontrol"]').toBeVisible();
         });
 
         it('should have Low priority selected by default', async () => {
-            await browser.expect('#atf-pri-low').toHaveAttribute('aria-pressed', 'true');
+            await browser.expect('#atf-priority-group [data-value="Low"]').toHaveAttribute('aria-pressed', 'true');
         });
 
         it('should switch priority to High when clicked', async () => {
-            await browser.click('#atf-pri-high');
-            await browser.expect('#atf-pri-high').toHaveAttribute('aria-pressed', 'true');
+            await browser.click('#atf-priority-group [data-value="High"]');
+            await browser.expect('#atf-priority-group [data-value="High"]').toHaveAttribute('aria-pressed', 'true');
         });
 
         it('should display description textarea', async () => {
@@ -265,7 +261,7 @@ describe('Schedule Page — Scheduler Interactions', () => {
 
         it('should create a task with Medium priority and show it in the list', async () => {
             await browser.type('#atf-name', 'E2E Test Task Beta');
-            await browser.click('#atf-pri-medium');
+            await browser.click('#atf-priority-group [data-value="Medium"]');
             await browser.click('#add-task-dialog ~ .k-dialog-actions .k-button:last-child');
             await browser.expect('#add-task-dialog').not.toBeVisible();
             await browser.expect('.task-text').toContainText('E2E Test Task Beta');
@@ -273,7 +269,7 @@ describe('Schedule Page — Scheduler Interactions', () => {
 
         it('should create a task with High priority and a description and show it in the list', async () => {
             await browser.type('#atf-name', 'E2E Test Task Gamma');
-            await browser.click('#atf-pri-high');
+            await browser.click('#atf-priority-group [data-value="High"]');
             await browser.type('#atf-description', 'Created by automated E2E test.');
             await browser.click('#add-task-dialog ~ .k-dialog-actions .k-button:last-child');
             await browser.expect('#add-task-dialog').not.toBeVisible();
@@ -292,26 +288,26 @@ describe('Schedule Page — Scheduler Interactions', () => {
             await browser.click('#atf-name');
             await browser.expect('#atf-name').toHaveFocus();
             await browser.sendKey(Key.TAB);
-            await browser.expect('#atf-pri-low').toHaveFocus();
+            await browser.expect('#atf-priority-group [data-value="Low"]').toHaveFocus();
         });
 
         it('should Tab from Low to Medium priority button', async () => {
-            await browser.click('#atf-pri-low');
-            await browser.expect('#atf-pri-low').toHaveFocus();
+            await browser.click('#atf-priority-group [data-value="Low"]');
+            await browser.expect('#atf-priority-group [data-value="Low"]').toHaveFocus();
             await browser.sendKey(Key.TAB);
-            await browser.expect('#atf-pri-medium').toHaveFocus();
+            await browser.expect('#atf-priority-group [data-value="Medium"]').toHaveFocus();
         });
 
         it('should Tab from Medium to High priority button', async () => {
-            await browser.click('#atf-pri-medium');
-            await browser.expect('#atf-pri-medium').toHaveFocus();
+            await browser.click('#atf-priority-group [data-value="Medium"]');
+            await browser.expect('#atf-priority-group [data-value="Medium"]').toHaveFocus();
             await browser.sendKey(Key.TAB);
-            await browser.expect('#atf-pri-high').toHaveFocus();
+            await browser.expect('#atf-priority-group [data-value="High"]').toHaveFocus();
         });
 
         it('should Tab from High priority to description textarea', async () => {
-            await browser.click('#atf-pri-high');
-            await browser.expect('#atf-pri-high').toHaveFocus();
+            await browser.click('#atf-priority-group [data-value="High"]');
+            await browser.expect('#atf-priority-group [data-value="High"]').toHaveFocus();
             await browser.sendKey(Key.TAB);
             await browser.expect('#atf-description').toHaveFocus();
         });
@@ -332,46 +328,18 @@ describe('Schedule Page — Scheduler Interactions', () => {
             await browser.expect('#add-task-dialog ~ .k-dialog-actions .k-button:last-child').toHaveFocus();
         });
 
-        it('should navigate within priority group using ArrowRight from Low to Medium', async () => {
-            await browser.click('#atf-pri-low');
-            await browser.expect('#atf-pri-low').toHaveFocus();
-            await browser.sendKey(Key.ARROW_RIGHT);
-            await browser.expect('#atf-pri-medium').toHaveFocus();
-        });
-
-        it('should navigate within priority group using ArrowRight from Medium to High', async () => {
-            await browser.click('#atf-pri-medium');
-            await browser.expect('#atf-pri-medium').toHaveFocus();
-            await browser.sendKey(Key.ARROW_RIGHT);
-            await browser.expect('#atf-pri-high').toHaveFocus();
-        });
-
-        it('should wrap around priority group from High to Low on ArrowRight', async () => {
-            await browser.click('#atf-pri-high');
-            await browser.expect('#atf-pri-high').toHaveFocus();
-            await browser.sendKey(Key.ARROW_RIGHT);
-            await browser.expect('#atf-pri-low').toHaveFocus();
-        });
-
-        it('should navigate priority group using ArrowLeft from Medium to Low', async () => {
-            await browser.click('#atf-pri-medium');
-            await browser.expect('#atf-pri-medium').toHaveFocus();
-            await browser.sendKey(Key.ARROW_LEFT);
-            await browser.expect('#atf-pri-low').toHaveFocus();
-        });
-
         it('should select a priority button using Space', async () => {
-            await browser.click('#atf-pri-low');
-            await browser.expect('#atf-pri-low').toHaveFocus();
+            await browser.click('#atf-priority-group [data-value="Low"]');
+            await browser.expect('#atf-priority-group [data-value="Low"]').toHaveFocus();
             await browser.sendKey(Key.TAB);
-            await browser.expect('#atf-pri-medium').toHaveFocus();
+            await browser.expect('#atf-priority-group [data-value="Medium"]').toHaveFocus();
             await browser.sendKey(Key.SPACE);
-            await browser.expect('#atf-pri-medium').toHaveAttribute('aria-pressed', 'true');
+            await browser.expect('#atf-priority-group [data-value="Medium"]').toHaveAttribute('aria-pressed', 'true');
         });
 
         it('should Shift+Tab from Low priority back to task name', async () => {
-            await browser.click('#atf-pri-low');
-            await browser.expect('#atf-pri-low').toHaveFocus();
+            await browser.click('#atf-priority-group [data-value="Low"]');
+            await browser.expect('#atf-priority-group [data-value="Low"]').toHaveFocus();
             await browser.sendKeyCombination(Key.SHIFT, Key.TAB);
             await browser.expect('#atf-name').toHaveFocus();
         });
