@@ -12,14 +12,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" />
     <!-- Kendo UI Default Theme -->
-    <link id="kendo-theme" rel="stylesheet" href="https://kendo.cdn.telerik.com/themes/13.1.1/default/default-main.css" />
+    <link id="kendo-theme" rel="stylesheet" href="https://kendo.cdn.telerik.com/themes/14.1.0/meridian/meridian-main.css" />
     <!-- Kendo Theme Variable Overrides -->
     <link rel="stylesheet" href="~/css/kendo-theme-overrides.css" asp-append-version="true" />
     <!-- Custom styles -->
     <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true" />
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://kendo.cdn.telerik.com/2026.1.325/js/kendo.all.min.js"></script>
-    <script src="https://kendo.cdn.telerik.com/2026.1.325/js/kendo.aspnetmvc.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2026.2.520/js/kendo.all.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2026.2.520/js/kendo.aspnetmvc.min.js"></script>
     <script src="~/js/data.js" asp-append-version="true"></script>
     <script>
         var appBasePath = "@Url.Content("~/")";
@@ -61,7 +61,7 @@
                 {
                     items.Add().Text("Home").Value("Home").Icon("home");
                     items.Add().Text("Schedule").Value("Schedule").Icon("calendar");
-                    items.Add().Text("Patients").Value("Patients").Icon("user-outline");
+                    items.Add().Text("Patients").Value("Patients").Icon("user");
                     items.Add().Text("Clinical Analytics").Value("Analytics").Icon("chart-bar-stacked");
                 })
                 .SelectedValue((string)ViewData["ActivePage"] ?? "Home")
@@ -84,24 +84,28 @@
                 .TemplateHandler("appbarSearchTemplate")
                 .Events(e => e.Filtering("onAppbarSearchFiltering").Select("onAppbarSearchSelect"))
             )
-            <button class="icon-btn search-icon-btn" id="btn-search-toggle" title="Search">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <path d="M7.333 12.667A5.333 5.333 0 1 0 7.333 2a5.333 5.333 0 0 0 0 10.667ZM14 14l-2.9-2.9" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </button>
+            @(Html.Kendo().Button()
+                .Name("btn-search-toggle")
+                .HtmlAttributes(new { @class = "icon-btn search-icon-btn", title = "Search" })
+                .Icon("search")
+                .Rounded(Rounded.Full)
+                .Events(e => e.Click("onSearchToggleClick"))
+            )
             @(Html.Kendo().Button()
                 .Name("btn-settings")
                 .HtmlAttributes(new { @class = "icon-btn", title="Toggle contrast" })
                 .Content("<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><g clip-path=\"url(#clip0_settings)\"><path d=\"M5.99992 10.6667C8.57725 10.6667 10.6666 8.57734 10.6666 6.00001C10.6666 3.42268 8.57725 1.33334 5.99992 1.33334C3.42259 1.33334 1.33325 3.42268 1.33325 6.00001C1.33325 8.57734 3.42259 10.6667 5.99992 10.6667Z\" stroke=\"currentColor\" stroke-width=\"1.33\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M9.99992 14.6667C12.5772 14.6667 14.6666 12.5773 14.6666 10C14.6666 7.42268 12.5772 5.33334 9.99992 5.33334C7.42259 5.33334 5.33325 7.42268 5.33325 10C5.33325 12.5773 7.42259 14.6667 9.99992 14.6667Z\" stroke=\"currentColor\" stroke-width=\"1.33\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></g><defs><clipPath id=\"clip0_settings\"><rect width=\"16\" height=\"16\" fill=\"white\"/></clipPath></defs></svg>")
+                .Rounded(Rounded.Full)
                 .Events(e => e.Click("onSettingsClick"))
             )
             @(Html.Kendo().Button()
                         .Name("notif-btn")
                         .HtmlAttributes(new { @class = "icon-btn notif-wrap", title = "Notifications" })
                         .Content("<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><path d=\"M8 2C5.8 2 4 3.8 4 6v3.5L2.5 11h11L12 9.5V6c0-2.2-1.8-4-4-4z\" stroke=\"currentColor\" stroke-width=\"1.33\" stroke-linecap=\"round\" stroke-linejoin=\"round\" fill=\"none\"/><path d=\"M6.5 13c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5\" stroke=\"currentColor\" stroke-width=\"1.33\" stroke-linecap=\"round\" fill=\"none\"/></svg>")
+                        .Rounded(Rounded.Full)
                         .Badge(b => b
                             .Text("")
-                            .ThemeColor(BadgeColor.Dark)
+                            .ThemeColor(BadgeColor.Primary)
                             .Shape(BadgeShape.Circle)
                             .Size(BadgeSize.Large)
                             .Visible(true)
@@ -118,11 +122,13 @@
                         .Events(e => e.Show("onNotifPopoverShow").Hide("onNotifPopoverHide"))
             )
             <span class="github-wrap">
-                <button class="icon-btn" id="btn-github" title="Get the Source Code">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
-                    </svg>
-                </button>
+                @(Html.Kendo().Button()
+                    .Name("btn-github")
+                    .HtmlAttributes(new { @class = "icon-btn", title = "Get the Source Code" })
+                    .Content("<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"currentColor\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z\"/></svg>")
+                    .Rounded(Rounded.Full)
+                    .Events(e => e.Click("onGithubBtnClick"))
+                )
                 <div id="github-popup"></div>
             </span>
             <span class="appbar-sep"></span>

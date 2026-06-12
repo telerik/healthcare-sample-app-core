@@ -90,7 +90,7 @@
                             .Content("Add Task")
                             .Icon("plus")
                             .FillMode(ButtonFillMode.Solid)
-                            .ThemeColor(ThemeColor.Dark)
+                            .ThemeColor(ThemeColor.Primary)
                             .Rounded(Rounded.Full)
                             .HtmlAttributes(new { @class = "tasks-add-btn" })
                             .Events(e => e.Click("onAddTaskBtnClick"))
@@ -174,13 +174,13 @@
                 </div>
                 <div class="atf-field">
                     <label class="atf-label">Priority</label>
-                    @(Html.Kendo().ButtonGroup()
+                    @(Html.Kendo().SegmentedControl()
                         .Name("atf-priority-group")
-                        .Selection("single")
+                        .SelectedValue("Low")
                         .Items(items => {
-                            items.Add().Text("Low").Selected(true).HtmlAttributes(new { id = "atf-pri-low" });
-                            items.Add().Text("Medium").HtmlAttributes(new { id = "atf-pri-medium" });
-                            items.Add().Text("High").HtmlAttributes(new { id = "atf-pri-high" });
+                            items.Add().Text("Low").Value("Low");
+                            items.Add().Text("Medium").Value("Medium");
+                            items.Add().Text("High").Value("High");
                         })
                     )
                 </div>

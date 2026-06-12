@@ -195,6 +195,24 @@ function onSettingsClick() {
     $(".appbar-logo").toggleClass("show-dark");
 }
 
+function onSearchToggleClick(e) {
+    var $appbar = $("#appbar");
+    var isOpen = $appbar.toggleClass("search-open").hasClass("search-open");
+    if (isOpen) {
+        var ac = $("#appbar-search").data("kendoAutoComplete");
+        if (ac) { ac.focus(); }
+    }
+}
+
+function onGithubBtnClick(e) {
+    var w = $("#github-popup").data("kendoWindow");
+    if (w.wrapper && w.wrapper.is(":visible")) {
+        w.close();
+    } else {
+        w.open();
+    }
+}
+
 /* ═══════════════════════════════════════════════════════
    PAGE HEADERS — toggle active header in the fixed zone
 ═══════════════════════════════════════════════════════ */
@@ -235,7 +253,7 @@ $(document).ready(function () {
     var navItems = [
         { text: "Home", value: "Home", icon: "home" },
         { text: "Schedule", value: "Schedule", icon: "calendar" },
-        { text: "Patients", value: "Patients", icon: "user-outline" },
+        { text: "Patients", value: "Patients", icon: "user" },
         { text: "Clinical Analytics", value: "Analytics", icon: "chart-bar-stacked" }
     ];
 
@@ -271,14 +289,8 @@ $(document).ready(function () {
     /* ═══════════════════════════════════════════════
        MOBILE SEARCH ICON — toggle autocomplete
     ═══════════════════════════════════════════════ */
-    $("#btn-search-toggle").on("click", function () {
-        var $appbar = $("#appbar");
-        var isOpen = $appbar.toggleClass("search-open").hasClass("search-open");
-        if (isOpen) {
-            var ac = $("#appbar-search").data("kendoAutoComplete");
-            if (ac) { ac.focus(); }
-        }
-    });
+    /* #btn-search-toggle is initialized as a Kendo Button via Html Helper.
+       Its click is handled by onSearchToggleClick() defined above. */
 
     /* Close mobile search on click outside */
     $(document).on("click", function (e) {
@@ -332,16 +344,6 @@ function initGithubPopup() {
             '<p class="gh-copyright">Copyright \u00A9 ' + currentYear + ' Progress Software.<br/>All rights reserved.</p>' +
         '</div>'
     );
-
-    $("#btn-github").on("click", function (e) {
-        e.stopPropagation();
-        var w = $("#github-popup").data("kendoWindow");
-        if (w.wrapper && w.wrapper.is(":visible")) {
-            w.close();
-        } else {
-            w.open();
-        }
-    });
 
     $(document).on("click", function (e) {
         if (!$(e.target).closest(".github-wrap").length) {
