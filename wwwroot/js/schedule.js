@@ -30,8 +30,6 @@ function onSchedulerDataBound() {
     }
 }
 
-var activePriorityFilter = null;
-
 /* Add Task button handler — wired by Html Helper */
 function onAddTaskBtnClick() {
     $("#add-task-dialog").data("kendoDialog").open();
@@ -93,7 +91,6 @@ function applyTaskFilters() {
     var q   = $("#tasks-search").val().toLowerCase().trim();
     var filters = [];
     if (q)                    { filters.push({ field: "Task",     operator: "contains",  value: q }); }
-    if (activePriorityFilter) { filters.push({ field: "Priority", operator: "eq",        value: activePriorityFilter }); }
     tasksDS.filter(filters.length ? { logic: "and", filters: filters } : {});
 }
 
@@ -225,8 +222,8 @@ function onTaskCheckboxChange(e) {
 function resetAddTaskForm() {
     var tb = $("#atf-name").data("kendoTextBox");
     if (tb) { tb.value(""); }
-    var grp = $("#atf-priority-group").data("kendoButtonGroup");
-    if (grp) grp.select(0);
+    var grp = $("#atf-priority-group").data("kendoSegmentedControl");
+    if (grp) grp.value("Low");
     var ta = $("#atf-description").data("kendoTextArea");
     if (ta) { ta.value(""); }
     clearTaskNameError();
@@ -266,10 +263,8 @@ function onAddTaskSave() {
         return false;
     }
     clearTaskNameError();
-    var priorities = ["Low", "Medium", "High"];
-    var grp = $("#atf-priority-group").data("kendoButtonGroup");
-    var idx = grp ? grp.current().index() : 0;
-    var priority = priorities[idx !== undefined ? idx : 0];
+    var grp = $("#atf-priority-group").data("kendoSegmentedControl");
+    var priority = grp ? (grp.value() || "Low") : "Low";
     var ta = $("#atf-description").data("kendoTextArea");
     var description = (ta ? ta.value() : $("#atf-description").val() || "").trim();
     var listView = $("#tasks-list").data("kendoListView");

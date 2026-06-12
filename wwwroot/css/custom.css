@@ -212,9 +212,8 @@ a { text-decoration: none; color: inherit; }
     background: none;
     border: 1px solid rgba(255, 255, 255, 0.0001);
     cursor: pointer;
-    width: 30px;
-    height: 30px;
-    border-radius: 9999px;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -226,8 +225,6 @@ a { text-decoration: none; color: inherit; }
 .icon-btn svg { width: 16px; height: 16px; display: block; }
 .icon-btn:hover { background: rgba(23, 56, 99, 0.06); }
 
-/* Notification button keeps square corners per Figma */
-#notif-btn.icon-btn { border-radius: 4px; }
 
 .notif-wrap { position: relative; display: inline-flex; }
 
@@ -642,10 +639,15 @@ a { text-decoration: none; color: inherit; }
     height: 32px;
     color: #bbb;
     flex-shrink: 0;
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, color 0.2s ease;
 }
 .shortcut-card:hover .shortcut-icon {
-    transform: scale(1.18);
+    color: #555;
+    transform: scale(1.38);
+}
+
+.shortcut-card:hover .shortcut-icon g {
+    opacity: 0.7 !important;
 }
 
 .shortcut-title {
@@ -670,10 +672,8 @@ a { text-decoration: none; color: inherit; }
     height: 36px !important;
     align-self: flex-start;
     padding: 0 10px !important;
-    border: 1px solid #1a1a2e !important;
     overflow: hidden;
     white-space: nowrap;
-    background: #1a1a2e !important;
     transition: background 0.18s ease, border-color 0.18s ease !important;
 }
 .shortcut-add-btn .btn-label,
@@ -684,10 +684,6 @@ a { text-decoration: none; color: inherit; }
     letter-spacing: 0.01em;
     vertical-align: middle;
     white-space: nowrap;
-}
-.shortcut-add-btn:hover {
-    background: #3d3d8f !important;
-    border-color: #3d3d8f !important;
 }
 .shortcut-add-btn:hover .btn-label,
 .shortcut-add-btn:hover .k-button-text,
@@ -734,20 +730,6 @@ a { text-decoration: none; color: inherit; }
     justify-content: flex-start;
 }
 .appointments-header .card-title, .appointments-header .k-card-title { margin-bottom: 0; }
-
-.view-schedule-btn {
-    background: #1a1a2e !important;
-}
-.view-schedule-btn:hover { background: #3d3d8f !important; }
-
-.k-toolbar .k-scheduler-views .k-selected{
-    border-color: var(--kendo-color-dark, #3d3d3d);
-    background-color: var(--kendo-color-dark, #3d3d3d);
-}
-
-.k-toolbar .k-scheduler-views .k-selected .k-button-text{
-    color: #ffffff;
-}
 
 /* Grid overrides */
 #appointments-grid .k-grid {
@@ -1664,57 +1646,7 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     border-radius: 0;
 }
 
-/* ── Scheduler Toolbar ── */
-.sched-card .k-scheduler-toolbar {
-    background: #F9FAFB !important;
-    border-bottom: 1px solid rgba(23, 56, 99, 0.08) !important;
-    border-top: none !important;
-    border-left: none !important;
-    border-right: none !important;
-    padding: 8px !important;
-    min-height: 47px;
-    border-radius: 0;
-}
-
-.sched-card .k-scheduler-toolbar .k-button,
-.sched-card .k-scheduler-toolbar .k-nav-current {
-    font-family: 'Poppins', sans-serif !important;
-    font-size: 14px !important;
-    font-weight: 400 !important;
-    color: #232A36 !important;
-}
-
-/* ── View switcher (SegmentedControl) ── */
-.sched-card .k-scheduler-views-wrapper {
-    background: linear-gradient(0deg, rgba(35, 42, 54, 0.08), rgba(35, 42, 54, 0.08)), #ECEFF3 !important;
-    border-radius: 800px !important;
-    padding: 2px !important;
-    border: none !important;
-}
-
-.sched-card .k-scheduler-views-wrapper .k-button {
-    border-radius: 9999px !important;
-    background: transparent !important;
-    border: none !important;
-    font-family: 'Poppins', sans-serif !important;
-    font-size: 14px !important;
-    font-weight: 400 !important;
-    color: #232A36 !important;
-    padding: 3px 12px !important;
-}
-
-.sched-card .k-scheduler-views-wrapper .k-button:hover {
-    background: #FFFFFF !important;
-    box-shadow: none !important;
-    color: #232A36 !important;
-}
-
-.sched-card .k-scheduler-views-wrapper .k-button.k-selected,
-.sched-card .k-scheduler-views-wrapper .k-button.k-selected:hover {
-    background: #232A36 !important;
-    box-shadow: none !important;
-    color: #FFFFFF !important;
-}
+/* Scheduler toolbar and views use built-in Kendo styling and segmented control. */
 
 /* ── Day header cells ── */
 .sched-card .k-scheduler-header th,
@@ -1754,25 +1686,9 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     border-bottom: 1px solid rgba(23, 56, 99, 0.08) !important;
 }
 
-/* ── Footer toolbar ── */
 .sched-card .k-scheduler-footer {
     background: #F9FAFB !important;
     border-top: 1px solid rgba(23, 56, 99, 0.08) !important;
-    border-bottom: none !important;
-    border-left: none !important;
-    border-right: none !important;
-    padding: 8px !important;
-    min-height: 47px;
-    border-radius: 0;
-}
-
-.sched-card .k-scheduler-footer .k-nav-today {
-    border: 1px solid #232A36 !important;
-    font-family: 'Poppins', sans-serif !important;
-    font-size: 14px !important;
-    font-weight: 400 !important;
-    color: #232A36 !important;
-    background: transparent !important;
 }
 
 /* Event card inside scheduler — Figma spec */
@@ -2104,22 +2020,6 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
    ADD TASK DIALOG
 ═══════════════════════════════════════════════════════ */
 
-/* Dialog window — outer wrapper */
-.k-dialog-wrapper.app-dialog-shell .k-window {
-    border: 1px solid rgba(23, 56, 99, 0.08);
-    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.07),
-                0px 20px 48px -8px rgba(0, 0, 0, 0.11);
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-/* Title bar */
-.k-dialog-wrapper.app-dialog-shell .k-window-titlebar {
-    padding: 16px;
-    border-bottom: 1px solid rgba(23, 56, 99, 0.08);
-    background: #fff;
-}
-
 .k-dialog-wrapper.app-dialog-shell .k-window-title {
     font-family: 'Poppins', sans-serif;
     font-weight: 700;
@@ -2133,13 +2033,6 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     width: 30px;
     height: 30px;
     border-radius: 9999px;
-}
-
-/* Content area */
-.k-dialog-wrapper.app-dialog-shell .k-window-content,
-.k-dialog-wrapper.app-dialog-shell .k-dialog-content {
-    padding: 32px;
-    background: #fff;
 }
 
 .add-task-form {
@@ -2240,14 +2133,6 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     box-shadow: none;
 }
 
-/* Footer action bar */
-.k-dialog-wrapper.app-dialog-shell .k-actions {
-    padding: 0 16px 16px;
-    gap: 8px;
-    justify-content: flex-end;
-    border-top: none;
-    background: #fff;
-}
 
 .k-dialog-wrapper:has(#add-task-dialog) .k-actions {
     justify-content: flex-end;
@@ -2256,40 +2141,6 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 .k-dialog-wrapper:has(#add-task-dialog) .k-actions .k-button {
     flex: 0 0 auto;
     width: auto;
-}
-
-/* Cancel button — flat / light */
-.k-dialog-wrapper.app-dialog-shell .k-actions .k-button:not(.k-button-primary):not(.k-button-solid-primary) {
-    background: #F3F5F7;
-    border: 1px solid rgba(255, 255, 255, 0.0001);
-    border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    color: #232A36;
-    height: 30px;
-    padding: 4px 8px;
-}
-
-/* Save button — primary / slate */
-.k-dialog-wrapper.app-dialog-shell .k-actions .k-button-primary,
-.k-dialog-wrapper.app-dialog-shell .k-actions .k-button-solid-primary {
-    background: #334155;
-    border: 1px solid #334155;
-    border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    color: #FFFFFF;
-    height: 30px;
-    padding: 4px 8px;
-}
-
-.k-dialog-wrapper.app-dialog-shell .k-actions .k-button-primary:hover,
-.k-dialog-wrapper.app-dialog-shell .k-actions .k-button-solid-primary:hover {
-    background: #273344;
-    border-color: #273344;
-    color: #FFFFFF;
 }
 
 
@@ -2342,24 +2193,12 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
    APPOINTMENT DETAIL DIALOG
 ═══════════════════════════════════════════════════════ */
 .k-dialog-wrapper:has(#appointment-dialog) .k-window {
-    border: 1px solid rgba(23, 56, 99, 0.08);
-    border-radius: 16px;
-    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.07), 0px 20px 48px -8px rgba(0, 0, 0, 0.11);
     overflow: hidden;
     width: 320px !important;
 }
 
 .k-dialog-wrapper:has(#appointment-dialog).appt-dialog-expanded .k-window {
     width: 360px !important;
-}
-
-.k-dialog-wrapper:has(#appointment-dialog) .k-window-titlebar {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 20px;
-    background: #F9FAFB;
-    border-bottom: 1px solid rgba(23, 56, 99, 0.08);
 }
 
 .k-dialog-wrapper:has(#appointment-dialog) .k-window-title {
@@ -4631,11 +4470,9 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 /* Profile Image section */
 .pm-section { margin-bottom: 20px; }
 .pm-label { display: block; font-size: 13px; font-weight: 600; color: #232A36; margin-bottom: 12px; }
-.pm-photo-wrap { width: 100%; max-height: 320px; margin-bottom: 18px; border-radius: 12px; overflow: hidden; background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%); }
+.pm-photo-wrap { width: 100%; max-height: 280px; margin-bottom: 18px; border-radius: 12px; overflow: hidden; background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%); }
 .pm-photo { width: 100%; display: block; object-fit: cover; object-position: center top; }
-#pm-btn-upload.k-button { width: 100%; min-height: 42px; justify-content: center; background: #334155; border-color: #334155; color: #ffffff; box-shadow: none; }
-#pm-btn-upload.k-button:hover,
-#pm-btn-upload.k-button:focus { background: #273344; border-color: #273344; color: #ffffff; }
+#pm-btn-upload.k-button { width: 100%; min-height: 42px; }
 
 /* Kendo Upload — full-width dark button (Figma spec) */
 .pm-section .k-upload .k-dropzone,
@@ -5584,7 +5421,6 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
    GITHUB SOURCE CODE POPUP
 ═══════════════════════════════════════════════════════ */
 .github-wrap { position: relative; display: inline-flex; }
-#btn-github.icon-btn { border-radius: 4px; }
 
 .github-popup.k-window {
     border-radius: 8px;
