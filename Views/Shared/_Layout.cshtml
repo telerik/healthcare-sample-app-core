@@ -20,6 +20,8 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://kendo.cdn.telerik.com/2026.2.520/js/kendo.all.min.js"></script>
     <script src="https://kendo.cdn.telerik.com/2026.2.520/js/kendo.aspnetmvc.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@@progress/kendo-svg-icons@5.0.0/dist/index.min.js"></script>
+    <script> kendo.ui.svgIcons = window.KendoSVGIcons;</script>
     <script src="~/js/data.js" asp-append-version="true"></script>
     <script>
         var appBasePath = "@Url.Content("~/")";
@@ -100,8 +102,7 @@
             )
             @(Html.Kendo().Button()
                         .Name("notif-btn")
-                        .HtmlAttributes(new { @class = "icon-btn notif-wrap", title = "Notifications" })
-                        .Content("<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><path d=\"M8 2C5.8 2 4 3.8 4 6v3.5L2.5 11h11L12 9.5V6c0-2.2-1.8-4-4-4z\" stroke=\"currentColor\" stroke-width=\"1.33\" stroke-linecap=\"round\" stroke-linejoin=\"round\" fill=\"none\"/><path d=\"M6.5 13c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5\" stroke=\"currentColor\" stroke-width=\"1.33\" stroke-linecap=\"round\" fill=\"none\"/></svg>")
+                        .HtmlAttributes(new { @class = "icon-btn", title = "Notifications" })
                         .Rounded(Rounded.Full)
                         .Badge(b => b
                             .Text("")

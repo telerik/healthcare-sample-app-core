@@ -66,44 +66,17 @@ a { text-decoration: none; color: inherit; }
 
 /* Container track — Figma: 42px tall, 2px padding, gray gradient pill */
 .appbar-nav .k-segmented-control {
-    height: 42px;
-    background: linear-gradient(0deg, rgba(35, 42, 54, 0.08), rgba(35, 42, 54, 0.08)), #ECEFF3;
-    border-radius: 800px;
-    padding: 2px;
+    height: 42px; 
     font-family: 'Poppins', sans-serif;
     font-size: 16px;
-    color: #232A36;
-}
-
-/* Sliding selection indicator — white pill */
-.appbar-nav .k-segmented-control-thumb {
-    background: #FFFFFF;
-    box-shadow: 0 1px 4px rgba(35, 42, 54, 0.10);
 }
 
 /* Individual segment buttons */
-.appbar-nav .k-segmented-control-button {
-    padding: 7px 12px;
-    gap: 8px;
-    border-radius: 9999px;
+.appbar-nav .k-segmented-control-button {  
     font-family: 'Poppins', sans-serif;
     font-size: 16px;
     font-weight: 400;
     line-height: 1.5;
-    color: #232A36;
-    background: transparent;
-}
-
-.appbar-nav .k-segmented-control-button:hover,
-.appbar-nav .k-segmented-control-button.k-hover {
-    background: rgba(35, 42, 54, 0.05);
-}
-
-.appbar-nav .k-segmented-control-button.k-selected,
-.appbar-nav .k-segmented-control-button.k-selected:hover,
-.appbar-nav .k-segmented-control-button.k-selected.k-hover {
-    background: transparent;
-    color: #232A36;
 }
 
 /* Icons — 16×16 px, inherit dark color */
@@ -1646,8 +1619,6 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     border-radius: 0;
 }
 
-/* Scheduler toolbar and views use built-in Kendo styling and segmented control. */
-
 /* ── Day header cells ── */
 .sched-card .k-scheduler-header th,
 .sched-card .k-scheduler-header .k-scheduler-table th {
@@ -2410,7 +2381,8 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 .ar-content { padding: 0; }
 
 .ar-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 16px; }
-.ar-icon { flex-shrink: 0; line-height: 0; }
+.ar-icon { flex-shrink: 0; line-height: 0; color: #dc2626; font-size: 28px; }
+.ar-icon .k-svg-icon { width: 28px; height: 28px; }
 .ar-title { font-size: 18px; font-weight: 700; color: #1a1a2e; }
 .ar-time  { font-size: 13px; color: #888; margin-top: 2px; }
 
@@ -2439,7 +2411,8 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
 .ar-divider { border: none; border-top: 1px solid #e5e7eb; margin: 0 0 16px 0; }
 
 .ar-patient-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
-.ar-patient-icon   { color: #666; flex-shrink: 0; }
+.ar-patient-icon   { color: #666; flex-shrink: 0; line-height: 0; }
+.ar-patient-icon .k-svg-icon { width: 18px; height: 18px; }
 .ar-patient-heading { font-weight: 700; font-size: 15px; color: #1a1a2e; flex: 1; }
 .ar-profile-link {
     font-size: 13px;
@@ -2813,7 +2786,9 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     cursor: pointer;
     padding: 4px;
     flex-shrink: 0;
+    color: #232A36;
 }
+.pp-close-btn .k-svg-icon { width: 16px; height: 16px; }
 .pp-close-btn:hover { background: #f2f2f5; }
 .patient-preview-panel > .k-card-body.pp-body {
     display: flex;
@@ -2904,6 +2879,7 @@ button.detail-link.k-button:hover { color: #232A36; background: none; }
     background: #FFF4D3;
     border: 1px solid #FFF4D3;
     border-radius: 8px;
+    color: #d97706;
 }
 .pp-allergy-text {
     display: flex;
