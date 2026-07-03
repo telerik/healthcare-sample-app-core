@@ -108,15 +108,23 @@ var _apptExpanded    = false;
    which are also global.
 ═══════════════════════════════════════════════ */
 function appointmentDialogIcon(kind) {
-    var icons = {
-        date: '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="3.25" y="4.75" width="13.5" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M6.5 3.5V6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M13.5 3.5V6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M3.25 8.25H16.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
-        time: '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="6.75" stroke="currentColor" stroke-width="1.8"/><path d="M10 6.75V10.25L12.5 11.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-        location: '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 17C12.8 13.7 15 11.15 15 8.75C15 6.13 12.76 4 10 4C7.24 4 5 6.13 5 8.75C5 11.15 7.2 13.7 10 17Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="10" cy="8.75" r="1.9" stroke="currentColor" stroke-width="1.8"/></svg>',
-        visit: '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M6.75 11.25C8.68 11.25 10.25 9.68 10.25 7.75C10.25 5.82 8.68 4.25 6.75 4.25C4.82 4.25 3.25 5.82 3.25 7.75C3.25 9.68 4.82 11.25 6.75 11.25Z" stroke="currentColor" stroke-width="1.8"/><path d="M11.25 15.75C11.25 13.4 9.23 11.5 6.75 11.5C4.27 11.5 2.25 13.4 2.25 15.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12.75 6L17 10.25" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M17 6V10.25H12.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-        expand: '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M11.75 4.5H15.5V8.25" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M15.5 4.5L10.75 9.25" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M8.25 15.5H4.5V11.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 15.5L9.25 10.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
-        collapse: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.33301 6.66667L13.9997 2" stroke="#232A36" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.333 6.66663H9.33301V2.66663" stroke="#232A36" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 14L6.66667 9.33337" stroke="#232A36" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.66699 9.33337H6.66699V13.3334" stroke="#232A36" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    var iconMap = {
+        date: "calendar",
+        time: "clock",
+        location: "map-marker-target",
+        visit: "user"
     };
-    return icons[kind] || "";
+    if (iconMap[kind]) {
+        return kendo.ui.icon({ type: "svg", icon: iconMap[kind] });
+    }
+    var builtinIcons = {
+        expand: "arrows-out-simple",
+        collapse: "min-height"
+    };
+    if (builtinIcons[kind]) {
+        return kendo.ui.icon({ type: "svg", icon: builtinIcons[kind] });
+    }
+    return "";
 }
 
 function renderAppointmentDialogContent(evt, callback) {

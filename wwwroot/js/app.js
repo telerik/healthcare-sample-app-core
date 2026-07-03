@@ -337,7 +337,7 @@ $(document).ready(function () {
        GREETING DATE
     ═══════════════════════════════════════════════ */
     $("#today-date").text(kendo.toString(new Date(), "dddd, MMMM dd, yyyy"));
-    if ($(".open-link").length) { kendo.ui.icon($(".open-link"), { icon: 'hyperlink-open-sm' }); }
+    if ($(".open-link").length) { kendo.ui.icon($(".open-link"), { icon: 'hyperlink-open' }); }
     if ($(".appt-time-icon").length) { kendo.ui.icon($(".appt-time-icon"), { icon: 'clock' }); }
     if ($(".ai-chat-header-close").length) { kendo.ui.icon($(".ai-chat-header-close"), { icon: 'x' }); }
     if ($(".sparkles").length) { kendo.ui.icon($(".sparkles"), { icon: 'sparkles' }); }
@@ -544,13 +544,13 @@ $(document).ready(function () {
                 html += '</div>';
                 html += '<div class="ai-feedback-actions">' +
                     '<button class="ai-feedback-btn" title="Helpful">' +
-                        '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><path d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg>' +
+                        kendo.ui.icon({ type: "svg", icon: "thumb-up" }) +
                     '</button>' +
                     '<button class="ai-feedback-btn" title="Not helpful">' +
-                        '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9a2 2 0 002 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0122 4v7a2.31 2.31 0 01-2.33 2H17"/></svg>' +
+                        kendo.ui.icon({ type: "svg", icon: "thumb-down" }) +
                     '</button>' +
                     '<button class="ai-feedback-btn" title="Regenerate">' +
-                        '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>' +
+                        kendo.ui.icon({ type: "svg", icon: "arrow-rotate-cw" }) +
                     '</button>' +
                 '</div>';
                 html += '</div>';
